@@ -14,10 +14,7 @@ int main(int argc, char* argv[]) {
         //menu
         gameProcess(game);
 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
         gameDraw(game);
-        EndDrawing();
     }
 
     gameOver(game);

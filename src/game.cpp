@@ -1,15 +1,95 @@
 #include "../include/game.hpp"
 #include "raylib.h"
 
-void gameStart(GameState& game){
+void gameStart(Game& game){
     game.quit = false;
 }
 
-void gameProcess(GameState& game){
+void gameProcess(Game& game){
     if (IsKeyPressed(KEY_Q)) game.quit = true;
+
+    switch(game.current_match.camera){
+        case COUNTER:
+            counter_features();
+        
+        break;
+        
+        case KITCHEN:
+            kitchen_features();
+
+        break;
+
+        case PREPARE:
+            prepare_features();
+
+        break;
+    }
+
 }
 
-void gameDraw(GameState& game){
+void gameDraw(Game &game){
+
+    switch(game.GameState) {
+
+        case MENU:
+
+        break;
+
+        case HOW_TO_PLAY:
+
+        break;
+
+        case HISTORY:
+
+        break;
+
+        case SETTINGS:
+
+        break;
+
+        case PLAYING:
+
+        break;
+
+    }
+
+}
+
+void matchDraw(Game& game){
+    BeginDrawing();
+
+    switch(game.current_match.matchState){
+
+        case PAUSED:
+            
+        break;
+
+        case DEFEAT:
+
+        break;
+
+        case VICTORY:
+
+        break;
+
+        case COUNTER:
+            draw_counter();
+        
+        break;
+        
+        case KITCHEN:
+            draw_kitchen();
+
+        break;
+
+        case PREPARE:
+            draw_prepare();
+
+        break;
+    }
+
+
+    EndDrawing();
     return;
     //Pausa
     //Cozinha
@@ -20,6 +100,6 @@ void gameDraw(GameState& game){
         //desenhar bagulho da pausa
 }
 
-void gameOver(GameState& game){
+void gameOver(Game& game){
     return;
 }

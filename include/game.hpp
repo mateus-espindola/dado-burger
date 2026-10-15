@@ -8,10 +8,10 @@
 #include "../include/data_structures.hpp"
 
 
-void gameStart(GameState& game);
-void gameProcess(GameState& game);
-void gameDraw(GameState& game);
-void gameOver(GameState& game);
+void gameStart(Game& game);
+void gameProcess(Game& game);
+void gameDraw(Game& game);
+void gameOver(Game& game);
 
 //Struct jogador
 
@@ -40,51 +40,65 @@ void gameOver(GameState& game);
 
 #define BALCON_SIZE 3;
 
-// struct{
+struct{
 
-//     char nome[50];
-//     int score;
+    char nome[50];
+    int score;
 
-// } Player;
+} Player;
 
-// struct {
+struct {
     
-//     int patience;
-//     Recipe order;
-//     Costumer_type type;
+    int patience;
+    Recipe order;
+    Costumer_type type;
 
-// } Costumer;
+} Costumer;
 
-// enum {
+enum {
 
-//     CHILL_GUY
-//     NORMAL
-//     VEGAN
-//     TONY
+    CHILL_GUY
+    NORMAL
+    VEGAN
+    TONY
 
-// } Costumer_type;
+} Costumer_type;
 
 
-// enum {
+enum {
 
-//     COUNTER
-//     KITCHEN
-//     PREPARE
+    MENU
+    HOW_TO_PLAY
+    HISTORY
+    SETTINGS
+    PLAYING
 
-// } ROOM;
+} GameState;
+
+enum {
+
+    COUNTER
+    KITCHEN
+    PREPARE
+    PAUSED
+    DEFEAT
+    VICTORY
+
+} MatchState;
 
 struct{
 
     bool quit;
     Match current_match;
+    GameState gameState;
 
-} GameState;
+} Game;
 
 struct {
 
+    MatchState matchState;
     Costumer_queue fila;
     Clientes atender[BALCON_SIZE];
-    Camera camera;
     int turn;
     //Hamburguers montando
     //Coisas do fogao
