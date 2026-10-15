@@ -5,14 +5,126 @@
 
 #include "raylib.h"
 #include "../include/constants.hpp"
+#include "../include/data_structures.hpp"
 
-typedef struct {
-    bool quit;
-} GameState;
 
 void gameStart(GameState& game);
 void gameProcess(GameState& game);
 void gameDraw(GameState& game);
 void gameOver(GameState& game);
+
+//Struct jogador
+
+//Struct cliente
+
+//Struct do jogo (gamestate)
+
+//Struct ingredientes com as caracteristicas dos ingredientes (pereciveis, necessitam de preparo...)
+
+//Biblioteca de dados
+
+//Fila com clientes
+//Controlar os tempos de preparo
+//Mais de uma tela de visao
+
+
+
+//Botao de passar turno
+//Numero de acoes por turno
+//Acabar acoes = passar turno automaticamente
+
+//Botao de troca de cenario
+//No botao balcao aparace excalamacao se tiver algum cliente a um turno de te mandar tomar no cu
+
+//Tres clientes no balcao por vez
+
+#define BALCON_SIZE 3;
+
+// struct{
+
+//     char nome[50];
+//     int score;
+
+// } Player;
+
+// struct {
+    
+//     int patience;
+//     Recipe order;
+//     Costumer_type type;
+
+// } Costumer;
+
+// enum {
+
+//     CHILL_GUY
+//     NORMAL
+//     VEGAN
+//     TONY
+
+// } Costumer_type;
+
+
+// enum {
+
+//     COUNTER
+//     KITCHEN
+//     PREPARE
+
+// } ROOM;
+
+struct{
+
+    bool quit;
+    Match current_match;
+
+} GameState;
+
+struct {
+
+    Costumer_queue fila;
+    Clientes atender[BALCON_SIZE];
+    Camera camera;
+    int turn;
+    //Hamburguers montando
+    //Coisas do fogao
+    //Coisas da tabua
+
+} Match;
+
+
+enum {
+
+    LETTUCE = 'a'
+    BACON = 'b'
+    ONION = 'c'
+    KETCHUP = 'k'
+    MUSTARD = 'm'
+    MEAT = 'n'
+    FRIED_EGG = 'o'
+    PICKLES = 'p'
+    CHEDDAR = 'q'
+    SWISS_CHEESE = 's'
+    TOMATO = 't'
+    UPPER_BREAD = 'z'
+
+} IngredientType;
+
+
+// 0 0
+// 0 1
+// 1 0
+// 1 1
+
+
+
+struct{
+    IngredientType type;
+    int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
+    int 
+
+} Ingredient;
+
+
 
 #endif

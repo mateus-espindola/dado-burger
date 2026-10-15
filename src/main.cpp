@@ -10,6 +10,8 @@ int main(int argc, char* argv[]) {
     SetTargetFPS(FPS);
 
     while (!WindowShouldClose() && !game.quit) {
+        //game
+        //menu
         gameProcess(game);
 
         BeginDrawing();
