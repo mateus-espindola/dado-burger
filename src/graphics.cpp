@@ -6,23 +6,23 @@ void gameDraw(Game &game){
     switch(game.state) {
 
         case MENU:
-            menuDraw();
+            // menuDraw();
         break;
 
         case HOW_TO_PLAY:
-            tutorialDraw();
+            // tutorialDraw();
         break;
 
         case HISTORY:
-            historyDraw();
+            // historyDraw();
         break;
 
         case SETTINGS:
-            settingsDraw();
+            // settingsDraw();
         break;
 
         case PLAYING:
-            matchDraw();
+            // matchDraw();
         break;
 
     }

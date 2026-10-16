@@ -1,5 +1,4 @@
 #include "../include/game.hpp"
-#include "raylib.h"
 
 void gameStart(Game& game){
     game.quit = false;
@@ -11,23 +10,23 @@ void gameProcess(Game& game){
     switch(game.state) {
 
         case MENU:
-            menuProcess();
+            // menuProcess();
         break;
 
         case HOW_TO_PLAY:
-            tutorialProcess();
+            // tutorialProcess();
         break;
 
         case HISTORY:
-            historyProcess();
+            // historyProcess();
         break;
 
         case SETTINGS:
-            settingsProcess();
+            // settingsProcess();
         break;
 
         case PLAYING:
-            matchProcess();
+            // matchProcess();
         break;
 
     }

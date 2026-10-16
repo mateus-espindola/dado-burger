@@ -1,9 +1,29 @@
 #ifndef DATA_STRUCTURES_HPP
 #define DATA_STRUCTURES_HPP
 
-#include <iostream>
+#include "constants.hpp"
 
-#include "game.hpp"
+enum IngredientType{
+
+    LETTUCE = 'a',
+    BACON = 'b',
+    ONION = 'c',
+    KETCHUP = 'k',
+    MUSTARD = 'm',
+    MEAT = 'n',
+    FRIED_EGG = 'o',
+    PICKLES = 'p',
+    CHEDDAR = 'q',
+    SWISS_CHEESE = 's',
+    TOMATO = 't',
+    UPPER_BREAD = 'z'
+
+};
+
+struct Ingredient{
+    IngredientType type;
+    int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
+};
 
 struct AVL_node{
     int id;
@@ -26,8 +46,22 @@ struct Recipe{
     List_node *start;
 }; // The Recipe struct is a list of ingredients
 
+enum CostumerType{
 
- struct Stack_node{
+    CHILL_GUY,
+    NORMAL,
+    VEGAN,
+    TONY
+
+};
+
+struct Costumer{
+    int patience;
+    Recipe order;
+    CostumerType type;
+};
+
+struct Stack_node{
    Stack_node *below;
    Ingredient ing;
 };

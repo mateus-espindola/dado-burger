@@ -1,11 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <iostream>
-
-#include "raylib.h"
-#include "../include/constants.hpp"
-#include "../include/data_structures.hpp"
+#include "data_structures.hpp"
 
 /* ============================ */
 /*      STRUCTS AND ENUMS       */
@@ -14,21 +10,6 @@
 struct PlayerInfo{
     char nome[50];
     int score;
-};
-
-enum CostumerType{
-
-    CHILL_GUY,
-    NORMAL,
-    VEGAN,
-    TONY
-
-};
-
-struct Costumer{
-    int patience;
-    Recipe order;
-    CostumerType type;
 };
 
 enum MatchState{
@@ -68,28 +49,6 @@ struct Game{
     GameState state;
 };
 
-enum IngredientType{
-
-    LETTUCE = 'a',
-    BACON = 'b',
-    ONION = 'c',
-    KETCHUP = 'k',
-    MUSTARD = 'm',
-    MEAT = 'n',
-    FRIED_EGG = 'o',
-    PICKLES = 'p',
-    CHEDDAR = 'q',
-    SWISS_CHEESE = 's',
-    TOMATO = 't',
-    UPPER_BREAD = 'z'
-
-};
-
-struct Ingredient{
-    IngredientType type;
-    int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
-};
-
 /* ============================== */
 /*      FUNCTION PROTOTYPES       */
 /* ============================== */
@@ -98,11 +57,11 @@ void gameStart(Game& game);
 void gameProcess(Game& game);
 void gameOver(Game& game);
 
-void menuProcess();
-void tutorialProcess();
-void historyProcess();
-void settingsProcess();
-void matchProcess();
+// void menuProcess();
+// void tutorialProcess();
+// void historyProcess();
+// void settingsProcess();
+// void matchProcess();
 
 #endif
 

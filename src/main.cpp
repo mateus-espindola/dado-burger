@@ -1,8 +1,8 @@
-#include "../include/constants.hpp"
-#include "../include/game.hpp"
-#include "../include/data_structures.hpp"
+// #include "../include/constants.hpp"
+// #include "../include/game.hpp"
+// #include "../include/data_structures.hpp"
 #include "../include/graphics.hpp"
-#include "raylib.h"
+// #include "raylib.h"
 
 int main(int argc, char* argv[]) {
     Game game;
