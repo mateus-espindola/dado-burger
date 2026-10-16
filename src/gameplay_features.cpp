@@ -1,28 +1,107 @@
 #include "raylib.h"
+#include "data_structures.hpp"
+//#include "game.hpp"
 
-struct {
+struct MouseInput{
 
     int x;
     int y;
 
-} MouseInput;
+};
 
-struct {
+struct Button{
 
     int x1;
     int x2;
     int y1;
     int y2;
 
-} Button;
+};
+
+//Defines com numero de botoes por camera:
+//Eu dei um valor arbitrário por enquanto
+//OU FAZEMOS QUE O PRIMEIRO INDICE DO VETOR TEM A QUANTIDADE DE BOTOES? Ta em maiusculo porque queria tua opiniao
+#define BUTTONS_COUNTER 10
+#define BUTTONS_KITCHEN 10
+#define BUTTONS_PREPARE 10
+
+#define COOK_SPEED 0.2
+#define COOK_TIME 2
 
 
-void findClick(MouseInput &mouse, Button botton_vec[]){
+int findClick(MouseInput &mouse, Button *button_vec/*jeito de passar vetor*/, int size){
 
-    //A funcao recebe a coordenada do click e um vetor [x]
+    //A funcao recebe a coordenada do click e um vetor [x + 1]
+    //PRECISO DE UMA OPINIAO: A posicao inicial do vetor pode indicar quantos elementos tem no vetor, que que tu acha? Ou a gente passa de parametro o tamanho por constantes?
     //dos botoes do comodo onde x e a quantidade de botoes desse comodo
     //Ai tem um for que testa a colisao com todos os botoes
     //e devolve o valor do indice do botao com o qual houve colisao
 
-
+    //for(int i = 1;  i < button_vec[0] + 1; i++){
+    for(int i = 0;  i < size; i++){
+        if (mouse.x >= button_vec[i].x1 && mouse.x <= button_vec[i].x2 &&
+            mouse.y >= button_vec[i].y1 && mouse.y <= button_vec[i].y2) {
+            return i;
+        }
+    }
+    return -1; // nenhum botão clicado
 }
+
+
+
+
+//E ALGUMA MALUQUICE QUE DEIXA DAR ++ NOS ENUM. E TIPO DEFINIR UMA OPERACAO NOVA
+//NOTA: O ++ TEM QUE SER ANTES POR ALGUM MOTIVO
+CookPoint& operator++(CookPoint& c) {
+    if (c != READY && c < OVER_COOKED)
+        c = static_cast<CookPoint>(c + 1);
+    return c;
+}
+
+
+
+
+void cut_ingredient(Ingredient& ing, Stack& ready_ing){
+    ing.cook_state.cookPoint[1] = READY;
+}
+
+
+
+
+void cook_egg(Ingredient& ing, Stack& ready_ing){
+
+    if(ing.cook_state.cook_time > 0)
+        ing.cook_state.cook_time -= COOK_SPEED;
+    else{
+        ++ing.cook_state.cookPoint[1];
+        ing.cook_state.cook_time = COOK_TIME;
+    }
+
+    return;
+}
+
+
+
+
+void cook_meat(Ingredient& ing, Stack& ready_ing){
+
+    if(ing.cook_state.cook_time > 0)
+        ing.cook_state.cook_time -= COOK_SPEED;
+    else{
+        ++ing.cook_state.cookPoint[1];
+        ing.cook_state.cook_time = COOK_TIME;
+    }
+
+    return;
+}
+
+void flip_meat(Ingredient& ing){
+    CookPoint aux = ing.cook_state.cookPoint[1];
+    ing.cook_state.cookPoint[1] = ing.cook_state.cookPoint[0];
+    ing.cook_state.cookPoint[0] = aux;
+}
+
+// void cook_cheese(){
+//     return;
+// }
+//EU NAO LEMBRO O QUE MAIS TEM QUE COZINHAR TLG

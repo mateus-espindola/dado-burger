@@ -20,8 +20,25 @@ enum IngredientType{
 
 };
 
-struct Ingredient{
+enum CookPoint {
+    READY = -1,
+    RAW = 0,
+    RARE,
+    MEDIUM_RARE,
+    WELL_DONE,
+    OVER_COOKED
+};
+
+struct CookState {
+    bool cooking; //Indica se o ingrediente está cozinhando. Se sim ele nao diminui seu tempo ate estragar
+    CookPoint cookPoint[2]; //Indica o quao cozido ele esta
+    float cook_time; //Indica o tempo até mudar o estágio de cozimento
+    
+};
+
+struct Ingredient {
     IngredientType type;
+    CookState cook_state;
     int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
 };
 
@@ -66,7 +83,7 @@ struct Stack_node{
    Ingredient ing;
 };
 
-struct Hamburger{
+struct Stack{
     Stack_node *top;
 }; // The Hamburguer struct is a stack of ingredients
 
