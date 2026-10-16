@@ -1,60 +1,50 @@
+#ifndef DATA_STRUCTURES_HPP
+#define DATA_STRUCTURES_HPP
+
 #include <iostream>
 
-struct {
+#include "game.hpp"
 
+struct AVL_node{
     int id;
     std::string recipe;
     AVL_node *right;
     AVL_node *left;
+};
 
-
-} AVL_node;
-
-struct {
-
+struct AVL{
     AVL_node *root;
+};
 
-} Avl;
 
-
-struct { 
-
+struct List_node{
     List_node *prox;
     Ingredient ing;
+};
 
-} List_node;
-
-strcut {
-
+struct Recipe{
     List_node *start;
+}; // The Recipe struct is a list of ingredients
 
-} Recipe;
 
-
-struct {
-
+ struct Stack_node{
    Stack_node *below;
    Ingredient ing;
+};
 
-} Stack_node;
-
-struct {
-
-    Stack_node *topo;
-
-} Hamburger;
+struct Hamburger{
+    Stack_node *top;
+}; // The Hamburguer struct is a stack of ingredients
 
 
-struct {
-
+struct Queue_node{
     Queue_node *prox; //The one who comes after him in line
     Costumer cost;
+};
 
-} Queue_node;
-
-struct {
-
+struct Costumer_queue{
     Queue_node *first;
     Queue_node *last;
+};
 
-} Costumer_queue;
+#endif

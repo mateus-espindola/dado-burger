@@ -1,19 +1,19 @@
+#include "../include/constants.hpp"
 #include "../include/game.hpp"
+#include "../include/data_structures.hpp"
+#include "../include/graphics.hpp"
 #include "raylib.h"
 
 int main(int argc, char* argv[]) {
-    GameState game;
+    Game game;
 
     gameStart(game);
 
-    InitWindow(JANELA_LARGURA, JANELA_ALTURA, "Dado Burger");
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
     SetTargetFPS(FPS);
 
     while (!WindowShouldClose() && !game.quit) {
-        //game
-        //menu
         gameProcess(game);
-
         gameDraw(game);
     }
 
