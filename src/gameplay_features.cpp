@@ -63,6 +63,12 @@ CookPoint& operator++(CookPoint& c) {
 
 void cut_ingredient(Ingredient& ing, Stack& ready_ing){
     ing.cook_state.cookPoint[1] = READY;
+    
+    Stack_node *node = new Stack_node;
+
+    node->ing = ing;
+    node->below = ready_ing.top;
+    ready_ing.top = node;
 }
 
 
@@ -77,7 +83,6 @@ void cook_egg(Ingredient& ing, Stack& ready_ing){
         ing.cook_state.cook_time = COOK_TIME;
     }
 
-    return;
 }
 
 
@@ -92,7 +97,6 @@ void cook_meat(Ingredient& ing, Stack& ready_ing){
         ing.cook_state.cook_time = COOK_TIME;
     }
 
-    return;
 }
 
 void flip_meat(Ingredient& ing){

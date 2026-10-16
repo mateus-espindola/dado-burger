@@ -10,4 +10,10 @@ constexpr int FPS = 60;
 
 constexpr int COUNTER_SIZE = 3;
 
+//CONSTANTES ADICIONADAS:
+#define PLATE_SIZE 6
+#define PAN_NUMBER 3
+#define PREPARING_SPACE 3
+#define STOARGE_SIZE 8
+
 #endif
