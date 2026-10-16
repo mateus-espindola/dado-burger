@@ -16,6 +16,31 @@ struct PlayerInfo{
     int score;
 };
 
+enum IngredientType{
+
+    LETTUCE = 'a',
+    BACON = 'b',
+    ONION = 'c',
+    KETCHUP = 'k',
+    MUSTARD = 'm',
+    MEAT = 'n',
+    FRIED_EGG = 'o',
+    PICKLES = 'p',
+    CHEDDAR = 'q',
+    SWISS_CHEESE = 's',
+    TOMATO = 't',
+    UPPER_BREAD = 'z'
+
+};
+
+struct Ingredient{
+    IngredientType type;
+    int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
+};
+
+using Recipe = List<Ingredient>;      // The Recipe is a list of ingredients
+using Hamburger = Stack<Ingredient>;  // The Hamburguer is a stack of ingredients
+
 enum CostumerType{
 
     CHILL_GUY,
@@ -30,6 +55,8 @@ struct Costumer{
     Recipe order;
     CostumerType type;
 };
+
+using Costumer_queue = Queue<Costumer>;
 
 enum MatchState{
 
@@ -66,28 +93,6 @@ struct Game{
     bool quit;
     Match current_match;
     GameState state;
-};
-
-enum IngredientType{
-
-    LETTUCE = 'a',
-    BACON = 'b',
-    ONION = 'c',
-    KETCHUP = 'k',
-    MUSTARD = 'm',
-    MEAT = 'n',
-    FRIED_EGG = 'o',
-    PICKLES = 'p',
-    CHEDDAR = 'q',
-    SWISS_CHEESE = 's',
-    TOMATO = 't',
-    UPPER_BREAD = 'z'
-
-};
-
-struct Ingredient{
-    IngredientType type;
-    int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
 };
 
 /* ============================== */
