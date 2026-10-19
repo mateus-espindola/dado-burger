@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "data_structures.hpp"
+#include "../include/data_structures.hpp'"
 //#include "game.hpp"
 
 struct MouseInput{
@@ -109,7 +109,6 @@ void flip_meat(Ingredient& ing){
 //     return;
 // }
 //EU NAO LEMBRO O QUE MAIS TEM QUE COZINHAR TLG
-
 
 void compare_hamburger_with_order(Stack *hamburger, Stack *order){
 

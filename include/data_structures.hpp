@@ -43,22 +43,6 @@ struct Ingredient {
     int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
 };
 
-struct AVL_node{
-    int id;
-    std::string recipe;
-    AVL_node *right;
-    AVL_node *left;
-};
-
-struct AVL{
-    AVL_node *root;
-};
-
-
-struct List_node{
-    List_node *prox;
-    Ingredient ing;
-};
 
 struct Recipe{
     List_node *start;
