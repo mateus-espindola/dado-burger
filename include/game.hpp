@@ -29,7 +29,7 @@ enum MatchState{
 
 struct Match{
     MatchState state;
-    Queue costumer_line;
+    Queue<Costumer> costumer_line;
     Costumer costumer_counter[COUNTER_SIZE];
     int turn;
     //Hamburguers montando

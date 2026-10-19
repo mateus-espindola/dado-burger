@@ -1,5 +1,5 @@
-#ifndef DATA_STRUCTURES_HPP
-#define DATA_STRUCTURES_HPP
+#ifndef TADS_HPP
+#define TADS_HPP
 
 // ---------- Pilha ----------
 template<typename T>
@@ -51,4 +51,4 @@ struct List {
     List_node<T> *start;
 }; // The Recipe struct is a list of ingredients
 
-#endif // DATA_STRUCTURES_HPP
+#endif

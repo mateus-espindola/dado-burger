@@ -44,9 +44,6 @@ struct Ingredient {
     int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
 };
 
-
-
-
 enum CostumerType{
 
     CHILL_GUY,
@@ -56,9 +53,11 @@ enum CostumerType{
 
 };
 
+
+
 struct Costumer{
     int patience;
-    Recipe order;
+    List<Ingredient> order;
     CostumerType type;
 };
 
