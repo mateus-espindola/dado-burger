@@ -3,6 +3,7 @@
 
 #include "data_structures.hpp"
 #include "constants.hpp"
+#include "tads.hpp"
 
 /* ============================ */
 /*      STRUCTS AND ENUMS       */
@@ -28,7 +29,7 @@ enum MatchState{
 
 struct Match{
     MatchState state;
-    Costumer_queue costumer_line;
+    Queue costumer_line;
     Costumer costumer_counter[COUNTER_SIZE];
     int turn;
     //Hamburguers montando

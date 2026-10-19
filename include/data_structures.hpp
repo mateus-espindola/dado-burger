@@ -2,6 +2,7 @@
 #define DATA_STRUCTURES_HPP
 
 #include "constants.hpp"
+#include "tads.hpp"
 
 enum IngredientType{
 
@@ -44,9 +45,7 @@ struct Ingredient {
 };
 
 
-struct Recipe{
-    List_node *start;
-}; // The Recipe struct is a list of ingredients
+
 
 enum CostumerType{
 
