@@ -2,50 +2,23 @@
 #include "../include/data_structures.hpp"
 //#include "game.hpp"
 
-struct MouseInput{
+// int findClick(MouseInput &mouse, Button *button_vec/*jeito de passar vetor*/, int size){
 
-    int x;
-    int y;
+//     //A funcao recebe a coordenada do click e um vetor [x + 1]
+//     //PRECISO DE UMA OPINIAO: A posicao inicial do vetor pode indicar quantos elementos tem no vetor, que que tu acha? Ou a gente passa de parametro o tamanho por constantes?
+//     //dos botoes do comodo onde x e a quantidade de botoes desse comodo
+//     //Ai tem um for que testa a colisao com todos os botoes
+//     //e devolve o valor do indice do botao com o qual houve colisao
 
-};
-
-struct Button{
-
-    int x1;
-    int x2;
-    int y1;
-    int y2;
-
-};
-
-//Defines com numero de botoes por camera:
-//Eu dei um valor arbitrário por enquanto
-//OU FAZEMOS QUE O PRIMEIRO INDICE DO VETOR TEM A QUANTIDADE DE BOTOES? Ta em maiusculo porque queria tua opiniao
-#define BUTTONS_COUNTER 10
-#define BUTTONS_KITCHEN 10
-#define BUTTONS_PREPARE 10
-
-#define COOK_SPEED 0.2
-#define COOK_TIME 2
-
-
-int findClick(MouseInput &mouse, Button *button_vec/*jeito de passar vetor*/, int size){
-
-    //A funcao recebe a coordenada do click e um vetor [x + 1]
-    //PRECISO DE UMA OPINIAO: A posicao inicial do vetor pode indicar quantos elementos tem no vetor, que que tu acha? Ou a gente passa de parametro o tamanho por constantes?
-    //dos botoes do comodo onde x e a quantidade de botoes desse comodo
-    //Ai tem um for que testa a colisao com todos os botoes
-    //e devolve o valor do indice do botao com o qual houve colisao
-
-    //for(int i = 1;  i < button_vec[0] + 1; i++){
-    for(int i = 0;  i < size; i++){
-        if (mouse.x >= button_vec[i].x1 && mouse.x <= button_vec[i].x2 &&
-            mouse.y >= button_vec[i].y1 && mouse.y <= button_vec[i].y2) {
-            return i;
-        }
-    }
-    return -1; // nenhum botão clicado
-}
+//     //for(int i = 1;  i < button_vec[0] + 1; i++){
+//     for(int i = 0;  i < size; i++){
+//         if (mouse.x >= button_vec[i].x1 && mouse.x <= button_vec[i].x2 &&
+//             mouse.y >= button_vec[i].y1 && mouse.y <= button_vec[i].y2) {
+//             return i;
+//         }
+//     }
+//     return -1; // nenhum botão clicado
+// }
 
 
 
@@ -104,6 +77,8 @@ void flip_meat(Ingredient& ing){
     ing.cook_state.cookPoint[1] = ing.cook_state.cookPoint[0];
     ing.cook_state.cookPoint[0] = aux;
 }
+
+void check_buttons()
 
 // void cook_cheese(){
 //     return;

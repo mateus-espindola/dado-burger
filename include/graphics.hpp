@@ -8,7 +8,9 @@ void gameDraw(Game& game);
 // void tutorialDraw();
 // void historyDraw();
 // void settingsDraw();
-// void matchDraw();
+void matchDraw(Match& match);
+
+void playerDraw(Player& player);
 
 
 #endif

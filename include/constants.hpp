@@ -16,4 +16,11 @@ constexpr int COUNTER_SIZE = 3;
 #define PREPARING_SPACE 3
 #define STOARGE_SIZE 8
 
+#define BUTTONS_COUNTER 10
+#define BUTTONS_KITCHEN 10
+#define BUTTONS_PREPARE 10
+
+#define COOK_SPEED 0.2
+#define COOK_TIME 2
+
 #endif

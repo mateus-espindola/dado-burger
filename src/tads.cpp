@@ -118,3 +118,9 @@ void queue_destroy(Queue<T> *q) {
     while (!queue_is_empty(q)) queue_dequeue(q, nullptr);
     delete q;
 }
+
+
+
+
+
+// LIST

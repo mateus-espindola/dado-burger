@@ -1,7 +1,10 @@
 #include "../include/graphics.hpp"
 
+
+
 void gameDraw(Game &game){
     BeginDrawing();
+    ClearBackground(RAYWHITE);
 
     switch(game.state) {
 
@@ -22,15 +25,16 @@ void gameDraw(Game &game){
         break;
 
         case PLAYING:
-            // matchDraw();
+            // DrawTexture(game.spritesheet.start->data.texture, 0, 0, WHITE);
+            matchDraw(game.current_match);
         break;
 
     }
     EndDrawing();
 }
 
-void matchDraw(Game& game){
-    switch(game.current_match.state){
+void matchDraw(Match& match){
+    switch(match.state){
 
         case PAUSED:
 
@@ -45,4 +49,12 @@ void matchDraw(Game& game){
         break;
 
     }
+
+    // BeginMode2D(match.camera);
+        playerDraw(match.player);
+    // EndMode2D;
+}
+
+void playerDraw(Player& player) {
+    DrawCircleV(player.pos, 25, RED);
 }
