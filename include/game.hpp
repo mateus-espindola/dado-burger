@@ -5,30 +5,65 @@
 #include "constants.hpp"
 #include "tads.hpp"
 
+
 /* ============================ */
 /*      STRUCTS AND ENUMS       */
 /* ============================ */
 
+struct Sprite {
+    Texture2D texture;
+    int width, height;
+};
+
 struct PlayerInfo{
     char nome[50];
     int score;
-    //Stack inventory[3];
-    //Stack inventory;
+};
+
+struct Player {
+    PlayerInfo info;
+    Stack<Ingredient> inventory;
+    Vector2 pos;
+};
+
+enum ButtonType {
+    BUTTON_MENU,
+    BUTTON_OVEN,
+    BUTTON_BOARD,
+    BUTTON_PREPARE,
+    BUTTON_FRIDGE,
+    BUTTON_TRASH,
+    BUTTON_BELL,
+};
+
+struct Button {
+    ButtonType type;
+    Rectangle shape;
+};
+
+struct Slot {
+    Button button;
+    Stack<Ingredient> stack;
 };
 
 enum MatchState{
 
-    /* COUNTER,
     KITCHEN,
-    PREPARE, */
+    OVEN,
+    BOARD,
+    PREPARE,
     PAUSED,
     DEFEAT,
-    VICTORY
+    VICTORY,
+    STATE_QUANTITY
 
 };
 
 struct Match{
     MatchState state;
+    Button* buttons[STATE_QUANTITY];
+    Camera2D camera;
+    Player player;
     Queue<Costumer> costumer_line;
     Costumer costumer_counter[COUNTER_SIZE];
     int turn;
@@ -59,6 +94,7 @@ struct Game{
     bool quit;
     Match current_match;
     GameState state;
+    List<Sprite> spritesheet;
 };
 
 /* ============================== */
@@ -69,11 +105,18 @@ void gameStart(Game& game);
 void gameProcess(Game& game);
 void gameOver(Game& game);
 
+void loadSpritesheet(List<Sprite>& spritesheet);
+
 // void menuProcess();
 // void tutorialProcess();
 // void historyProcess();
 // void settingsProcess();
-// void matchProcess();
+void matchProcess(Match& match);
+
+void matchStart(Match& match);
+void cameraProcess(Camera2D& camera, Player& player);
+void playerProcess(Player& player);
+
 
 #endif
 
