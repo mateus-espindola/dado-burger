@@ -41,7 +41,17 @@ struct CookState {
 struct Ingredient {
     IngredientType type;
     CookState cook_state;
-    int tempo_perecivel; // turnos ate estragar. -1 se nao estraga
+    int perish_time; // turnos ate estragar. -1 se nao estraga
+
+    bool operator<(const Ingredient& other) const {
+        return this->perish_time < other.perish_time;
+    } // É TIPO AQUELE BAGULHO QUE TU FEZ DO operator++ QUE DÁ PRA DEFINIR O OPERADOR
+      // FIZ ISSO PRA PODER COMPARAR OS INGREDIENTES EM RELAÇÃO AO TEMPO DE ESTRAGAR, PRA PODER USAR O HEAP E TER O INGREDIENTE QUE VAI ESTRAGAR PRIMEIRO NO TOPO
+
+    bool operator>(const Ingredient& other) const {
+        return this->perish_time > other.perish_time;
+    }
+
 };
 
 enum CostumerType{
