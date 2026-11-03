@@ -78,15 +78,11 @@ void flip_meat(Ingredient& ing){
     ing.cook_state.cookPoint[0] = aux;
 }
 
-void check_buttons()
-
 // void cook_cheese(){
 //     return;
 // }
 //EU NAO LEMBRO O QUE MAIS TEM QUE COZINHAR TLG
 
 void compare_hamburger_with_order(Stack<Ingredient> *hamburger, List<Ingredient> *order){
-
-    
-
+    return;
 }
