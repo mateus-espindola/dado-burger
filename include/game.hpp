@@ -10,9 +10,21 @@
 /*      STRUCTS AND ENUMS       */
 /* ============================ */
 
+enum SpriteType {
+    SPR_BACKGROUND,
+    SPR_PLAYER,
+    QUANTITY_OF_SPRITES
+};
+
 struct Sprite {
     Texture2D texture;
     int width, height;
+};
+
+struct Object {
+    Sprite sprite;
+    Vector2 pos;
+    float radius;
 };
 
 struct PlayerInfo{
@@ -21,9 +33,9 @@ struct PlayerInfo{
 };
 
 struct Player {
+    Object object;
     PlayerInfo info;
     Stack<Ingredient> inventory;
-    Vector2 pos;
 };
 
 enum ButtonType {
@@ -94,7 +106,7 @@ struct Game{
     bool quit;
     Match current_match;
     GameState state;
-    List<Sprite> spritesheet;
+    Sprite sprites[QUANTITY_OF_SPRITES];
 };
 
 /* ============================== */
@@ -105,7 +117,8 @@ void gameStart(Game& game);
 void gameProcess(Game& game);
 void gameOver(Game& game);
 
-void loadSpritesheet(List<Sprite>& spritesheet);
+void loadSpritesheet(Sprite sprites[]);
+void unloadSpritesheet(Sprite sprites[]);
 
 // void menuProcess();
 // void tutorialProcess();

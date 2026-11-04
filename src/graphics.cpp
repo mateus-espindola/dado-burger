@@ -25,8 +25,12 @@ void gameDraw(Game &game){
         break;
 
         case PLAYING:
-            // DrawTexture(game.spritesheet.start->data.texture, 0, 0, WHITE);
+
+        BeginMode2D(game.current_match.camera);
+            spriteDraw(game.sprites[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
             matchDraw(game.current_match);
+        EndMode2D();
+        
         break;
 
     }
@@ -49,12 +53,31 @@ void matchDraw(Match& match){
         break;
 
     }
-
-    // BeginMode2D(match.camera);
+        hitboxDraw(match.player.object);
         playerDraw(match.player);
-    // EndMode2D;
+}
+
+Vector2 getSpritePos(Object& object) {
+    return (Vector2){object.pos.x - (object.sprite.width * GAME_SCALE) / 2, object.pos.y - (object.sprite.height * GAME_SCALE) / 2};
+}
+
+void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint) {
+    DrawTexturePro(
+        sprite.texture,
+        (Rectangle){0, 0, (float)sprite.width, (float)sprite.height},
+        (Rectangle){pos.x, pos.y, (float)sprite.width * scale, (float)sprite.height * scale},
+        (Vector2){0, 0},
+        0.0f,
+        tint
+    );
+}
+
+void hitboxDraw(Object& object) {
+    DrawCircleV(object.pos, object.radius, RED);
 }
 
 void playerDraw(Player& player) {
-    DrawCircleV(player.pos, 25, RED);
+    Vector2 spritePos = getSpritePos(player.object);
+    spriteDraw(player.object.sprite, spritePos, GAME_SCALE, WHITE);
+    std::cout << "Player Position: (" << player.object.pos.x << ", " << player.object.pos.y << ")" << std::endl;
 }
