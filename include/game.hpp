@@ -7,12 +7,43 @@
 /*            SPRITES           */
 /* ============================ */
 
+enum SpriteType {
+    SPR_BACKGROUND,
+    SPR_PLAYER,
+    QUANTITY_OF_SPRITES
+};
+
 struct Sprite {
     Texture2D texture;
     int width, height;
 };
 
+<<<<<<< HEAD
 
+=======
+struct Object {
+    Sprite sprite;
+    Vector2 pos;
+    float radius;
+};
+
+enum Direction {
+    DIR_LEFT,
+    DIR_RIGHT
+};
+
+struct PlayerInfo{
+    char nome[50];
+    int score;
+};
+
+struct Player {
+    Object object;
+    PlayerInfo info;
+    Stack<Ingredient> inventory;
+    Direction direction;
+};
+>>>>>>> f81ab36a65a1122e1733b2804398d4964509821a
 
 
 /* ============================ */
@@ -33,7 +64,7 @@ struct Game{
     bool quit;
     Match current_match;
     GameState state;
-    List<Sprite> spritesheet;
+    Sprite sprites[QUANTITY_OF_SPRITES];
 };
 
 /* ============================== */
@@ -44,12 +75,22 @@ void gameStart(Game& game);
 void gameProcess(Game& game);
 void gameOver(Game& game);
 
-void loadSpritesheet(List<Sprite>& spritesheet);
+void loadSpritesheet(Sprite sprites[]);
+void unloadSpritesheet(Sprite sprites[]);
 
 // void menuProcess();
 // void tutorialProcess();
 // void historyProcess();
 // void settingsProcess();
+<<<<<<< HEAD
+=======
+void matchProcess(Match& match, Sprite background);
+
+void matchStart(Match& match);
+
+void cameraProcess(Camera2D& camera, Player& player, Sprite background);
+void playerProcess(Player& player, Sprite background);
+>>>>>>> f81ab36a65a1122e1733b2804398d4964509821a
 
 
 

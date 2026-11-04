@@ -11,12 +11,10 @@
 int main(int argc, char* argv[]) {
     Game game;
 
-    
+    gameStart(game);
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
     SetTargetFPS(FPS);
-
-    gameStart(game);    //Tem que ser chamado depois de abrir a tela pra que a camera2D consiga achar o tamanho da janela e ai achar o centro dela pra desenhar o player
 
     while (!WindowShouldClose() && !game.quit) {
         gameProcess(game);
