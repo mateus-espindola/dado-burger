@@ -27,6 +27,11 @@ struct Object {
     float radius;
 };
 
+enum Direction {
+    DIR_LEFT,
+    DIR_RIGHT
+};
+
 struct PlayerInfo{
     char nome[50];
     int score;
@@ -36,6 +41,7 @@ struct Player {
     Object object;
     PlayerInfo info;
     Stack<Ingredient> inventory;
+    Direction direction;
 };
 
 enum ButtonType {
@@ -124,11 +130,12 @@ void unloadSpritesheet(Sprite sprites[]);
 // void tutorialProcess();
 // void historyProcess();
 // void settingsProcess();
-void matchProcess(Match& match);
+void matchProcess(Match& match, Sprite background);
 
 void matchStart(Match& match);
-void cameraProcess(Camera2D& camera, Player& player);
-void playerProcess(Player& player);
+
+void cameraProcess(Camera2D& camera, Player& player, Sprite background);
+void playerProcess(Player& player, Sprite background);
 
 
 #endif

@@ -53,7 +53,7 @@ void matchDraw(Match& match){
         break;
 
     }
-        hitboxDraw(match.player.object);
+        // hitboxDraw(match.player.object);
         playerDraw(match.player);
 }
 
@@ -72,12 +72,28 @@ void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint) {
     );
 }
 
+void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint) {
+    DrawTexturePro(
+        sprite.texture,
+        (Rectangle){(float)sprite.width, 0, (float)sprite.width * -1, (float)sprite.height},
+        (Rectangle){pos.x, pos.y, (float)sprite.width * scale, (float)sprite.height * scale},
+        (Vector2){0, 0},
+        0.0f,
+        tint
+    );
+}
+
 void hitboxDraw(Object& object) {
     DrawCircleV(object.pos, object.radius, RED);
 }
 
 void playerDraw(Player& player) {
     Vector2 spritePos = getSpritePos(player.object);
-    spriteDraw(player.object.sprite, spritePos, GAME_SCALE, WHITE);
-    std::cout << "Player Position: (" << player.object.pos.x << ", " << player.object.pos.y << ")" << std::endl;
+
+    if (player.direction == DIR_RIGHT) {
+        spriteDraw(player.object.sprite, spritePos, GAME_SCALE, WHITE);
+    }
+    if (player.direction == DIR_LEFT) {
+        warDetirps(player.object.sprite, spritePos, (GAME_SCALE * -1), WHITE);
+    }
 }

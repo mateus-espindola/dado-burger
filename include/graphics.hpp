@@ -13,6 +13,7 @@ void matchDraw(Match& match);
 Vector2 getSpritePos(Object& object);
 
 void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint);
+void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint);
 void hitboxDraw(Object& object);
 
 void playerDraw(Player& player);
