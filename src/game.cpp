@@ -55,77 +55,53 @@ void gameProcess(Game& game){
         break;
 
         case PLAYING:
-<<<<<<< HEAD
-            // declareButtons();   //Nao sei se fica aqui ou se coloco quando abre o jogo
-                                //Pois nao sei se e bom recarregar os botoes toda vez que o cara vai pro menu
-                                //Talvez seja melhor declarar sempre no comeco da partida
-                                //Que que tu acha?
-            matchProcess(game.current_match);
-=======
             matchProcess(game.current_match, game.sprites[SPR_BACKGROUND]);
->>>>>>> f81ab36a65a1122e1733b2804398d4964509821a
         break;
 
     }
 }
 
 void gameOver(Game& game){
-<<<<<<< HEAD
-    return;
-=======
     unloadSpritesheet(game.sprites);
 }
 
-void matchStart(Match& match) {
-    match.player.object.pos = PLAYER_START_POS;
-    match.player.direction = DIR_RIGHT;
 
-    match.camera = { 0 };
+//TRANSFERIDA PARA CAMERA.CPP
+// void cameraProcess(Camera2D& camera, Player& player, Sprite background) {
+//     Vector2 targetPos = { player.object.pos.x, player.object.pos.y};
 
-    match.camera.target = { match.player.object.pos.x, match.player.object.pos.y};
-    match.camera.offset = { WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT - PLAYER_START_POS.y / 2.0f };
-    match.camera.zoom = 1.0f;
-}
+//     camera.target.x += (targetPos.x - camera.target.x) * CAMERA_INTERPOOLATION;
 
-void matchProcess(Match& match, Sprite background) {
-    cameraProcess(match.camera, match.player, background);
-    playerProcess(match.player, background);
-}
+//     if (camera.target.x < camera.offset.x) {
+//         camera.target.x = camera.offset.x;
+//     }
+//     if (camera.target.x > background.width * GAME_SCALE - camera.offset.x) {
+//         camera.target.x = background.width * GAME_SCALE - camera.offset.x;
+//     }
+// }
 
-void cameraProcess(Camera2D& camera, Player& player, Sprite background) {
-    Vector2 targetPos = { player.object.pos.x, player.object.pos.y};
 
-    camera.target.x += (targetPos.x - camera.target.x) * CAMERA_INTERPOOLATION;
+//TRANSFERIDA PARA PLAYER.CPP
+// void playerProcess(Player& player, Sprite background) {
+//     int playerSpeed;
+//     if (IsKeyDown(KEY_LEFT_SHIFT)) {
+//         playerSpeed = PLAYER_SPEED * 2;
+//     } else {
+//         playerSpeed = PLAYER_SPEED;
+//     }
 
-    if (camera.target.x < camera.offset.x) {
-        camera.target.x = camera.offset.x;
-    }
-    if (camera.target.x > background.width * GAME_SCALE - camera.offset.x) {
-        camera.target.x = background.width * GAME_SCALE - camera.offset.x;
-    }
-}
+//     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
+//         player.direction = DIR_RIGHT;
+//         player.object.pos.x += playerSpeed;
+//     }
+//     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
+//         player.direction = DIR_LEFT;
+//         player.object.pos.x -= playerSpeed;
+//     }
 
-void playerProcess(Player& player, Sprite background) {
-    int playerSpeed;
-    if (IsKeyDown(KEY_LEFT_SHIFT)) {
-        playerSpeed = PLAYER_SPEED * 2;
-    } else {
-        playerSpeed = PLAYER_SPEED;
-    }
+//     float minX = 0.0f + (player.object.sprite.width * GAME_SCALE) / 2;
+//     float maxX = background.width * GAME_SCALE - (player.object.sprite.width * GAME_SCALE) / 2;
 
-    if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) {
-        player.direction = DIR_RIGHT;
-        player.object.pos.x += playerSpeed;
-    }
-    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) {
-        player.direction = DIR_LEFT;
-        player.object.pos.x -= playerSpeed;
-    }
-
-    float minX = 0.0f + (player.object.sprite.width * GAME_SCALE) / 2;
-    float maxX = background.width * GAME_SCALE - (player.object.sprite.width * GAME_SCALE) / 2;
-
-    if (player.object.pos.x < minX) player.object.pos.x = minX;
-    if (player.object.pos.x > maxX) player.object.pos.x = maxX;
->>>>>>> f81ab36a65a1122e1733b2804398d4964509821a
-}
+//     if (player.object.pos.x < minX) player.object.pos.x = minX;
+//     if (player.object.pos.x > maxX) player.object.pos.x = maxX;
+// }

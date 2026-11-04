@@ -2,11 +2,30 @@
 #define PLAYER_HPP
 
 #include "food.hpp"
-#include "food.hpp"
 #include "tads.hpp"
 #include "buttons.hpp"
+#include "constants.hpp"
+#include "sprites.hpp"
 
 #include "raylib.h"
+
+
+
+
+/* ============================ */
+/*            OBJECT            */
+/* ============================ */
+
+struct Object {
+    Sprite sprite;
+    Vector2 pos;
+    float radius;
+};
+
+enum Direction {
+    DIR_LEFT,
+    DIR_RIGHT
+};
 
 
 
@@ -22,9 +41,10 @@ struct PlayerInfo{
 };
 
 struct Player {
+    Object object;
     PlayerInfo info;
     Stack<Ingredient> inventory;
-    Vector2 pos;
+    Direction direction;
 };
 
 struct Slot {
@@ -34,6 +54,8 @@ struct Slot {
 
 
 void setPlayer(Player&);
+
+void playerProcess(Player& player, Sprite background);
 
 
 

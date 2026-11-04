@@ -1,49 +1,12 @@
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include "match.hpp"
+#include "camera.hpp"
 #include "raylib.h"
 
 
-/* ============================ */
-/*            SPRITES           */
-/* ============================ */
 
-enum SpriteType {
-    SPR_BACKGROUND,
-    SPR_PLAYER,
-    QUANTITY_OF_SPRITES
-};
-
-struct Sprite {
-    Texture2D texture;
-    int width, height;
-};
-
-<<<<<<< HEAD
-
-=======
-struct Object {
-    Sprite sprite;
-    Vector2 pos;
-    float radius;
-};
-
-enum Direction {
-    DIR_LEFT,
-    DIR_RIGHT
-};
-
-struct PlayerInfo{
-    char nome[50];
-    int score;
-};
-
-struct Player {
-    Object object;
-    PlayerInfo info;
-    Stack<Ingredient> inventory;
-    Direction direction;
-};
->>>>>>> f81ab36a65a1122e1733b2804398d4964509821a
 
 
 /* ============================ */
@@ -82,15 +45,12 @@ void unloadSpritesheet(Sprite sprites[]);
 // void tutorialProcess();
 // void historyProcess();
 // void settingsProcess();
-<<<<<<< HEAD
-=======
 void matchProcess(Match& match, Sprite background);
 
-void matchStart(Match& match);
+// void matchStart(Match& match);
 
-void cameraProcess(Camera2D& camera, Player& player, Sprite background);
-void playerProcess(Player& player, Sprite background);
->>>>>>> f81ab36a65a1122e1733b2804398d4964509821a
+// void cameraProcess(Camera2D& camera, Player& player, Sprite background); Transferido para camera.hpp
+// void playerProcess(Player& player, Sprite background); Transferido para player.hpp
 
 
 
@@ -127,3 +87,5 @@ void playerProcess(Player& player, Sprite background);
 //No botao balcao aparace excalamacao se tiver algum cliente a um turno de te mandar tomar no cu
 
 //Tres clientes no balcao por vez
+
+#endif

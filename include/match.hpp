@@ -56,8 +56,9 @@ struct Match{
 
 void matchStart(Match& match);
 
-void matchProcess(Match& match);
-void playerProcess(Player& player);
+// void matchProcess(Match& match);
+void matchProcess(Match& match, Sprite background);
+// void playerProcess(Player& player); Transferido para player.hpp
 
 
 
