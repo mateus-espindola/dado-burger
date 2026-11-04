@@ -1,5 +1,5 @@
-#include "raylib.h"
-#include "../include/data_structures.hpp"
+#include "food.hpp"
+#include "../include/match.hpp"
 //#include "game.hpp"
 
 // int findClick(MouseInput &mouse, Button *button_vec/*jeito de passar vetor*/, int size){

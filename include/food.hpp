@@ -1,8 +1,9 @@
-#ifndef DATA_STRUCTURES_HPP
-#define DATA_STRUCTURES_HPP
+#ifndef FOOD_HPP
+#define FOOD_HPP
 
-#include "constants.hpp"
-#include "tads.hpp"
+/* ============================ */
+/*          INGREDIENT         */
+/* ============================ */
 
 enum IngredientType{
 
@@ -53,24 +54,5 @@ struct Ingredient {
     }
 
 };
-
-enum CostumerType{
-
-    CHILL_GUY,
-    NORMAL,
-    VEGAN,
-    TONY
-
-};
-
-
-
-struct Costumer{
-    int patience;
-    List<Ingredient> order;
-    CostumerType type;
-};
-
-
 
 #endif

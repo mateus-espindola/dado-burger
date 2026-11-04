@@ -1,5 +1,7 @@
-#include "../include/graphics.hpp"
+#include <cstdio>
 
+#include "../include/graphics.hpp"
+#include "../include/camera.hpp"
 
 
 void gameDraw(Game &game){
@@ -34,6 +36,12 @@ void gameDraw(Game &game){
 }
 
 void matchDraw(Match& match){
+
+    BeginMode2D(match.camera);
+        playerDraw(match.player);
+        DrawRectangle(1000, 300, 30, 30, BLACK);
+        printf("%f, %f\n", match.player.pos.x, match.player.pos.y);
+    EndMode2D();
     switch(match.state){
 
         case PAUSED:
@@ -50,9 +58,8 @@ void matchDraw(Match& match){
 
     }
 
-    // BeginMode2D(match.camera);
-        playerDraw(match.player);
-    // EndMode2D;
+    
+        
 }
 
 void playerDraw(Player& player) {

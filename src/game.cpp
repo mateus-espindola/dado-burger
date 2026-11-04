@@ -41,6 +41,10 @@ void gameProcess(Game& game){
         break;
 
         case PLAYING:
+            // declareButtons();   //Nao sei se fica aqui ou se coloco quando abre o jogo
+                                //Pois nao sei se e bom recarregar os botoes toda vez que o cara vai pro menu
+                                //Talvez seja melhor declarar sempre no comeco da partida
+                                //Que que tu acha?
             matchProcess(game.current_match);
         break;
 
@@ -49,29 +53,4 @@ void gameProcess(Game& game){
 
 void gameOver(Game& game){
     return;
-}
-
-void matchStart(Match& match) {
-
-    match.player.pos = (Vector2) {400, 300};
-
-    match.camera = { 0 };
-
-    match.camera.target = { match.player.pos.x + 20, match.player.pos.y + 20 };
-    match.camera.offset = { 800 / 2.0f, 450 / 2.0f };
-    match.camera.zoom = 1.0f;
-}
-
-void matchProcess(Match& match) {
-    cameraProcess(match.camera, match.player);
-    playerProcess(match.player);
-}
-
-void cameraProcess(Camera2D& camera, Player& player) {
-
-}
-
-void playerProcess(Player& player) {
-    if (IsKeyDown(KEY_RIGHT)) player.pos.x += 4;
-    if (IsKeyDown(KEY_LEFT))  player.pos.x -= 4;
 }
