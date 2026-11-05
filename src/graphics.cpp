@@ -30,6 +30,7 @@ void gameDraw(Game &game){
 
         BeginMode2D(game.current_match.camera);
             spriteDraw(game.sprites[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
+            drawNearestButton(game.current_match.player, game.current_match.buttons);
             matchDraw(game.current_match);
         EndMode2D();
         
@@ -99,12 +100,29 @@ void hitboxDraw(Object& object) {
 void playerDraw(Player& player) {
     Vector2 spritePos = getSpritePos(player.object);
 
-    DrawRectangle(50, 500, 30, 30, BLACK);
-
     if (player.direction == DIR_RIGHT) {
         spriteDraw(player.object.sprite, spritePos, GAME_SCALE, WHITE);
     }
     if (player.direction == DIR_LEFT) {
         warDetirps(player.object.sprite, spritePos, GAME_SCALE, WHITE);
     }
+}
+
+void drawNearestButton(const Player& player, Button **buttons) {
+    // for (int i = 0; i < STATE_QUANTITY; i++) {
+    //     if (buttons[i] == nullptr) continue;   // estado sem botões
+
+    //     const Button &b = buttons[i][0];
+    //     DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.size.x, (int)b.size.y, GRAY);
+    //     DrawText(b.text, (int)b.pos.x + 10, (int)b.pos.y + 10, 30, BLACK);
+    // }
+
+    int index = nearestButtonIndex(player.object.pos.x, buttons);
+    printf("x=%.0f index=%d\n", player.object.pos.x, index);
+    if(index == -1) return;
+
+    const Button &b = buttons[index][0];
+    DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.size.x, (int)b.size.y, GRAY);
+    DrawText(b.text, (int)b.pos.x + 10, (int)b.pos.y + 10, 30, BLACK);
+
 }

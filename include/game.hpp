@@ -1,9 +1,10 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "match.hpp"
-#include "camera.hpp"
 #include "raylib.h"
+
+#include "match.hpp"
+#include "sprites.hpp"
 
 
 

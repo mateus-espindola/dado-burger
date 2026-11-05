@@ -9,12 +9,13 @@
 // #include "raylib.h"
 
 int main(int argc, char* argv[]) {
-    Game game;
+    Game game = {};
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
     SetTargetFPS(FPS);
 
     gameStart(game);
+    declareButtons(game.current_match.buttons, STATE_QUANTITY);
 
     while (!WindowShouldClose() && !game.quit) {
         gameProcess(game);

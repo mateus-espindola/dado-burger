@@ -24,7 +24,9 @@ void cameraProcess(Camera2D& camera, Player& player, Sprite background) {
     Vector2 targetPos = { player.object.pos.x, player.object.pos.y};
 
      float cameraInterpolation = 1.0f - expf(-8.0f * GetFrameTime());
+
     camera.target.x += (targetPos.x - camera.target.x) * cameraInterpolation;
+    // camera.target.x += (targetPos.x - camera.target.x) * CAMERA_INTERPOOLATION;
 
     if (camera.target.x < camera.offset.x) {
         camera.target.x = camera.offset.x;

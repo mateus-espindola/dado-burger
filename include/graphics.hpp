@@ -17,9 +17,11 @@ Vector2 getSpritePos(Object& object);
 // void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint);
 // void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint);
 
-void hitboxDraw(Object& object);
+void hitboxDraw(Object&);
 
-void playerDraw(Player& player);
+void playerDraw(Player&);
+
+void drawNearestButton(const Player &player, Button **buttons);
 
 
 #endif

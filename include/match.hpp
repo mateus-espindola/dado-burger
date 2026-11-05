@@ -1,10 +1,14 @@
 #ifndef MATCH_HPP
 #define MATCH_HPP
 
-#include "constants.hpp"
-#include "player.hpp"
-
 #include "raylib.h"
+
+#include "constants.hpp"
+#include "tads.hpp"
+#include "food.hpp"
+#include "sprites.hpp"
+#include "buttons.hpp"
+#include "player.hpp"
 
 
 
