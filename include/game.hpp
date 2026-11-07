@@ -10,6 +10,7 @@
 
 
 
+
 /* ============================ */
 /*             GAME             */
 /* ============================ */
@@ -47,6 +48,8 @@ void unloadSpritesheet(Sprite sprites[]);
 // void historyProcess();
 // void settingsProcess();
 void matchProcess(Match& match, Sprite background);
+
+void ambientProcess(Game& game);
 
 // void matchStart(Match& match);
 

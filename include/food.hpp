@@ -14,7 +14,7 @@ enum IngredientType{
     MUSTARD = 'm',
     MEAT = 'n',
     VEGAN_PROTEIN = 'v',
-    FRIED_EGG = 'o',
+    EGG = 'o',
     PICKLES = 'p',
     CHEDDAR = 'q',
     SWISS_CHEESE = 's',

@@ -4,66 +4,90 @@
 #include "../include/camera.hpp"
 
 
-void gameDraw(Game &game){
+// void gameDraw(Game &game){
+//     BeginDrawing();
+//     ClearBackground(RAYWHITE);
+
+//     switch(game.state) {
+
+//         case MENU:
+//             // menuDraw();
+//         break;
+
+//         case HOW_TO_PLAY:
+//             // tutorialDraw();
+//         break;
+
+//         case HISTORY:
+//             // historyDraw();
+//         break;
+
+//         case SETTINGS:
+//             // settingsDraw();
+//         break;
+
+//         case PLAYING:
+
+//         BeginMode2D(game.current_match.camera);
+//             spriteDraw(game.sprites[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
+//             //drawNearestBut(game.current_match.player, game.current_match.buttons);
+//             matchDraw(game.current_match);
+//         EndMode2D();
+        
+//         break;
+
+//     }
+//     EndDrawing();
+// }
+
+
+void drawKitchen(Game& game){
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-    switch(game.state) {
-
-        case MENU:
-            // menuDraw();
-        break;
-
-        case HOW_TO_PLAY:
-            // tutorialDraw();
-        break;
-
-        case HISTORY:
-            // historyDraw();
-        break;
-
-        case SETTINGS:
-            // settingsDraw();
-        break;
-
-        case PLAYING:
-
         BeginMode2D(game.current_match.camera);
             spriteDraw(game.sprites[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
-            drawNearestButton(game.current_match.player, game.current_match.buttons);
-            matchDraw(game.current_match);
-        EndMode2D();
-        
-        break;
 
-    }
+            if(game.current_match.player.object.pos.x > 4800) drawFrigeBut(game.current_match.buttons);
+            else drawNearestBut(game.current_match.player, game.current_match.buttons);
+
+            playerDraw(game.current_match.player);
+            printf("%f, %f\n", game.current_match.player.object.pos.x, game.current_match.player.object.pos.y);
+
+            if(DRAW_HITBOX == 1) hitboxDraw(game.current_match.player.object);
+
+        EndMode2D();
+
     EndDrawing();
 }
 
-void matchDraw(Match& match){
 
-    // BeginMode2D(match.camera);
-        playerDraw(match.player);
-        printf("%f, %f\n", match.player.object.pos.x, match.player.object.pos.y);
-    // EndMode2D();
-    switch(match.state){
+// void matchDraw(Match& match){
 
-        case PAUSED:
+//     // BeginMode2D(match.camera);
 
-        break;
+//         playerDraw(match.player);
+//         printf("%f, %f\n", match.player.object.pos.x, match.player.object.pos.y);
+        
+//     // EndMode2D();
+//     switch(match.state){
 
-        case DEFEAT:
+//         case PAUSED:
 
-        break;
+//         break;
 
-        case VICTORY:
+//         case DEFEAT:
 
-        break;
+//         break;
 
-    }
-        hitboxDraw(match.player.object);
-        // playerDraw(match.player);
-}
+//         case VICTORY:
+
+//         break;
+
+//     }
+//         hitboxDraw(match.player.object);
+//         // playerDraw(match.player);
+// }
 
 Vector2 getSpritePos(Object& object) {
     return (Vector2){object.pos.x - (object.sprite.width * GAME_SCALE) / 2, object.pos.y - (object.sprite.height * GAME_SCALE) / 2};
@@ -108,7 +132,7 @@ void playerDraw(Player& player) {
     }
 }
 
-void drawNearestButton(const Player& player, Button **buttons) {
+void drawNearestBut(const Player& player, Button **buttons) {
     // for (int i = 0; i < STATE_QUANTITY; i++) {
     //     if (buttons[i] == nullptr) continue;   // estado sem botões
 
@@ -124,5 +148,18 @@ void drawNearestButton(const Player& player, Button **buttons) {
     const Button &b = buttons[index][0];
     DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.size.x, (int)b.size.y, GRAY);
     DrawText(b.text, (int)b.pos.x + 10, (int)b.pos.y + 10, 30, BLACK);
+
+}
+
+void drawFrigeBut(Button **buttons){
+
+    for (int i = 0; i <  BUTTONS_KITCHEN; i++) {
+
+        const Button &b = buttons[KITCHEN][i];
+
+        DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.size.x, (int)b.size.y, GRAY);
+        DrawText(b.text, (int)b.pos.x + 10, (int)b.pos.y + 10, 30, BLACK);
+
+    }
 
 }

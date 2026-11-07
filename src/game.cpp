@@ -1,4 +1,5 @@
 #include "../include/game.hpp"
+#include "../include/graphics.hpp"
 
 void gameStart(Game& game){
     loadSpritesheet(game.sprites);
@@ -40,25 +41,55 @@ void gameProcess(Game& game){
 
         case MENU:
             // menuProcess();
+            // drawMenu();
         break;
 
         case HOW_TO_PLAY:
             // tutorialProcess();
+            // drawHowToPlay();
         break;
 
         case HISTORY:
             // historyProcess();
+            // drawHistory();
         break;
 
         case SETTINGS:
             // settingsProcess();
+            // drawSettings();
         break;
 
         case PLAYING:
+            game.current_match.state = KITCHEN;
             matchProcess(game.current_match, game.sprites[SPR_BACKGROUND]);
+            ambientProcess(game); //Mostra os botoes e desenha o fundo de acordo com o ambiente
         break;
 
     }
+}
+
+void ambientProcess(Game& game){
+
+    switch(game.current_match.state){
+        case KITCHEN:
+            drawKitchen(game);
+            // gameDraw(game);
+
+        break;
+
+        case OVEN:
+
+        break;
+
+        case BOARD:
+
+        break;
+
+        case PREPARE:
+
+        break;
+    }
+
 }
 
 void gameOver(Game& game){

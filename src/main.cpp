@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
 
     while (!WindowShouldClose() && !game.quit) {
         gameProcess(game);
-        gameDraw(game);
+        // gameDraw(game);
     }
 
     gameOver(game);

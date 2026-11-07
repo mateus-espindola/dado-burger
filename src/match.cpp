@@ -3,6 +3,8 @@
 
 void matchStart(Match& match) {
 
+    match.state = KITCHEN;
+
     setPlayer(match.player);
 
     setCamera(match);

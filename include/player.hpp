@@ -40,17 +40,24 @@ struct PlayerInfo{
     int score;
 };
 
+struct Slot{
+    Stack<Ingredient> inventory;
+    int size;
+    //Indica qual item esta na pilha. Para nao misturar ingredientes diferentes
+    char lable;
+};
+
 struct Player {
     Object object;
     PlayerInfo info;
-    Stack<Ingredient> inventory;
+    // Stack<Ingredient> inventory;
     Direction direction;
 };
 
-struct Slot {
-    Button button;
-    Stack<Ingredient> stack;
-};
+// struct Slot {
+//     Button button;
+//     Stack<Ingredient> stack;
+// };
 
 
 void setPlayer(Player&);

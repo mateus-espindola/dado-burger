@@ -21,7 +21,10 @@ void hitboxDraw(Object&);
 
 void playerDraw(Player&);
 
-void drawNearestButton(const Player &player, Button **buttons);
+void drawNearestBut(const Player &player, Button **buttons);
 
+void drawFrigeBut(Button **buttons);
+
+void drawKitchen(Game& game);
 
 #endif
