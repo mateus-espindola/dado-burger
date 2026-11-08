@@ -23,4 +23,8 @@ void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint);
 
 void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint);
 
+void loadSpritesheet(Sprite sprites[]);
+
+void unloadSpritesheet(Sprite sprites[]);
+
 #endif

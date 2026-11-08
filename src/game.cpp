@@ -1,41 +1,32 @@
+#include <cstdio>
+#include <cstring>
+
 #include "../include/game.hpp"
 #include "../include/graphics.hpp"
+#include "../include/inputs.hpp"
+
+#include "raylib.h"
 
 void gameStart(Game& game){
-    loadSpritesheet(game.sprites);
 
-    game.current_match.player.object.sprite = game.sprites[SPR_PLAYER];
-    game.current_match.player.object.radius = PLAYER_HITBOX_RADIUS;
+    Match &match = game.current_match;
+    // loadSpritesheet(game.spritesMenu);
+    loadSpritesheet(match.spriteMatch);
+
+    match.player.object.sprite = match.spriteMatch[SPR_PLAYER];
+    match.player.object.radius = PLAYER_HITBOX_RADIUS;
 
     // AJEITAR DESPUES
-    matchStart(game.current_match);
+    matchStart(match);
 
     game.state = PLAYING;
     game.quit = false;
 }
 
-void loadSpritesheet(Sprite sprites[]) {
-    // Array apenas com os caminhos, na mesma ordem dos enums (0, 1, ...)
-    const char *paths[QUANTITY_OF_SPRITES] = {
-        [SPR_BACKGROUND] = "assets/sprites/background.png",
-        [SPR_PLAYER]     = "assets/sprites/player.png"
-    };
-
-    for (int i = 0; i < QUANTITY_OF_SPRITES; i++) {
-        sprites[i].texture = LoadTexture(paths[i]);
-        sprites[i].width   = sprites[i].texture.width;
-        sprites[i].height  = sprites[i].texture.height;
-    }
-}
-
-void unloadSpritesheet(Sprite sprites[]) {
-    for (int i = 0; i < QUANTITY_OF_SPRITES; i++) {
-        UnloadTexture(sprites[i].texture);
-    }
-}
-
 void gameProcess(Game& game){
     if (IsKeyPressed(KEY_ESCAPE)) game.quit = true;
+
+    Vector2 mouse = findMousePos();
 
     switch(game.state) {
 
@@ -60,40 +51,76 @@ void gameProcess(Game& game){
         break;
 
         case PLAYING:
-            game.current_match.state = KITCHEN;
-            matchProcess(game.current_match, game.sprites[SPR_BACKGROUND]);
-            ambientProcess(game); //Mostra os botoes e desenha o fundo de acordo com o ambiente
+            matchProcess(game.current_match, game.current_match.spriteMatch[SPR_BACKGROUND], mouse);
+            ambientProcess(game, mouse); //Mostra os botoes e desenha o fundo de acordo com o ambiente
         break;
 
     }
 }
 
-void ambientProcess(Game& game){
 
-    switch(game.current_match.state){
+
+
+void ambientProcess(Game& game, Vector2 mouse){
+
+    Match &match = game.current_match;   // Referencia, nao copia
+
+    printf("%d\n", game.current_match.screen);
+
+    if (match.screen == KITCHEN || match.screen == FRIDGE)
+        //Condição  ?   Se verdadeiro   :   Se falso
+        match.screen = (match.player.object.pos.x > 4800) ? FRIDGE : KITCHEN;
+
+    int butUnderMouseInd = findButtonUnderMouse(mouse, match.buttonsVec[match.screen], match.camera);
+
+    switch(match.screen){
         case KITCHEN:
-            drawKitchen(game);
-            // gameDraw(game);
+            drawKitchen(match, butUnderMouseInd);
+            printf("%d %d\n", match.screen, butUnderMouseInd);
+            if(mouseKeyLeftClicked() && butUnderMouseInd != -1){
+                processButClick(match.screen, match.buttonsVec[match.screen], butUnderMouseInd);
+                // for(int i = 0; i < 100; i++)
+                //     printf("Entrou");
+            }
+        break;
 
+        case FRIDGE:
+            drawKitchen(match, butUnderMouseInd);
+            if(mouseKeyLeftClicked() && butUnderMouseInd != -1)
+                processButClick(match.screen, match.buttonsVec[match.screen], butUnderMouseInd);
         break;
 
         case OVEN:
-
+            drawPrepare(match, butUnderMouseInd);
         break;
 
         case BOARD:
-
+            drawPrepare(match, butUnderMouseInd);
         break;
 
         case PREPARE:
+            drawPrepare(match, butUnderMouseInd);
+            printf("%d %d\n", match.screen, butUnderMouseInd);
+
+        break;
+
+        case PAUSED:
+
+        break;
+
+        case DEFEAT:
+
+        break;
+
+        case VICTORY:
 
         break;
     }
-
 }
 
 void gameOver(Game& game){
-    unloadSpritesheet(game.sprites);
+    // unloadSpritesheet(game.spritesMenu);
+    unloadSpritesheet(game.current_match.spriteMatch);
 }
 
 

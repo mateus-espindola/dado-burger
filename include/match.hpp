@@ -32,9 +32,10 @@ struct Items{
 
 };
 
-enum MatchState{
+enum MatchScreen{
 
     KITCHEN,
+    FRIDGE,
     OVEN,
     BOARD,
     PREPARE,
@@ -46,14 +47,15 @@ enum MatchState{
 };
 
 struct Match{
-    MatchState state;
-    Button* buttons[STATE_QUANTITY];
+    MatchScreen screen;
+    ButtonVec buttonsVec[STATE_QUANTITY];
     Camera2D camera;
     Player player;
     Queue<Costumer> costumer_line;
     Costumer costumer_counter[COUNTER_SIZE];
     // int turn;
     Items items;
+    Sprite spriteMatch[QUANTITY_OF_SPRITES];
 
 };
 
@@ -67,7 +69,7 @@ struct Match{
 void matchStart(Match& match);
 
 // void matchProcess(Match& match);
-void matchProcess(Match& match, Sprite background);
+void matchProcess(Match& match, Sprite background, Vector2 mouse);
 // void playerProcess(Player& player); Transferido para player.hpp
 
 

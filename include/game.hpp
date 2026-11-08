@@ -29,7 +29,7 @@ struct Game{
     bool quit;
     Match current_match;
     GameState state;
-    Sprite sprites[QUANTITY_OF_SPRITES];
+    Sprite spritesMenu[QUANTITY_OF_SPRITES];
 };
 
 /* ============================== */
@@ -47,9 +47,11 @@ void unloadSpritesheet(Sprite sprites[]);
 // void tutorialProcess();
 // void historyProcess();
 // void settingsProcess();
-void matchProcess(Match& match, Sprite background);
 
-void ambientProcess(Game& game);
+//Movida para match.hpp
+// void matchProcess(Match& match, Sprite background);
+
+void ambientProcess(Game& game, Vector2 mouse);
 
 // void matchStart(Match& match);
 

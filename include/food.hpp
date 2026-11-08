@@ -7,6 +7,7 @@
 
 enum IngredientType{
 
+    NONE = '0',
     LETTUCE = 'a',
     BACON = 'b',
     ONION = 'c',

@@ -8,26 +8,45 @@
 /*            BUTTON            */
 /* ============================ */
 
+//NOTA: Para tu saber qual item tu ta pegando e so tirar a primeira letra da string do texto do botao
+//Botoes de clicar
+    //Clica e eles te trocam de ambiente ou algo assim
+//Botoes de pegar item:
+    //Verificam se tu tem alguma coisa na mao, se nao, pode pegar e se sim pega o item
+//Botoes de insert:
+    //Se tu tem item na mao, tu coloca o item (e se acapacidade nao estiver cheia, e claro)
+    //Se nao tiver item na mao, tu pega o item
+//Botoes de stack
+    //Verificam clicks compostos (podemos diferenciar por click esquerdo e direito do mouse)
+        //Com shift e pra tirar o item
+            //Se nao tiver item nao faz nada
+        //Sem shift tira o item
+            //Se o stack tiver sem item, nao faz nada
 enum ButtonType {
-    BUTTON_MENU,
-    BUTTON_OVEN,
-    BUTTON_BOARD,
-    BUTTON_PREPARE,
-    BUTTON_FRIDGE,
-    BUTTON_TRASH,
-    BUTTON_BELL,
+    CLICK,  //Click and does an action
+    PICK,   //Click to pick an item
+    DROP,   //Click to drop an item
+    INSERT, //Click to put or pick an item
+    STACK   //Click to put or take an item (usa shift (ou outra tecla) para diferenciar o click de tirar e colocar)
 };
 
 struct Button {
     ButtonType type;
     Rectangle shape;
-    Vector2 pos;
-    Vector2 size;
+    // Vector2 pos;
+    // Vector2 size;
     char text[20];
 };
 
-void declareButtons(Button **buttons, int size);
+struct ButtonVec {
+    Button *buttons;
+    int size;
+};
 
-int nearestButtonIndex(float, Button **buttons);
+void declareButtons(ButtonVec *screens);
+
+int nearestButtonIndex(const float playerX, const ButtonVec screen);
+
+int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screen, Camera2D camera);
 
 #endif

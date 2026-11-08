@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     SetTargetFPS(FPS);
 
     gameStart(game);
-    declareButtons(game.current_match.buttons, STATE_QUANTITY);
+    declareButtons(game.current_match.buttonsVec);
 
     while (!WindowShouldClose() && !game.quit) {
         gameProcess(game);

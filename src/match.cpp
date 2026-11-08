@@ -3,7 +3,7 @@
 
 void matchStart(Match& match) {
 
-    match.state = KITCHEN;
+    match.screen = KITCHEN;
 
     setPlayer(match.player);
 
@@ -15,7 +15,7 @@ void matchStart(Match& match) {
 //     playerProcess(match.player);
 // }
 
-void matchProcess(Match& match, Sprite background) {
+void matchProcess(Match& match, Sprite background, Vector2 mouse) {
     // cameraProcess(match.camera, match.player, background);
     cameraProcess(match.camera, match.player, background);
     playerProcess(match.player, background);

@@ -1,6 +1,9 @@
 //BUTTON CONSTANTS
 #define MAX_ACESS_DIST 300 //Distancia maxima que o player pode abrir uma parte do cenario
 
+#define BRIGHTNESS_LAYERS 12
+#define BRIGHTNESS 0.8
+
 #define PREPARE_LEFT_X 2300
 #define PREPARE_LEFT_Y 200
 #define PREPARE_LEFT_W 400

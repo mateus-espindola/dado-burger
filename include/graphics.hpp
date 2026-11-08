@@ -3,12 +3,12 @@
 
 #include "game.hpp"
 
-void gameDraw(Game& game);
+// void gameDraw(Game& game);
 // void menuDraw();
 // void tutorialDraw();
 // void historyDraw();
 // void settingsDraw();
-void matchDraw(Match& match);
+// void matchDraw(Match& match);
 
 Vector2 getSpritePos(Object& object);
 
@@ -17,14 +17,20 @@ Vector2 getSpritePos(Object& object);
 // void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint);
 // void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint);
 
-void hitboxDraw(Object&);
+void hitboxDraw(const Object&);
 
+//COLOCAR CONST DEPOIS
 void playerDraw(Player&);
 
-void drawNearestBut(const Player &player, Button **buttons);
+// void drawNearestBut(const Player &player, Button **buttons);
+int drawNearestBut(const Player& player, const ButtonVec& screen);
 
-void drawFrigeBut(Button **buttons);
+void drawButtons(const ButtonVec& screen);
 
-void drawKitchen(Game& game);
+void drawKitchen(Match& match, int butUnderMouseInd);
+
+void drawButGlow(Rectangle r, Color cor, int camadas, float alpha);
+
+void drawPrepare(Match match, int butUnderMouseInd);
 
 #endif

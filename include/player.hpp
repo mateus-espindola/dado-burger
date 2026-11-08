@@ -51,6 +51,7 @@ struct Player {
     Object object;
     PlayerInfo info;
     // Stack<Ingredient> inventory;
+    Slot inventory[4];
     Direction direction;
 };
 
