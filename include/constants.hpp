@@ -9,7 +9,8 @@ constexpr int WINDOW_HEIGHT = 720;
 constexpr int FPS = 60;
 constexpr float GAME_SCALE = ((float) WINDOW_HEIGHT) / 96.0f;
 
-constexpr Vector2 PLAYER_START_POS = {WINDOW_WIDTH/2, WINDOW_HEIGHT*2/3};
+constexpr Vector2 PLAYER_KITCHEN_POS = {WINDOW_WIDTH/2, WINDOW_HEIGHT*2/3};
+constexpr Vector2 PLAYER_OVEN_POS = { WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f };
 constexpr int PLAYER_HITBOX_RADIUS = 100;
 constexpr float PLAYER_SPEED = 10.0f;
 
@@ -22,13 +23,6 @@ constexpr int COUNTER_SIZE = 3;
 #define PAN_NUMBER 3
 #define PREPARING_SPACE 3
 #define STOARGE_SIZE 8
-
-#define BUTTONS_COUNTER 10
-#define BUTTONS_KITCHEN 3
-#define BUTTONS_FRIDGE 10
-#define BUTTONS_PREPARE 10
-#define BUTTONS_BOARD 10
-#define BUTTONS_OVEN 10
 
 #define COOK_SPEED 0.2
 #define COOK_TIME 2
@@ -51,5 +45,27 @@ constexpr int COUNTER_SIZE = 3;
 #define STACK_MARGIN 40   // espaço horizontal entre stack e tábua
 #define STACKS_LEFT  3
 #define STACKS_RIGHT 2
+
+
+
+
+// Mundo do fogão: duas vezes a largura da tela
+constexpr int STOVE_WORLD_WIDTH  = WINDOW_WIDTH * 2;   // 2560
+constexpr int STOVE_WORLD_HEIGHT = WINDOW_HEIGHT;
+
+constexpr float STOVE_MARGIN = 60.0f;
+constexpr float PANEL_Y      = STOVE_MARGIN;
+constexpr float PANEL_H      = STOVE_WORLD_HEIGHT - 2 * STOVE_MARGIN;
+constexpr float PANEL_GAP    = 60.0f;
+
+// Larguras das três seções (somam o que cabe entre as margens)
+constexpr float PLATE_W   = 1000.0f;   // chapa (esquerda)
+constexpr float SQUARES_W = 800.0f;    // 2 colunas de quadrados (meio)
+constexpr float CIRCLES_W = STOVE_WORLD_WIDTH - 2 * STOVE_MARGIN
+                            - PLATE_W - SQUARES_W - 2 * PANEL_GAP;   // coluna de círculos (direita)
+
+constexpr float PLATE_X   = STOVE_MARGIN;
+constexpr float SQUARES_X = PLATE_X + PLATE_W + PANEL_GAP;
+constexpr float CIRCLES_X = SQUARES_X + SQUARES_W + PANEL_GAP;
 
 #endif

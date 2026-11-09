@@ -9,6 +9,7 @@
 #include "sprites.hpp"
 #include "buttons.hpp"
 #include "player.hpp"
+#include "match_enums.hpp"
 
 
 
@@ -32,22 +33,9 @@ struct Items{
 
 };
 
-enum MatchScreen{
-
-    KITCHEN,
-    FRIDGE,
-    OVEN,
-    BOARD,
-    PREPARE,
-    PAUSED,
-    DEFEAT,
-    VICTORY,
-    STATE_QUANTITY
-
-};
-
 struct Match{
     MatchScreen screen;
+    MatchScreen prevScreen; //Used to detect screen changes during the matc
     ButtonVec buttonsVec[STATE_QUANTITY];
     Camera2D camera;
     Player player;
@@ -69,7 +57,7 @@ struct Match{
 void matchStart(Match& match);
 
 // void matchProcess(Match& match);
-void matchProcess(Match& match, Sprite background, Vector2 mouse);
+// void matchProcess(Match& match, Sprite background, Vector2 mouse);
 // void playerProcess(Player& player); Transferido para player.hpp
 
 

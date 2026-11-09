@@ -31,6 +31,8 @@ void drawKitchen(Match& match, int butUnderMouseInd);
 
 void drawButGlow(Rectangle r, Color cor, int camadas, float alpha);
 
-void drawPrepare(Match match, int butUnderMouseInd);
+void drawBoard(Match match, int butUnderMouseInd);
+
+void drawStove(const Camera2D &camera);
 
 #endif

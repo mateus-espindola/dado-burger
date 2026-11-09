@@ -6,6 +6,7 @@
 #include "buttons.hpp"
 #include "constants.hpp"
 #include "sprites.hpp"
+#include "match_enums.hpp"
 
 #include "raylib.h"
 
@@ -48,7 +49,8 @@ struct Slot{
 };
 
 struct Player {
-    Object object;
+    Object object;              //The constant bellow is defined in the struct WORLD in match.hpp
+    Vector2 savedPos[WORLD_COUNT]; //Number of scenes that require camera2D. This is used to not lose the player position after each scene change
     PlayerInfo info;
     // Stack<Ingredient> inventory;
     Slot inventory[4];
@@ -63,7 +65,9 @@ struct Player {
 
 void setPlayer(Player&);
 
-void playerProcess(Player& player, Sprite background);
+void playerProcess(Player& player, float minX, float maxX);
+
+// void playerProcessNoSprite(Player& player);
 
 
 

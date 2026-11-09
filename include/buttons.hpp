@@ -2,6 +2,7 @@
 #define BUTTONS_HPP
 
 #include "raylib.h"
+#include "match_enums.hpp"
 
 
 /* ============================ */
@@ -43,10 +44,10 @@ struct ButtonVec {
     int size;
 };
 
-void declareButtons(ButtonVec *screens);
+void declareButtons(ButtonVec *screenButtons);
 
-int nearestButtonIndex(const float playerX, const ButtonVec screen);
+int nearestButtonIndex(const float playerX, const ButtonVec screenButtons);
 
-int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screen, Camera2D camera);
+int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen);
 
 #endif
