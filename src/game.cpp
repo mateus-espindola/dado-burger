@@ -4,6 +4,8 @@
 #include "../include/game.hpp"
 #include "../include/graphics.hpp"
 #include "../include/inputs.hpp"
+#include "camera.hpp"
+#include "world.hpp"
 
 #include "raylib.h"
 
@@ -51,7 +53,7 @@ void gameProcess(Game& game){
         break;
 
         case PLAYING:
-            matchProcess(game.current_match, game.current_match.spriteMatch[SPR_BACKGROUND], mouse);
+            // matchProcess(game.current_match, game.current_match.spriteMatch[SPR_BACKGROUND], mouse);
             ambientProcess(game, mouse); //Mostra os botoes e desenha o fundo de acordo com o ambiente
         break;
 
@@ -63,59 +65,41 @@ void gameProcess(Game& game){
 
 void ambientProcess(Game& game, Vector2 mouse){
 
-    Match &match = game.current_match;   // Referencia, nao copia
+    Match &match = game.current_match;
 
-    printf("%d\n", game.current_match.screen);
+    if(sceneChanged(match.screen, match.prevScreen))
+        correctCamera(match);
+    match.prevScreen = match.screen;
 
     if (match.screen == KITCHEN || match.screen == FRIDGE)
-        //Condição  ?   Se verdadeiro   :   Se falso
         match.screen = (match.player.object.pos.x > 4800) ? FRIDGE : KITCHEN;
 
-    int butUnderMouseInd = findButtonUnderMouse(mouse, match.buttonsVec[match.screen], match.camera);
-
+    // 1. update
     switch(match.screen){
         case KITCHEN:
-            drawKitchen(match, butUnderMouseInd);
-            printf("%d %d\n", match.screen, butUnderMouseInd);
-            if(mouseKeyLeftClicked() && butUnderMouseInd != -1){
-                processButClick(match.screen, match.buttonsVec[match.screen], butUnderMouseInd);
-                // for(int i = 0; i < 100; i++)
-                //     printf("Entrou");
-            }
-        break;
-
         case FRIDGE:
-            drawKitchen(match, butUnderMouseInd);
-            if(mouseKeyLeftClicked() && butUnderMouseInd != -1)
-                processButClick(match.screen, match.buttonsVec[match.screen], butUnderMouseInd);
-        break;
-
         case OVEN:
-            drawPrepare(match, butUnderMouseInd);
+            playerProcess(match.player, playerLimitsOf(match).min , playerLimitsOf(match).max);
+            cameraProcess(match.camera, match.player, worldWidthOf(match));
         break;
-
-        case BOARD:
-            drawPrepare(match, butUnderMouseInd);
-        break;
-
-        case PREPARE:
-            drawPrepare(match, butUnderMouseInd);
-            printf("%d %d\n", match.screen, butUnderMouseInd);
-
-        break;
-
-        case PAUSED:
-
-        break;
-
-        case DEFEAT:
-
-        break;
-
-        case VICTORY:
-
-        break;
+        default: break;
     }
+
+    // o índice é calculado depois do update, com a câmera já atualizada
+    int butUnderMouseInd = findButtonUnderMouse(mouse, match.buttonsVec[match.screen], match.camera, match.screen);
+
+    // 2. draw
+    switch(match.screen){
+        case KITCHEN:
+        case FRIDGE: drawKitchen(match, butUnderMouseInd); break;
+        case OVEN:   drawStove(match.camera);              break;
+        case BOARD:  drawBoard(match, butUnderMouseInd);   break;
+        default: break;
+    }
+
+    // 3. click, por último
+    if (mouseKeyLeftClicked() && butUnderMouseInd != -1)
+        processButClick(match.screen, match.buttonsVec[match.screen], butUnderMouseInd);
 }
 
 void gameOver(Game& game){

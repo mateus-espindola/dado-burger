@@ -85,7 +85,7 @@ static void drawStackColumn(float x, int count) {
     }
 }
 
-void drawPrepare(Match match, int butUnderMouseInd) {
+void drawBoard(Match match, int butUnderMouseInd) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
@@ -103,6 +103,62 @@ void drawPrepare(Match match, int butUnderMouseInd) {
 
         // 2 stacks à direita
         drawStackColumn(BOARD_X + BOARD_W + STACK_MARGIN, STACKS_RIGHT);
+
+    EndDrawing();
+}
+
+
+
+
+// Grade de círculos pretos, centrados em cada célula da área
+static void drawCircleGrid(Rectangle area, int cols, int rows, float radius) {
+    float cw = area.width  / cols;
+    float ch = area.height / rows;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            DrawCircleV({ area.x + (c + 0.5f) * cw, area.y + (r + 0.5f) * ch }, radius, BLACK);
+}
+
+// Grade de quadrados pretos, centrados em cada célula da área
+static void drawSquareGrid(Rectangle area, int cols, int rows, float side) {
+    float cw = area.width  / cols;
+    float ch = area.height / rows;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++) {
+            Rectangle sq = { area.x + (c + 0.5f) * cw - side / 2,
+                             area.y + (r + 0.5f) * ch - side / 2, side, side };
+            DrawRectangleRec(sq, BLACK);
+        }
+}
+
+void drawStove(const Camera2D &camera) {
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        BeginMode2D(camera);
+
+            // corpo do fogão (cobre o mundo todo)
+            DrawRectangle(0, 0, STOVE_WORLD_WIDTH, STOVE_WORLD_HEIGHT, LIGHTGRAY);
+
+            // 1) chapa à esquerda: 6 círculos (2 colunas x 3 linhas)
+            Rectangle plate = { PLATE_X, PANEL_Y, PLATE_W, PANEL_H };
+            DrawRectangleRec(plate, DARKGRAY);
+            DrawRectangleLinesEx(plate, 6, GRAY);
+            drawCircleGrid(plate, 2, 3, 80);
+
+            // 2) espaço do meio: 2 colunas x 3 quadrados
+            Rectangle squares = { SQUARES_X, PANEL_Y, SQUARES_W, PANEL_H };
+            DrawRectangleRec(squares, GRAY);
+            DrawRectangleLinesEx(squares, 6, DARKGRAY);
+            drawSquareGrid(squares, 2, 3, 140);
+
+            // 3) seção da direita: 1 coluna x 3 círculos
+            Rectangle circles = { CIRCLES_X, PANEL_Y, CIRCLES_W, PANEL_H };
+            DrawRectangleRec(circles, GRAY);
+            DrawRectangleLinesEx(circles, 6, DARKGRAY);
+            drawCircleGrid(circles, 1, 3, 80);
+
+        EndMode2D();
 
     EndDrawing();
 }

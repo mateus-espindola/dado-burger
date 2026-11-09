@@ -7,7 +7,7 @@ void matchStart(Match& match) {
 
     setPlayer(match.player);
 
-    setCamera(match);
+    setKitchenCamera(match);
 }
 
 // void matchProcess(Match& match) {
@@ -15,11 +15,11 @@ void matchStart(Match& match) {
 //     playerProcess(match.player);
 // }
 
-void matchProcess(Match& match, Sprite background, Vector2 mouse) {
-    // cameraProcess(match.camera, match.player, background);
-    cameraProcess(match.camera, match.player, background);
-    playerProcess(match.player, background);
-}
+// void matchProcess(Match& match, Sprite background, Vector2 mouse) {
+//     // cameraProcess(match.camera, match.player, background);
+//     cameraProcess(match.camera, match.player, match.spriteMatch[SPR_BACKGROUND].width * GAME_SCALE);
+//     playerProcess(match.player, background);
+// }
 
 void playerProcess(Player& player) {
     if (IsKeyDown(KEY_RIGHT)) player.object.pos.x += 4;

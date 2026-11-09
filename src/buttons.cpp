@@ -2,7 +2,8 @@
 #include <cmath>
 
 #include "../include/buttons.hpp"
-#include "../include/match.hpp"    // para STATE_QUANTITY, PREPARE, BOARD, OVEN
+// #include "match_enums.hpp"
+// #include "../include/match.hpp"    // para STATE_QUANTITY, PREPARE, BOARD, OVEN
 #include "../include/button_constants.hpp"
 
 // static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
@@ -43,7 +44,7 @@ static void setButton(Button &b, float x, float y, float w, float h, const char 
     snprintf(b.text, sizeof(b.text), "%s", text);
 }
 
-void declareButtons(ButtonVec *screens) {
+void declareButtons(ButtonVec *screenButtons) {
     // static: os arrays vivem até o fim do programa
     static Button kitchenBut[BUTTONS_KITCHEN];
     static Button fridgeBut[BUTTONS_FRIDGE];
@@ -51,11 +52,11 @@ void declareButtons(ButtonVec *screens) {
     static Button boardBut[BUTTONS_BOARD];
     static Button ovenBut[BUTTONS_OVEN];
 
-    screens[KITCHEN] = { kitchenBut, BUTTONS_KITCHEN };
-    screens[FRIDGE]  = { fridgeBut,  BUTTONS_FRIDGE  };
-    screens[PREPARE] = { prepareBut, BUTTONS_PREPARE };
-    screens[BOARD]   = { boardBut,   BUTTONS_BOARD   };
-    screens[OVEN]    = { ovenBut,    BUTTONS_OVEN    };
+    screenButtons[KITCHEN] = { kitchenBut, BUTTONS_KITCHEN };
+    screenButtons[FRIDGE]  = { fridgeBut,  BUTTONS_FRIDGE  };
+    screenButtons[PREPARE] = { prepareBut, BUTTONS_PREPARE };
+    screenButtons[BOARD]   = { boardBut,   BUTTONS_BOARD   };
+    screenButtons[OVEN]    = { ovenBut,    BUTTONS_OVEN    };
 
     setButton(kitchenBut[0], PREPARE_LEFT_X, PREPARE_LEFT_Y, PREPARE_LEFT_W, PREPARE_LEFT_H, "PREPARE", CLICK);
     setButton(kitchenBut[1], BOARD_LEFT_X,   BOARD_LEFT_Y,   BOARD_LEFT_W,   BOARD_LEFT_H,   "BOARD",   CLICK);
@@ -65,13 +66,13 @@ void declareButtons(ButtonVec *screens) {
     setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "LETUCE", PICK);
 }
 
-int nearestButtonIndex(const float playerX, const ButtonVec screen) {
+int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
     int nearest = -1;
     float bestDist = INFINITY;
 
-    for (int i = 0; i < screen.size; i++) {
+    for (int i = 0; i < screenButtons.size; i++) {
 
-        const Button &b = screen.buttons[i];
+        const Button &b = screenButtons.buttons[i];
 
         // pos é o canto superior esquerdo, então usamos o centro do botão
         float centerX = b.shape.x + b.shape.width / 2.0f;
@@ -97,15 +98,26 @@ void processClick(){
 
 }
 
-int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screen, Camera2D camera){
+bool usesCamera(MatchScreen screen) {
+    switch (screen) {
+        case KITCHEN:
+        case FRIDGE:
+        case OVEN:   return true;
+        default:     return false;
+    }
+}
 
-    Vector2 world = GetScreenToWorld2D(mouse, camera);
+int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen){
 
-    for (int i = screen.size - 1; i >= 0; i--){
-        const Rectangle &r = screen.buttons[i].shape;
+    bool useCamera = usesCamera(curScreen);
+    
+    Vector2 point = useCamera ? GetScreenToWorld2D(mouse, camera) : mouse;
 
-        bool in_x = world.x >= r.x && world.x <= r.x + r.width;
-        bool in_y = world.y >= r.y && world.y <= r.y + r.height;
+    for (int i = screenButtons.size - 1; i >= 0; i--){
+        const Rectangle &r = screenButtons.buttons[i].shape;
+
+        bool in_x = point.x >= r.x && point.x <= r.x + r.width;
+        bool in_y = point.y >= r.y && point.y <= r.y + r.height;
 
         if (in_x && in_y) return i;
     }
