@@ -1,6 +1,9 @@
+#include <cstdio>
 #include <cstring>
 
 #include "inputs.hpp"
+#include "tads.hpp"
+#include "food.hpp"
 // #include "match.hpp"
 
 Vector2 findMousePos(){
@@ -9,6 +12,14 @@ Vector2 findMousePos(){
 
 bool mouseKeyLeftClicked(){
     return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+}
+
+bool keyUpClicked(){
+    return IsKeyPressed(KEY_UP);
+}
+
+bool keyDownClicked(){
+    return IsKeyPressed(KEY_DOWN);
 }
 
 
@@ -23,27 +34,68 @@ MatchScreen screenFromName(const char *name)
 }
 
 
-void processButClick(MatchScreen& matchScreen, const ButtonVec& screen, int clickInd){
-    Button &button = screen.buttons[clickInd];
-    switch(button.type){
+void processButClick(Match& match, const Button& button) {
+    Player& player = match.player;
+
+    switch (button.type) {
         case CLICK:
-            matchScreen = screenFromName(button.text);
+            match.screen = screenFromName(button.text);
         break;
 
         case PICK:
-
+        {
+            // if (button.target == nullptr) {
+            //     printf("ERRO: button.target e nullptr!\n");
+            //     return;
+            // }
+            Slot *inventory = player.inventory;
+            int slot = player.selectedSlot;
+            if(inventory[slot].count < inventory[slot].capacity){
+                Ingredient ing;
+                initIngredient(ing, button.text[0]);
+                stack_push(inventory[slot].items, ing);
+                inventory[slot].count++;
+                inventory[slot].type = ing.type;
+                printf("ITEM: %d\n", match.player.inventory->items.top->data.type);
+                printf("%c\n", button.text[0]);
+            }
+        }
+                
         break;
-
         case DROP:
-
+            // só usam o player
         break;
 
         case INSERT:
-
-        break;
-
         case STACK:
-
+            if (button.target == nullptr) return;   // botão mal configurado
+            // usa player.inventory[...] como origem e *button.target como destino
         break;
     }
 }
+
+
+// void processButClick(MatchScreen& matchScreen, const ButtonVec& screen, int clickInd){
+//     Button &button = screen.buttons[clickInd];
+//     switch(button.type){
+//         case CLICK:
+//             matchScreen = screenFromName(button.text);
+//         break;
+
+//         case PICK:
+
+//         break;
+
+//         case DROP:
+
+//         break;
+
+//         case INSERT:
+
+//         break;
+
+//         case STACK:
+
+//         break;
+//     }
+// }
