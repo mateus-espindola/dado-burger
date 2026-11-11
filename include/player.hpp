@@ -41,11 +41,11 @@ struct PlayerInfo{
     int score;
 };
 
-struct Slot{
-    Stack<Ingredient> inventory;
-    int size;
-    //Indica qual item esta na pilha. Para nao misturar ingredientes diferentes
-    char lable;
+struct Slot {
+    Stack<Ingredient> items;   // ingredientes empilhados neste slot
+    int count;                 // quantidade atual na pilha
+    int capacity;              // máximo que o slot aguenta
+    IngredientType type;       // tipo do ingrediente no slot (NONE se vazio)
 };
 
 struct Player {
@@ -53,7 +53,8 @@ struct Player {
     Vector2 savedPos[WORLD_COUNT]; //Number of scenes that require camera2D. This is used to not lose the player position after each scene change
     PlayerInfo info;
     // Stack<Ingredient> inventory;
-    Slot inventory[4];
+    Slot inventory[INVENTORY_SLOTS];
+    int selectedSlot;
     Direction direction;
 };
 

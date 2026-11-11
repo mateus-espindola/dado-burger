@@ -32,6 +32,59 @@ CookPoint& operator++(CookPoint& c) {
 }
 
 
+IngredientType charToIngType(char c) {
+    switch (c) {
+        case 'a': return LETTUCE;
+        case 'b': return BACON;
+        case 'c': return ONION;
+        case 'k': return KETCHUP;
+        case 'm': return MUSTARD;
+        case 'n': return MEAT;
+        case 'v': return VEGAN_PROTEIN;
+        case 'o': return EGG;
+        case 'p': return PICKLES;
+        case 'q': return CHEDDAR;
+        case 's': return SWISS_CHEESE;
+        case 't': return TOMATO;
+        case 'z': return UPPER_BREAD;
+        default:  return NONE;   // inclui '0' e qualquer letra desconhecida
+    }
+}
+
+// turnos até estragar; -1 = não estraga
+int perishTimeOf(IngredientType type) {
+    switch (type) {
+        default:      return -1;
+    }
+}
+
+CookPoint cookingStateOf(IngredientType type) {
+    switch (type) {
+        default:      return NEEDS_TO_CUT;
+    }
+}
+
+float cookTimeOf(IngredientType type) {
+    switch (type) {
+        default:      return 0.0;
+    }
+}
+
+
+// Inicializa um ingrediente recém-criado (estoque infinito, ainda cru)
+void initIngredient(Ingredient &ing, char ingType) {
+
+    IngredientType type = charToIngType(ingType);
+
+    ing.type = type;
+
+    ing.cook_state.cooking      = false;
+    ing.cook_state.cookPoint[0] = cookingStateOf(type);
+    ing.cook_state.cookPoint[1] = cookingStateOf(type);
+    ing.cook_state.cook_time    = cookTimeOf(type);
+
+    ing.perish_time = perishTimeOf(type);
+}
 
 
 void cut_ingredient(Ingredient& ing, Stack<Ingredient>& ready_ing){

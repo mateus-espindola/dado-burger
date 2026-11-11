@@ -1,6 +1,27 @@
+#include <cstring>
+
+// #include "food.hpp"
 #include "player.hpp"
 
-void setPlayer(Player& player){
+// void setPlayer(Player& player){
+
+//     player.savedPos[WORLD_KITCHEN] = PLAYER_KITCHEN_POS;
+//     player.savedPos[WORLD_OVEN] = PLAYER_OVEN_POS;
+
+//     player.object.pos = player.savedPos[WORLD_KITCHEN];
+//     player.direction = DIR_RIGHT;
+
+//     memset(player.inventory, 0, sizeof(player.inventory));
+
+//     stack_init(player.inventory[0].items);
+//     stack_init(player.inventory[1].items);
+//     stack_init(player.inventory[2].items);
+
+//     player.inventory->items.top->data.type = LETTUCE;
+
+// }
+
+void setPlayer(Player& player) {
 
     player.savedPos[WORLD_KITCHEN] = PLAYER_KITCHEN_POS;
     player.savedPos[WORLD_OVEN] = PLAYER_OVEN_POS;
@@ -8,6 +29,21 @@ void setPlayer(Player& player){
     player.object.pos = player.savedPos[WORLD_KITCHEN];
     player.direction = DIR_RIGHT;
 
+    for (int i = 0; i < INVENTORY_SLOTS; i++) {
+        stack_init(player.inventory[i].items);
+
+        player.inventory[i].count = 0;
+        player.inventory[i].capacity = 1; // Exemplo
+        player.inventory[i].type = NONE;
+    }
+
+    // Ingredient ing;
+    // initIngredient(ing, LETTUCE);
+
+    // stack_push(player.inventory[0].items, ing);
+
+    // player.inventory[0].count = 1;
+    // player.inventory[0].type = LETTUCE;
 }
 
 void playerProcess(Player& player, float minX, float maxX) {

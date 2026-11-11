@@ -25,6 +25,7 @@ enum IngredientType{
 };
 
 enum CookPoint {
+    NEEDS_TO_CUT = -2,
     READY = -1,
     RAW = 0,
     RARE,
@@ -55,5 +56,13 @@ struct Ingredient {
     }
 
 };
+
+// //This is necessary so that the player can hold a burger. The player inventory doesen't comport stacks, but it comports a type
+// struct hamburger {
+//     Stack<Ingredient> hamburger;
+// };
+
+void initIngredient(Ingredient &ing, char ingType);
+
 
 #endif

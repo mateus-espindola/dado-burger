@@ -70,6 +70,7 @@ void ambientProcess(Game& game, Vector2 mouse){
     if(sceneChanged(match.screen, match.prevScreen))
         correctCamera(match);
     match.prevScreen = match.screen;
+    // printf("%d\n", match.player.selectedSlot);
 
     if (match.screen == KITCHEN || match.screen == FRIDGE)
         match.screen = (match.player.object.pos.x > 4800) ? FRIDGE : KITCHEN;
@@ -91,15 +92,30 @@ void ambientProcess(Game& game, Vector2 mouse){
     // 2. draw
     switch(match.screen){
         case KITCHEN:
-        case FRIDGE: drawKitchen(match, butUnderMouseInd); break;
-        case OVEN:   drawStove(match.camera);              break;
-        case BOARD:  drawBoard(match, butUnderMouseInd);   break;
+        case FRIDGE: drawKitchen(match, butUnderMouseInd);  break;
+        case OVEN:   drawStove(match, butUnderMouseInd);    break;
+        case BOARD:  drawBoard(match, butUnderMouseInd);    break;
         default: break;
     }
 
-    // 3. click, por último
-    if (mouseKeyLeftClicked() && butUnderMouseInd != -1)
-        processButClick(match.screen, match.buttonsVec[match.screen], butUnderMouseInd);
+    // 3. click
+    switch(match.screen){
+        case KITCHEN: { //The brackets garantee that the variable nearest only exists in the brackets and can't be used elsewhere in the switch so that we don't have de problem of an unnitialized veriable being used
+            int nearest = nearestButtonIndex(match.player.object.pos.x, match.buttonsVec[match.screen]);
+            if (keyUpClicked() && nearest != -1)
+                processButClick(match, match.buttonsVec[match.screen].buttons[nearest]);
+        } break;
+        case PREPARE:
+        case OVEN:
+        case BOARD:
+            if(keyDownClicked()) match.screen = KITCHEN;
+        case FRIDGE:
+            if (mouseKeyLeftClicked() && butUnderMouseInd != -1)
+                processButClick(match, match.buttonsVec[match.screen].buttons[butUnderMouseInd]);
+        break;
+        default: break;
+    }
+    
 }
 
 void gameOver(Game& game){

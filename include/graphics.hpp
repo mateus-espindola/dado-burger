@@ -33,6 +33,8 @@ void drawButGlow(Rectangle r, Color cor, int camadas, float alpha);
 
 void drawBoard(Match match, int butUnderMouseInd);
 
-void drawStove(const Camera2D &camera);
+void drawStove(Match& match, int butUnderMouseInd);
+
+void drawInventory(const Player &player);
 
 #endif

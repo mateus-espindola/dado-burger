@@ -8,6 +8,10 @@ Vector2 findMousePos(void);
 
 bool mouseKeyLeftClicked(void);
 
-void processButClick(MatchScreen& matchScreen, const ButtonVec& screen, int clickInd);
+bool keyUpClicked(void);
+
+bool keyDownClicked(void);
+
+void processButClick(Match& match, const Button& button);
 
 #endif

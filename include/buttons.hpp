@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 #include "match_enums.hpp"
+#include "tads.hpp"
+#include "food.hpp"
 
 
 /* ============================ */
@@ -34,9 +36,9 @@ enum ButtonType {
 struct Button {
     ButtonType type;
     Rectangle shape;
-    // Vector2 pos;
-    // Vector2 size;
     char text[20];
+    Stack<Ingredient> *target;
+    int target_size;
 };
 
 struct ButtonVec {
@@ -49,5 +51,7 @@ void declareButtons(ButtonVec *screenButtons);
 int nearestButtonIndex(const float playerX, const ButtonVec screenButtons);
 
 int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen);
+
+int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type);
 
 #endif

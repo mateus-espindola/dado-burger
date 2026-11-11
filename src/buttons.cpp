@@ -39,9 +39,11 @@
 // }
 
 static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
-    b.type  = type;   // faltava: o parâmetro type não estava sendo usado
+    b.type  = type;
     b.shape = { x, y, w, h };
     snprintf(b.text, sizeof(b.text), "%s", text);
+    b.target = nullptr;
+    b.target_size = 0;
 }
 
 void declareButtons(ButtonVec *screenButtons) {
@@ -62,8 +64,16 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(kitchenBut[1], BOARD_LEFT_X,   BOARD_LEFT_Y,   BOARD_LEFT_W,   BOARD_LEFT_H,   "BOARD",   CLICK);
     setButton(kitchenBut[2], OVEN_LEFT_X,    OVEN_LEFT_Y,    OVEN_LEFT_W,    OVEN_LEFT_H,    "OVEN",    CLICK);
 
-    setButton(fridgeBut[0], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "TOMATO", PICK);
-    setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "LETUCE", PICK);
+    setButton(fridgeBut[0], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "tTOMATO", PICK);
+    setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "aLETUCE", PICK);
+
+    int startInd = 0;
+    startInd = setCircleButtons(ovenBut, startInd, COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, "COOK", INSERT);
+    startInd = setCircleButtons(ovenBut, startInd, COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, "COOK", INSERT);
+
+    // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
+    // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
+    // setButton(ovenBut[2], COOK_TOP_3_LEFT_X, COOK_TOP_3_LEFT_Y, COOK_TOP_3_LEFT_W, COOK_TOP_3_LEFT_H, "COOK", INSERT);
 }
 
 int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
@@ -87,6 +97,21 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
     }
 
     return nearest;
+}
+
+// x e firstY sao o canto superior esquerdo do primeiro botao
+//Devolve o proximo indice livre do botao
+int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
+    for (int k = 0; k < CIRCLE_BUTTON_COUNT; k++) {
+        setButton(buttons[startInd + k],
+                  x,
+                  firstY + k * CIRCLE_BUTTON_STEP_Y,
+                  CIRCLE_BUTTON_DIAMETER,
+                  CIRCLE_BUTTON_DIAMETER,
+                  text,
+                  type);
+    }
+    return startInd + CIRCLE_BUTTON_COUNT;
 }
 
 

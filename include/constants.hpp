@@ -9,7 +9,7 @@ constexpr int WINDOW_HEIGHT = 720;
 constexpr int FPS = 60;
 constexpr float GAME_SCALE = ((float) WINDOW_HEIGHT) / 96.0f;
 
-constexpr Vector2 PLAYER_KITCHEN_POS = {WINDOW_WIDTH/2, WINDOW_HEIGHT*2/3};
+constexpr Vector2 PLAYER_KITCHEN_POS = {/*WINDOW_WIDTH/2*/ 4200, WINDOW_HEIGHT*2/3};
 constexpr Vector2 PLAYER_OVEN_POS = { WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f };
 constexpr int PLAYER_HITBOX_RADIUS = 100;
 constexpr float PLAYER_SPEED = 10.0f;
@@ -17,6 +17,15 @@ constexpr float PLAYER_SPEED = 10.0f;
 constexpr float CAMERA_INTERPOOLATION = 0.2f;
 
 constexpr int COUNTER_SIZE = 3;
+
+constexpr int INVENTORY_SLOTS = 3;
+
+
+//Inventory draw constants
+constexpr float INV_SLOT_SIZE = 90.0f;
+constexpr float INV_SLOT_GAP  = 15.0f;
+constexpr float INV_X         = 20.0f;   // canto superior esquerdo do inventário
+constexpr float INV_Y         = 20.0f;
 
 //CONSTANTES ADICIONADAS:
 #define PLATE_SIZE 6

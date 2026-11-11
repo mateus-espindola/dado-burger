@@ -71,6 +71,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
         EndMode2D();
 
+        drawInventory(match.player);
+
     EndDrawing();
 }
 
@@ -104,6 +106,8 @@ void drawBoard(Match match, int butUnderMouseInd) {
         // 2 stacks à direita
         drawStackColumn(BOARD_X + BOARD_W + STACK_MARGIN, STACKS_RIGHT);
 
+        drawInventory(match.player);
+
     EndDrawing();
 }
 
@@ -131,11 +135,11 @@ static void drawSquareGrid(Rectangle area, int cols, int rows, float side) {
         }
 }
 
-void drawStove(const Camera2D &camera) {
+void drawStove(Match& match, int butUnderMouseInd) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
-        BeginMode2D(camera);
+        BeginMode2D(match.camera);
 
             // corpo do fogão (cobre o mundo todo)
             DrawRectangle(0, 0, STOVE_WORLD_WIDTH, STOVE_WORLD_HEIGHT, LIGHTGRAY);
@@ -158,9 +162,54 @@ void drawStove(const Camera2D &camera) {
             DrawRectangleLinesEx(circles, 6, DARKGRAY);
             drawCircleGrid(circles, 1, 3, 80);
 
+            const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+            drawButtons(buttonsVec);
+            drawButGlow(buttonsVec.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
+
         EndMode2D();
 
+        drawInventory(match.player);
+
     EndDrawing();
+}
+
+
+// Cor do círculo de cada ingrediente
+static Color ingredientColor(IngredientType t) {
+    switch (t) {
+        case LETTUCE: return GREEN;
+        case TOMATO:  return RED;
+        default:      return GRAY;   // ingrediente sem cor definida ainda
+    }
+}
+
+void drawInventory(const Player &player) {
+    for (int i = 0; i < INVENTORY_SLOTS; i++) {
+        const Slot &slot = player.inventory[i];
+
+        Rectangle r = { INV_X + i * (INV_SLOT_SIZE + INV_SLOT_GAP), INV_Y,
+                        INV_SLOT_SIZE, INV_SLOT_SIZE };
+
+        // fundo meio transparente (todos os slots)
+        DrawRectangleRec(r, Fade(BLACK, 0.4f));
+
+        // destaque do slot selecionado
+        if (i == player.selectedSlot)
+            DrawRectangleLinesEx(r, 3, WHITE);
+        else
+            DrawRectangleLinesEx(r, 1, Fade(WHITE, 0.4f));
+
+        // item, se houver
+        if (slot.count > 0 && slot.type != NONE) {
+            Vector2 center = { r.x + r.width / 2, r.y + r.height / 2 };
+            DrawCircleV(center, INV_SLOT_SIZE * 0.3f, ingredientColor(slot.type));
+
+            // quantidade no canto inferior direito
+            if (slot.count > 1)
+                DrawText(TextFormat("%d", slot.count),
+                         (int)(r.x + r.width - 22), (int)(r.y + r.height - 22), 20, WHITE);
+        }
+    }
 }
 
 // void drawPrepare(Match match, int butUnderMouseInd){

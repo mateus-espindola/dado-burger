@@ -28,6 +28,47 @@
 #define OVEN_LEFT_W 400
 #define OVEN_LEFT_H 200
 
+constexpr float CIRCLE_BUTTON_DIAMETER = 100.0f;
+constexpr float CIRCLE_BUTTON_STEP_Y   = 200.0f;
+constexpr int   CIRCLE_BUTTON_COUNT    = 3;
+
+#define COOK_TOP_FRST_CLMN_LEFT_X 260
+#define COOK_TOP_FRST_Y 110
+
+#define COOK_TOP_SCND_CLMN_LEFT_X 760
+#define COOK_TOP_SCND_Y 110
+
+//Changed for a function that declares the padronized buttons
+// #define COOK_TOP_1_LEFT_X 260
+// #define COOK_TOP_1_LEFT_Y 110
+// #define COOK_TOP_1_LEFT_W 100
+// #define COOK_TOP_1_LEFT_H 100
+
+// #define COOK_TOP_2_LEFT_X 260
+// #define COOK_TOP_2_LEFT_Y 310
+// #define COOK_TOP_2_LEFT_W 100
+// #define COOK_TOP_2_LEFT_H 100
+
+// #define COOK_TOP_3_LEFT_X 260
+// #define COOK_TOP_3_LEFT_Y 510
+// #define COOK_TOP_3_LEFT_W 100
+// #define COOK_TOP_3_LEFT_H 100
+
+// #define COOK_TOP_4_LEFT_X 260
+// #define COOK_TOP_4_LEFT_Y 110
+// #define COOK_TOP_4_LEFT_W 100
+// #define COOK_TOP_4_LEFT_H 100
+
+// #define COOK_TOP_5_LEFT_X 260
+// #define COOK_TOP_5_LEFT_Y 310
+// #define COOK_TOP_5_LEFT_W 100
+// #define COOK_TOP_5_LEFT_H 100
+
+// #define COOK_TOP_6_LEFT_X 260
+// #define COOK_TOP_6_LEFT_Y 510
+// #define COOK_TOP_6_LEFT_W 100
+// #define COOK_TOP_6_LEFT_H 100
+
 
 //Kitchen buttons
 #define TOMATO_LEFT_X 5210
