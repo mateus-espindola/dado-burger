@@ -12,6 +12,8 @@ bool keyUpClicked(void);
 
 bool keyDownClicked(void);
 
+int changeInvSlot(void);
+
 void processButClick(Match& match, const Button& button);
 
 #endif

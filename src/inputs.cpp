@@ -22,6 +22,13 @@ bool keyDownClicked(){
     return IsKeyPressed(KEY_DOWN);
 }
 
+int changeInvSlot(){
+    if(IsKeyPressed(KEY_ONE)) return 0;
+    if(IsKeyPressed(KEY_TWO)) return 1;
+    if(IsKeyPressed(KEY_THREE)) return 2;
+    return -1;
+}
+
 
 MatchScreen screenFromName(const char *name)
 {
@@ -37,33 +44,37 @@ MatchScreen screenFromName(const char *name)
 void processButClick(Match& match, const Button& button) {
     Player& player = match.player;
 
+    Slot *inventory = player.inventory;
+    int slot = player.selectedSlot;
+
     switch (button.type) {
         case CLICK:
             match.screen = screenFromName(button.text);
         break;
 
         case PICK:
-        {
             // if (button.target == nullptr) {
             //     printf("ERRO: button.target e nullptr!\n");
             //     return;
             // }
-            Slot *inventory = player.inventory;
-            int slot = player.selectedSlot;
             if(inventory[slot].count < inventory[slot].capacity){
                 Ingredient ing;
                 initIngredient(ing, button.text[0]);
                 stack_push(inventory[slot].items, ing);
                 inventory[slot].count++;
                 inventory[slot].type = ing.type;
-                printf("ITEM: %d\n", match.player.inventory->items.top->data.type);
+                //SÓ USAR ESSE PRINTF SE EXTREMAMENTE NECESSÁRIO PARA DEBUG. ELE PODE ORIGINAR ACESSO À PONTEIRO NULL E CRASHAR A PORRA TODA
+                // printf("ITEM: %d\n", match.player.inventory->items.top->data.type);
                 printf("%c\n", button.text[0]);
             }
-        }
                 
         break;
         case DROP:
-            // só usam o player
+            if(inventory[slot].count > 0){
+                stack_pop(inventory[slot].items);
+                inventory[slot].count--;
+                if(inventory[slot].count == 0) inventory[slot].type = NONE;
+            }
         break;
 
         case INSERT:

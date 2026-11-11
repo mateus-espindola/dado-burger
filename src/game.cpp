@@ -75,6 +75,25 @@ void ambientProcess(Game& game, Vector2 mouse){
     if (match.screen == KITCHEN || match.screen == FRIDGE)
         match.screen = (match.player.object.pos.x > 4800) ? FRIDGE : KITCHEN;
 
+    int selectedInvSlot = changeInvSlot();
+    if(selectedInvSlot != -1 && selectedInvSlot < INVENTORY_SLOTS)
+        match.player.selectedSlot = selectedInvSlot;
+    printf("%d\n", selectedInvSlot);
+
+    // for (int i = 0; i < INVENTORY_SLOTS; i++) {
+    // printf("Slot %d: count=%d, top=%p\n",
+    //        i,
+    //        match.player.inventory[i].count,
+    //        (void*)match.player.inventory[i].items.top);
+    // }
+
+    // if (match.player.selectedSlot < 0 ||
+    // match.player.selectedSlot >= INVENTORY_SLOTS) {
+    // printf("SELECTED SLOT INVALID: %d\n",
+    //        match.player.selectedSlot);
+    // return;
+    // }
+
     // 1. update
     switch(match.screen){
         case KITCHEN:
