@@ -37,11 +37,18 @@ constexpr float CIRCLE_BUTTON_DIAMETER = 100.0f;
 constexpr float CIRCLE_BUTTON_STEP_Y   = 200.0f;
 constexpr int   CIRCLE_BUTTON_COUNT    = 3;
 
+constexpr float OVEN_SQR_BUTTON_SIZE = 100.0f;
+constexpr float OVEN_SQR_BUTTON_STEP_Y = 200.f;
+constexpr int   OVEN_SQR_BUTTON_COUNT    = 3;
+
 #define COOK_TOP_FRST_CLMN_LEFT_X 260
 #define COOK_TOP_FRST_Y 110
 
 #define COOK_TOP_SCND_CLMN_LEFT_X 760
 #define COOK_TOP_SCND_Y 110
+
+#define OVEN_STACK_SCND_CLMN_LEFT_X 1270
+#define OVEN_STACK_TOP_SCND_Y 110
 
 //Changed for a function that declares the padronized buttons
 // #define COOK_TOP_1_LEFT_X 260

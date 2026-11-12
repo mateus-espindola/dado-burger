@@ -38,12 +38,21 @@
 
 // }
 
+int buttonTargetCapacityOf(ButtonType type){
+    switch(type){
+        case INSERT: return 1;
+        case STACK: return 10;
+        default: return 0;
+    }
+}
+
 static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
     b.type  = type;
     b.shape = { x, y, w, h };
     snprintf(b.text, sizeof(b.text), "%s", text);
     b.target = nullptr;
-    b.target_size = 0;
+    b.targetCapacity = buttonTargetCapacityOf(type);
+    b.targetSize = 0;
 }
 
 void declareButtons(ButtonVec *screenButtons) {
@@ -70,8 +79,9 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(fridgeBut[2], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
 
     int startInd = 0;
-    startInd = setCircleButtons(ovenBut, startInd, COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, "COOK", INSERT);
-    startInd = setCircleButtons(ovenBut, startInd, COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, "COOK", INSERT);
+    startInd = setSquareButtons(ovenBut, startInd, COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, "COOK", INSERT);
+    startInd = setSquareButtons(ovenBut, startInd, COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, "COOK", INSERT);
+    startInd = setSquareButtons(ovenBut, startInd, OVEN_STACK_SCND_CLMN_LEFT_X, OVEN_STACK_TOP_SCND_Y, "STACK", STACK);
 
     // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
     // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
@@ -103,17 +113,30 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
 
 // x e firstY sao o canto superior esquerdo do primeiro botao
 //Devolve o proximo indice livre do botao
-int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
-    for (int k = 0; k < CIRCLE_BUTTON_COUNT; k++) {
+// int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
+//     for (int k = 0; k < CIRCLE_BUTTON_COUNT; k++) {
+//         setButton(buttons[startInd + k],
+//                   x,
+//                   firstY + k * CIRCLE_BUTTON_STEP_Y,
+//                   CIRCLE_BUTTON_DIAMETER,
+//                   CIRCLE_BUTTON_DIAMETER,
+//                   text,
+//                   type);
+//     }
+//     return startInd + CIRCLE_BUTTON_COUNT;
+// }
+
+int setSquareButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
+    for (int k = 0; k < OVEN_SQR_BUTTON_COUNT; k++) {
         setButton(buttons[startInd + k],
                   x,
-                  firstY + k * CIRCLE_BUTTON_STEP_Y,
-                  CIRCLE_BUTTON_DIAMETER,
-                  CIRCLE_BUTTON_DIAMETER,
+                  firstY + k * OVEN_SQR_BUTTON_STEP_Y,
+                  OVEN_SQR_BUTTON_SIZE,
+                  OVEN_SQR_BUTTON_SIZE,
                   text,
                   type);
     }
-    return startInd + CIRCLE_BUTTON_COUNT;
+    return startInd + OVEN_SQR_BUTTON_COUNT;
 }
 
 

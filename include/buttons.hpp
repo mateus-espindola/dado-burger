@@ -38,7 +38,8 @@ struct Button {
     Rectangle shape;
     char text[20];
     Stack<Ingredient> *target;
-    int target_size;
+    int targetCapacity;
+    int targetSize;
 };
 
 struct ButtonVec {
@@ -52,6 +53,6 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons);
 
 int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen);
 
-int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type);
+int setSquareButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type);
 
 #endif

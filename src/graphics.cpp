@@ -320,6 +320,14 @@ void drawButtons(const ButtonVec& screen){
         // drawButGlow(b.shape, WHITE, CAMADAS_DE_BRILHO, BRILHO);
         DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
+        if(b.type == STACK){
+            Color color;
+            if(b.targetSize <= (int) (b.targetCapacity/4)) color = GREEN;
+            else if(b.targetSize > (int) (b.targetCapacity/4) && b.targetSize <= (3*b.targetCapacity/4)) color = YELLOW;
+            else color = RED;
+            DrawText(TextFormat("%d", b.targetSize), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+        }
+
     }
 
 }
