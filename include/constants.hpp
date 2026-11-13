@@ -37,7 +37,7 @@ constexpr float INV_Y         = 20.0f;
 #define COOK_TIME 2
 
 
-#define DRAW_HITBOX 1
+#define DRAW_HITBOX 0
 
 
 

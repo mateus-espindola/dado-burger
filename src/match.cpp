@@ -1,5 +1,5 @@
-#include "match.hpp"
-#include "camera.hpp"
+#include "../include/match.hpp"
+#include "../include/camera.hpp"
 
 void matchStart(Match& match) {
 

@@ -1,4 +1,4 @@
-#include "sprites.hpp"
+#include "../include/sprites.hpp"
 
 void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint) {
     DrawTexturePro(

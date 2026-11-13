@@ -1,12 +1,12 @@
 #include <math.h>
 #include <cassert>
 
-#include "match_enums.hpp"
+#include "../include/match_enums.hpp"
 #include "../include/camera.hpp"
-#include "world.hpp"
+#include "../include/world.hpp"
 
 void setKitchenCamera(Match& match){
-    
+
     match.camera = { 0 };
 
     match.camera.target = { match.player.object.pos.x, match.player.object.pos.y};
@@ -26,7 +26,7 @@ void setOvenCamera(Match& match){
 }
 
 // void cameraProcess(Match& match){
-    
+
 //     float t = 1.0f - expf(-8.0f * GetFrameTime());
 
 //     match.camera.target.x += (match.player.object.pos.x - match.camera.target.x) * t;

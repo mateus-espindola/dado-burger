@@ -4,8 +4,8 @@
 #include "../include/game.hpp"
 #include "../include/graphics.hpp"
 #include "../include/inputs.hpp"
-#include "camera.hpp"
-#include "world.hpp"
+#include "../include/camera.hpp"
+#include "../include/world.hpp"
 
 #include "raylib.h"
 
@@ -114,6 +114,7 @@ void ambientProcess(Game& game, Vector2 mouse){
         case FRIDGE: drawKitchen(match, butUnderMouseInd);  break;
         case OVEN:   drawStove(match, butUnderMouseInd);    break;
         case BOARD:  drawBoard(match, butUnderMouseInd);    break;
+        case PREPARE: drawPrepare(match, butUnderMouseInd); break;
         default: break;
     }
 
@@ -134,7 +135,7 @@ void ambientProcess(Game& game, Vector2 mouse){
         break;
         default: break;
     }
-    
+
 }
 
 void gameOver(Game& game){

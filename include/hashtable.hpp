@@ -7,7 +7,7 @@ constexpr int HASHTABLE_CAPACITY = 11;
 struct Order {
 	int cod;
 	std::string order;
-};	
+};
 
 template <typename T>
 struct Hash_node{
@@ -82,7 +82,7 @@ void initializeHashTable(HashTable<T>& ht) {
 template <typename T>
 void insertHashTable(HashTable<T>& ht, const T& obj) {
 	int new_key = generate_hash_key(obj);
-	
+
 	int i = knuth_hash(new_key, HASHTABLE_CAPACITY);
 
 	if (ht.data[i] != nullptr) {
@@ -94,7 +94,7 @@ void insertHashTable(HashTable<T>& ht, const T& obj) {
 	new_node->key = new_key;
 	new_node->data = obj;
 	new_node->next = ht.data[i];
-	
+
 	ht.data[i] = new_node;
 	ht.size++;
 	update_load_factor(ht);
@@ -120,20 +120,20 @@ void exterminateHashTable(HashTable<T>& ht) {
 
 
 
-int main() {
-	HashTable<Order> hash_test;
+// int main() {
+// 	HashTable<Order> hash_test;
 
-	initializeHashTable(hash_test);
+// 	initializeHashTable(hash_test);
 
-	TEST_knush_hash();
+// 	TEST_knush_hash();
 
-	Order burger1;
-	burger1.cod = 67;
-	burger1.order = "penis";
+// 	Order burger1;
+// 	burger1.cod = 67;
+// 	burger1.order = "penis";
 
-	insertHashTable(hash_test, burger1);
+// 	insertHashTable(hash_test, burger1);
 
-	exterminateHashTable(hash_test);
+// 	exterminateHashTable(hash_test);
 
-	return 0;
-}
+// 	return 0;
+// }

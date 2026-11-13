@@ -1,9 +1,9 @@
 #include <cstdio>
 #include <cstring>
 
-#include "inputs.hpp"
-#include "tads.hpp"
-#include "food.hpp"
+#include "../include/inputs.hpp"
+#include "../include/tads.hpp"
+#include "../include/food.hpp"
 // #include "match.hpp"
 
 Vector2 findMousePos(){
@@ -67,7 +67,7 @@ void processButClick(Match& match, const Button& button) {
                 // printf("ITEM: %d\n", match.player.inventory->items.top->data.type);
                 printf("%c\n", button.text[0]);
             }
-                
+
         break;
         case DROP:
             if(inventory[slot].count > 0){

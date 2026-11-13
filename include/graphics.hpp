@@ -35,6 +35,8 @@ void drawBoard(Match match, int butUnderMouseInd);
 
 void drawStove(Match& match, int butUnderMouseInd);
 
+void drawPrepare(Match& match, int butUnderMouseInd);
+
 void drawInventory(const Player &player);
 
 #endif

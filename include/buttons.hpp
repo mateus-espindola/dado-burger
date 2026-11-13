@@ -53,6 +53,6 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons);
 
 int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen);
 
-int setSquareButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type);
+int setSquareButtons(Button *buttons, int startInd, int quantity, int delta, Rectangle shape, const char *text, ButtonType type, bool vertical);
 
 #endif

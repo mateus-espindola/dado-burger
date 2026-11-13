@@ -1,7 +1,7 @@
 #include <cstring>
 
 // #include "food.hpp"
-#include "player.hpp"
+#include "../include/player.hpp"
 
 // void setPlayer(Player& player){
 

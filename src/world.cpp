@@ -1,5 +1,5 @@
-#include "world.hpp"
-#include "match.hpp"
+#include "../include/world.hpp"
+#include "../include/match.hpp"
 
 //Returns the width of the scene. It is used to call the camera function with the proper scene size to find target and things like that
 float worldWidthOf(const Match &match) {

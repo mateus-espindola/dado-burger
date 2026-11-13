@@ -2,7 +2,8 @@
 
 #include "../include/graphics.hpp"
 #include "../include/camera.hpp"
-#include "button_constants.hpp"
+#include "../include/button_constants.hpp"
+#include "raylib.h"
 
 
 // void gameDraw(Game &game){
@@ -34,7 +35,7 @@
 //             //drawNearestBut(game.current_match.player, game.current_match.buttons);
 //             matchDraw(game.current_match);
 //         EndMode2D();
-        
+
 //         break;
 
 //     }
@@ -72,6 +73,19 @@ void drawKitchen(Match& match, int butUnderMouseInd){
         EndMode2D();
 
         drawInventory(match.player);
+
+    EndDrawing();
+}
+
+void drawPrepare(Match &match, int butUnderMouseInd) {
+    BeginDrawing();
+    ClearBackground(GREEN);
+
+    const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+
+    drawButtons(buttonsVec);
+
+    drawButGlow(buttonsVec.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
 
     EndDrawing();
 }
@@ -223,7 +237,7 @@ void drawInventory(const Player &player) {
 
 //         playerDraw(match.player);
 //         printf("%f, %f\n", match.player.object.pos.x, match.player.object.pos.y);
-        
+
 //     // EndMode2D();
 //     switch(match.state){
 

@@ -1,4 +1,5 @@
 //BUTTON CONSTANTS
+#include "constants.hpp"
 #define MAX_ACESS_DIST 300 //Distancia maxima que o player pode abrir uma parte do cenario
 
 #define BRIGHTNESS_LAYERS 12
@@ -8,7 +9,7 @@
 #define BUTTONS_COUNTER 10
 #define BUTTONS_KITCHEN 10
 #define BUTTONS_FRIDGE 10
-#define BUTTONS_PREPARE 10
+#define BUTTONS_PREPARE 15
 #define BUTTONS_BOARD 10
 #define BUTTONS_OVEN 10
 
@@ -41,6 +42,8 @@ constexpr float OVEN_SQR_BUTTON_SIZE = 100.0f;
 constexpr float OVEN_SQR_BUTTON_STEP_Y = 200.f;
 constexpr int   OVEN_SQR_BUTTON_COUNT    = 3;
 
+
+// Oven buttons
 #define COOK_TOP_FRST_CLMN_LEFT_X 260
 #define COOK_TOP_FRST_Y 110
 
@@ -50,36 +53,15 @@ constexpr int   OVEN_SQR_BUTTON_COUNT    = 3;
 #define OVEN_STACK_SCND_CLMN_LEFT_X 1270
 #define OVEN_STACK_TOP_SCND_Y 110
 
-//Changed for a function that declares the padronized buttons
-// #define COOK_TOP_1_LEFT_X 260
-// #define COOK_TOP_1_LEFT_Y 110
-// #define COOK_TOP_1_LEFT_W 100
-// #define COOK_TOP_1_LEFT_H 100
 
-// #define COOK_TOP_2_LEFT_X 260
-// #define COOK_TOP_2_LEFT_Y 310
-// #define COOK_TOP_2_LEFT_W 100
-// #define COOK_TOP_2_LEFT_H 100
+// Prepare buttons
+constexpr int PREPARE_SALAD_BUT_WIDTH = 120;
+constexpr int PREPARE_SALAD_BUT_HEIGHT= 90;
+constexpr int PREPARE_SALAD_BUT_DELTA = 40;
+constexpr int PREPARE_SALAD_MID_BUT_LEFT_X = (WINDOW_WIDTH / 2) - (PREPARE_SALAD_BUT_WIDTH / 2); // Calcular o do meio so pra definir certinho
+constexpr int PREPARE_SALAD_FIRST_BUT_LEFT_X = PREPARE_SALAD_MID_BUT_LEFT_X - (2*PREPARE_SALAD_BUT_DELTA + 2*PREPARE_SALAD_BUT_WIDTH);
+constexpr int PREPARE_SALAD_FIRST_BUT_LEFT_Y = WINDOW_HEIGHT / 15;
 
-// #define COOK_TOP_3_LEFT_X 260
-// #define COOK_TOP_3_LEFT_Y 510
-// #define COOK_TOP_3_LEFT_W 100
-// #define COOK_TOP_3_LEFT_H 100
-
-// #define COOK_TOP_4_LEFT_X 260
-// #define COOK_TOP_4_LEFT_Y 110
-// #define COOK_TOP_4_LEFT_W 100
-// #define COOK_TOP_4_LEFT_H 100
-
-// #define COOK_TOP_5_LEFT_X 260
-// #define COOK_TOP_5_LEFT_Y 310
-// #define COOK_TOP_5_LEFT_W 100
-// #define COOK_TOP_5_LEFT_H 100
-
-// #define COOK_TOP_6_LEFT_X 260
-// #define COOK_TOP_6_LEFT_Y 510
-// #define COOK_TOP_6_LEFT_W 100
-// #define COOK_TOP_6_LEFT_H 100
 
 
 //Kitchen buttons

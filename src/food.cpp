@@ -1,4 +1,4 @@
-#include "food.hpp"
+#include "../include/food.hpp"
 #include "../include/match.hpp"
 //#include "game.hpp"
 
@@ -89,7 +89,7 @@ void initIngredient(Ingredient &ing, char ingType) {
 
 void cut_ingredient(Ingredient& ing, Stack<Ingredient>& ready_ing){
     ing.cook_state.cookPoint[1] = READY;
-    
+
     Stack_node<Ingredient> *node = new Stack_node<Ingredient>;
 
     node->data = ing;

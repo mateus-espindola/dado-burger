@@ -5,6 +5,7 @@
 // #include "match_enums.hpp"
 // #include "../include/match.hpp"    // para STATE_QUANTITY, PREPARE, BOARD, OVEN
 #include "../include/button_constants.hpp"
+#include "raylib.h"
 
 // static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
 //     b.shape = { x, y, w, h };
@@ -79,9 +80,15 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(fridgeBut[2], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
 
     int startInd = 0;
-    startInd = setSquareButtons(ovenBut, startInd, COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, "COOK", INSERT);
-    startInd = setSquareButtons(ovenBut, startInd, COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, "COOK", INSERT);
-    startInd = setSquareButtons(ovenBut, startInd, OVEN_STACK_SCND_CLMN_LEFT_X, OVEN_STACK_TOP_SCND_Y, "STACK", STACK);
+    Rectangle prepare_salad_button_rect = { PREPARE_SALAD_FIRST_BUT_LEFT_X, PREPARE_SALAD_FIRST_BUT_LEFT_Y, PREPARE_SALAD_BUT_WIDTH, PREPARE_SALAD_BUT_HEIGHT };
+    setSquareButtons(prepareBut, startInd, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "PICK", PICK, false);
+
+    Rectangle rect1 = { COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
+    Rectangle rect2 = { COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
+    Rectangle rect3 = { OVEN_STACK_SCND_CLMN_LEFT_X, OVEN_STACK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
+    startInd = setSquareButtons(ovenBut, startInd, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect1, "COOK", INSERT, true);
+    startInd = setSquareButtons(ovenBut, startInd, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect2, "COOK", INSERT, true);
+    startInd = setSquareButtons(ovenBut, startInd, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect3, "STACK", STACK, true);
 
     // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
     // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
@@ -126,17 +133,31 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
 //     return startInd + CIRCLE_BUTTON_COUNT;
 // }
 
-int setSquareButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
-    for (int k = 0; k < OVEN_SQR_BUTTON_COUNT; k++) {
-        setButton(buttons[startInd + k],
-                  x,
-                  firstY + k * OVEN_SQR_BUTTON_STEP_Y,
-                  OVEN_SQR_BUTTON_SIZE,
-                  OVEN_SQR_BUTTON_SIZE,
-                  text,
-                  type);
+int setSquareButtons(Button *buttons, int startInd, int quantity, int delta, Rectangle shape, const char *text, ButtonType type, bool vertical) {
+    if (vertical) {
+        for (int k = 0; k < quantity; k++) {
+            setButton(buttons[startInd + k],
+                    shape.x,
+                    shape.y + k * delta,
+                    shape.width,
+                    shape.height,
+                    text,
+                    type);
+        }
+        return startInd + quantity;
     }
-    return startInd + OVEN_SQR_BUTTON_COUNT;
+    else {
+        for (int k = 0; k < quantity; k++) {
+            setButton(buttons[startInd + k],
+                    shape.x+ k * delta,
+                    shape.y,
+                    shape.width,
+                    shape.height,
+                    text,
+                    type);
+        }
+        return startInd + quantity;
+    }
 }
 
 
@@ -160,7 +181,7 @@ bool usesCamera(MatchScreen screen) {
 int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen){
 
     bool useCamera = usesCamera(curScreen);
-    
+
     Vector2 point = useCamera ? GetScreenToWorld2D(mouse, camera) : mouse;
 
     for (int i = screenButtons.size - 1; i >= 0; i--){
@@ -173,5 +194,3 @@ int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D
     }
     return -1;
 }
-
-

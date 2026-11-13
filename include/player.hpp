@@ -52,7 +52,6 @@ struct Player {
     Object object;              //The constant bellow is defined in the struct WORLD in match.hpp
     Vector2 savedPos[WORLD_COUNT]; //Number of scenes that require camera2D. This is used to not lose the player position after each scene change
     PlayerInfo info;
-    // Stack<Ingredient> inventory;
     Slot inventory[INVENTORY_SLOTS];
     int selectedSlot;
     Direction direction;
