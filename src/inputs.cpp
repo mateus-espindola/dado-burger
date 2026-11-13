@@ -40,6 +40,25 @@ MatchScreen screenFromName(const char *name)
     return KITCHEN;   // valor padrão se não achar
 }
 
+
+
+static bool isCookable(IngredientType t) {
+    return t == MEAT || t == VEGAN_PROTEIN || t == BACON
+        || t == EGG  || t == SWISS_CHEESE  || t == CHEDDAR;
+}
+
+static bool isCuttable(IngredientType t) {
+    return t == TOMATO || t == ONION;
+}
+
+bool canInsert(MatchScreen screen, IngredientType type) {
+    switch (screen) {
+        case OVEN:  return isCookable(type);
+        case BOARD: return isCuttable(type);
+        default:    return false;   // outras telas não aceitam INSERT
+    }
+}
+
 void transferBetweenStacks(Stack& orig, Stack& dest){
     Ingredient ing;
     stack_pop(orig, ing);
@@ -66,7 +85,7 @@ void processButClick(Match& match, Button& button) {
             if(inventory.size < inventory.capacity){
                 Ingredient ing;
                 initIngredient(ing, button.text[0]);
-                //stack_push already incremetns the size and assigns the type
+                //The function stack_push already incremetns the size and assigns the type
                 stack_push(inventory, ing);
                 //SÓ USAR ESSE PRINTF SE EXTREMAMENTE NECESSÁRIO PARA DEBUG. ELE PODE ORIGINAR ACESSO À PONTEIRO NULL E CRASHAR A PORRA TODA
                 // printf("ITEM: %d\n", match.player.inventory->top->data.type);
@@ -79,15 +98,14 @@ void processButClick(Match& match, Button& button) {
 
         case DROP:
             if(inventory.size > 0){
+                //The function stack_push already incremetns the size and assigns the type
                 stack_pop(inventory);
-                inventory.size--;
-                if(inventory.size == 0) inventory.type = NONE;
             }
         break;
 
         case INSERT:
             if(butStack.size == 0){
-                if(inventory.size > 0){
+                if(inventory.size > 0 && canInsert(match.screen, inventory.type)){
                     transferBetweenStacks(inventory, butStack);
                 }
             }

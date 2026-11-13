@@ -34,19 +34,19 @@ CookPoint& operator++(CookPoint& c) {
 
 IngredientType charToIngType(char c) {
     switch (c) {
-        case 'a': return LETTUCE;
-        case 'b': return BACON;
-        case 'c': return ONION;
-        case 'k': return KETCHUP;
+        case 'L': return LETTUCE;
+        case 'B': return BACON;
+        case 'O': return ONION;
+        case 'K': return KETCHUP;
         case 'm': return MUSTARD;
-        case 'n': return MEAT;
-        case 'v': return VEGAN_PROTEIN;
-        case 'o': return EGG;
-        case 'p': return PICKLES;
-        case 'q': return CHEDDAR;
-        case 's': return SWISS_CHEESE;
-        case 't': return TOMATO;
-        case 'z': return UPPER_BREAD;
+        case 'M': return MEAT;
+        case 'V': return VEGAN_PROTEIN;
+        case 'E': return EGG;
+        case 'P': return PICKLES;
+        case 'C': return CHEDDAR;
+        case 'S': return SWISS_CHEESE;
+        case 'T': return TOMATO;
+        case 'U': return UPPER_BREAD;
         default:  return NONE;   // inclui '0' e qualquer letra desconhecida
     }
 }
