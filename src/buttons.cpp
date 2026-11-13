@@ -79,16 +79,24 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "aLETUCE", PICK);
     setButton(fridgeBut[2], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
 
-    int startInd = 0;
+    int prepare_start_index = 0;
     Rectangle prepare_salad_button_rect = { PREPARE_SALAD_FIRST_BUT_LEFT_X, PREPARE_SALAD_FIRST_BUT_LEFT_Y, PREPARE_SALAD_BUT_WIDTH, PREPARE_SALAD_BUT_HEIGHT };
-    setSquareButtons(prepareBut, startInd, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "PICK", PICK, false);
+    Rectangle prepare_bottle_button_rect = { PREPARE_BOTTLE_FIRST_BUT_LEFT_X, PREPARE_BOTTLE_FIRST_BUT_LEFT_Y, PREPARE_BOTTLE_BUT_WIDTH, PREPARE_BOTTLE_BUT_HEIGHT };
+    Rectangle prepare_protein_button_rect = { PREPARE_PROTEIN_FIRST_BUT_LEFT_X, PREPARE_PROTEIN_FIRST_BUT_LEFT_Y, PREPARE_PROTEIN_BUT_WIDTH, PREPARE_PROTEIN_BUT_HEIGHT };
+    Rectangle prepare_bread_button_rect = { PREPARE_BREAD_FIRST_BUT_LEFT_X, PREPARE_BREAD_FIRST_BUT_LEFT_Y, PREPARE_BREAD_BUT_WIDTH, PREPARE_BREAD_BUT_HEIGHT };
+    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "SALAD", STACK, false);
+    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_BOTTLE_BUT_DELTA + PREPARE_BOTTLE_BUT_HEIGHT, prepare_bottle_button_rect, "BOTTLE", STACK, true);
+    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_PROTEIN_BUT_DELTA + PREPARE_PROTEIN_BUT_HEIGHT, prepare_protein_button_rect, "PROTEIN", STACK, true);
+    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 2, PREPARE_BREAD_BUT_DELTA + PREPARE_BREAD_BUT_WIDTH, prepare_bread_button_rect, "BREAD", PICK, false);
+    setButton(prepareBut[prepare_start_index], PREPARE_BURGER_BUT_LEFT_X, PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
 
+    int cook_start_index = 0;
     Rectangle rect1 = { COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
     Rectangle rect2 = { COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
     Rectangle rect3 = { OVEN_STACK_SCND_CLMN_LEFT_X, OVEN_STACK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    startInd = setSquareButtons(ovenBut, startInd, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect1, "COOK", INSERT, true);
-    startInd = setSquareButtons(ovenBut, startInd, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect2, "COOK", INSERT, true);
-    startInd = setSquareButtons(ovenBut, startInd, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect3, "STACK", STACK, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect1, "COOK", INSERT, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect2, "COOK", INSERT, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect3, "STACK", STACK, true);
 
     // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
     // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
