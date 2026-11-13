@@ -197,9 +197,20 @@ void drawStove(Match& match, int butUnderMouseInd) {
 // Cor do círculo de cada ingrediente
 static Color ingredientColor(IngredientType t) {
     switch (t) {
-        case LETTUCE: return GREEN;
-        case TOMATO:  return RED;
-        default:      return BLANK;   // ingrediente sem cor definida ainda
+        case LETTUCE:       return GREEN;
+        case TOMATO:        return RED;
+        case BACON:         return PINK;
+        case ONION:         return PURPLE;
+        case KETCHUP:       return MAROON;
+        case MUSTARD:       return YELLOW;
+        case MEAT:          return BROWN;
+        case VEGAN_PROTEIN: return DARKGREEN;
+        case EGG:           return RAYWHITE;
+        case PICKLES:       return LIME;
+        case CHEDDAR:       return ORANGE;
+        case SWISS_CHEESE:  return GOLD;
+        case UPPER_BREAD:   return BEIGE;
+        default:            return BLANK;   // NONE ou ingrediente sem cor definida
     }
 }
 

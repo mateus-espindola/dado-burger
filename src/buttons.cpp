@@ -7,38 +7,6 @@
 #include "../include/button_constants.hpp"
 #include "raylib.h"
 
-// static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
-//     b.shape = { x, y, w, h };
-//     // b.pos   = { x, y };
-//     // b.size  = { w, h };
-//     snprintf(b.text, sizeof(b.text), "%s", text);
-// }
-
-// void declareButtons(Button **buttons, int size) {
-//     // static: os arrays vivem até o fim do programa
-//     static Button kitchenBut[BUTTONS_KITCHEN];
-//     static Button fridgeBut[BUTTONS_KITCHEN];
-//     static Button prepareBut[BUTTONS_PREPARE];
-//     static Button boardBut[BUTTONS_BOARD];
-//     static Button ovenBut[BUTTONS_OVEN];
-
-//     buttons[KITCHEN] = kitchenBut;
-//     buttons[FRIDGE] = fridgeBut;
-//     buttons[PREPARE] = prepareBut;
-//     buttons[BOARD]   = boardBut;
-//     buttons[OVEN]    = ovenBut;
-
-
-//     setButton(kitchenBut[0], PREPARE_LEFT_X, PREPARE_LEFT_Y, PREPARE_LEFT_W, PREPARE_LEFT_H, "PREPARE", CLICK);
-//     setButton(kitchenBut[1], BOARD_LEFT_X, BOARD_LEFT_Y,   BOARD_LEFT_W,   BOARD_LEFT_H, "BOARD", CLICK);
-//     setButton(kitchenBut[2], OVEN_LEFT_X, OVEN_LEFT_Y, OVEN_LEFT_W, OVEN_LEFT_H, "OVEN", CLICK);
-
-//     setButton(fridgeBut[0], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "TOMATO", PICK);
-//     setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "LETUCE", PICK);
-
-
-// }
-
 int buttonTargetCapacityOf(ButtonType type){
     switch(type){
         case INSERT: return 1;
@@ -63,6 +31,21 @@ static void setButton(Button &b, float x, float y, float w, float h, const char 
     b.target.type = NONE;
 }
 
+void correctButName(Button *b){
+
+    // Button &b = bVec.buttons[bVec.size];
+    snprintf(b[0].text, sizeof(b[0].text), "%s", "EGGS");
+    snprintf(b[1].text, sizeof(b[1].text), "%s", "LETUCE");
+    snprintf(b[2].text, sizeof(b[2].text), "%s", "TOMATO");
+    snprintf(b[3].text, sizeof(b[3].text), "%s", "ONION");
+    snprintf(b[4].text, sizeof(b[4].text), "%s", "MEAT");
+    snprintf(b[5].text, sizeof(b[5].text), "%s", "VEGAN PROTEIN");
+    snprintf(b[6].text, sizeof(b[6].text), "%s", "BACON");
+    snprintf(b[7].text, sizeof(b[7].text), "%s", "SWISS CHEESE");
+    snprintf(b[8].text, sizeof(b[8].text), "%s", "CHEDDAR");
+
+}
+
 void declareButtons(ButtonVec *screenButtons) {
     // static: os arrays vivem até o fim do programa
     static Button kitchenBut[BUTTONS_KITCHEN];
@@ -82,15 +65,18 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(kitchenBut[2], OVEN_LEFT_X,    OVEN_LEFT_Y,    OVEN_LEFT_W,    OVEN_LEFT_H,    "OVEN",    CLICK);
     setButton(kitchenBut[3], TRASH_KITCHEN_LEFT_X, TRASH_KITCHEN_LEFT_Y, TRASH_KITCHEN_LEFT_W, TRASH_KITCHEN_LEFT_H, "TRASH", DROP);
 
-    setButton(fridgeBut[0], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "tTOMATO", PICK);
-    setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "aLETUCE", PICK);
-    setButton(fridgeBut[2], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
+    int fridgeIndex = 0;
+    fridgeIndex = setSquareButtons(fridgeBut, fridgeIndex, 4, KITCHEN_BUTTON_DELTA, fridge_item_frst_row_but_rect, "NONE", PICK, false);
+    fridgeIndex = setSquareButtons(fridgeBut, fridgeIndex, 5, KITCHEN_BUTTON_DELTA, fridge_item_scnd_row_but_rect, "NONE", PICK, false);
+    setButton(fridgeBut[fridgeIndex], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
+
+    correctButName(fridgeBut);
+
+    // setButton(fridgeBut[0], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "tTOMATO", PICK);
+    // setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "aLETUCE", PICK);
+    // setButton(fridgeBut[2], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
 
     int prepare_start_index = 0;
-    Rectangle prepare_salad_button_rect = { PREPARE_SALAD_FIRST_BUT_LEFT_X, PREPARE_SALAD_FIRST_BUT_LEFT_Y, PREPARE_SALAD_BUT_WIDTH, PREPARE_SALAD_BUT_HEIGHT };
-    Rectangle prepare_bottle_button_rect = { PREPARE_BOTTLE_FIRST_BUT_LEFT_X, PREPARE_BOTTLE_FIRST_BUT_LEFT_Y, PREPARE_BOTTLE_BUT_WIDTH, PREPARE_BOTTLE_BUT_HEIGHT };
-    Rectangle prepare_protein_button_rect = { PREPARE_PROTEIN_FIRST_BUT_LEFT_X, PREPARE_PROTEIN_FIRST_BUT_LEFT_Y, PREPARE_PROTEIN_BUT_WIDTH, PREPARE_PROTEIN_BUT_HEIGHT };
-    Rectangle prepare_bread_button_rect = { PREPARE_BREAD_FIRST_BUT_LEFT_X, PREPARE_BREAD_FIRST_BUT_LEFT_Y, PREPARE_BREAD_BUT_WIDTH, PREPARE_BREAD_BUT_HEIGHT };
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "SALAD", STACK, false);
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_BOTTLE_BUT_DELTA + PREPARE_BOTTLE_BUT_HEIGHT, prepare_bottle_button_rect, "BOTTLE", STACK, true);
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_PROTEIN_BUT_DELTA + PREPARE_PROTEIN_BUT_HEIGHT, prepare_protein_button_rect, "PROTEIN", STACK, true);
