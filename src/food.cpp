@@ -87,10 +87,10 @@ void initIngredient(Ingredient &ing, char ingType) {
 }
 
 
-void cut_ingredient(Ingredient& ing, Stack<Ingredient>& ready_ing){
+void cut_ingredient(Ingredient& ing, Stack& ready_ing){
     ing.cook_state.cookPoint[1] = READY;
 
-    Stack_node<Ingredient> *node = new Stack_node<Ingredient>;
+    Stack_node *node = new Stack_node;
 
     node->data = ing;
     node->below = ready_ing.top;
@@ -100,7 +100,7 @@ void cut_ingredient(Ingredient& ing, Stack<Ingredient>& ready_ing){
 
 
 
-void cook_egg(Ingredient& ing, Stack<Ingredient>& ready_ing){
+void cook_egg(Ingredient& ing, Stack& ready_ing){
 
     if(ing.cook_state.cook_time > 0)
         ing.cook_state.cook_time -= COOK_SPEED;
@@ -114,7 +114,7 @@ void cook_egg(Ingredient& ing, Stack<Ingredient>& ready_ing){
 
 
 
-void cook_meat(Ingredient& ing, Stack<Ingredient>& ready_ing){
+void cook_meat(Ingredient& ing, Stack& ready_ing){
 
     if(ing.cook_state.cook_time > 0)
         ing.cook_state.cook_time -= COOK_SPEED;
@@ -136,6 +136,6 @@ void flip_meat(Ingredient& ing){
 // }
 //EU NAO LEMBRO O QUE MAIS TEM QUE COZINHAR TLG
 
-void compare_hamburger_with_order(Stack<Ingredient> *hamburger, List<Ingredient> *order){
+void compare_hamburger_with_order(Stack *hamburger, List<Ingredient> *order){
     return;
 }

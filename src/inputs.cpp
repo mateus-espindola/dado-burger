@@ -40,12 +40,18 @@ MatchScreen screenFromName(const char *name)
     return KITCHEN;   // valor padrão se não achar
 }
 
+void transferBetweenStacks(Stack& orig, Stack& dest){
+    Ingredient ing;
+    stack_pop(orig, ing);
+    stack_push(dest, ing);
+}
 
-void processButClick(Match& match, const Button& button) {
+
+void processButClick(Match& match, Button& button) {
     Player& player = match.player;
 
-    Slot *inventory = player.inventory;
-    int slot = player.selectedSlot;
+    Stack& inventory = player.inventory[player.selectedSlot];
+    Stack& butStack = button.target;
 
     switch (button.type) {
         case CLICK:
@@ -57,30 +63,69 @@ void processButClick(Match& match, const Button& button) {
             //     printf("ERRO: button.target e nullptr!\n");
             //     return;
             // }
-            if(inventory[slot].count < inventory[slot].capacity){
+            if(inventory.size < inventory.capacity){
                 Ingredient ing;
                 initIngredient(ing, button.text[0]);
-                stack_push(inventory[slot].items, ing);
-                inventory[slot].count++;
-                inventory[slot].type = ing.type;
+                //stack_push already incremetns the size and assigns the type
+                stack_push(inventory, ing);
                 //SÓ USAR ESSE PRINTF SE EXTREMAMENTE NECESSÁRIO PARA DEBUG. ELE PODE ORIGINAR ACESSO À PONTEIRO NULL E CRASHAR A PORRA TODA
-                // printf("ITEM: %d\n", match.player.inventory->items.top->data.type);
-                printf("%c\n", button.text[0]);
+                // printf("ITEM: %d\n", match.player.inventory->top->data.type);
+                printf("%c ", button.text[0]);
+                printf("%d ", inventory.size);
+                printf("%d\n", inventory.type);
             }
 
         break;
+
         case DROP:
-            if(inventory[slot].count > 0){
-                stack_pop(inventory[slot].items);
-                inventory[slot].count--;
-                if(inventory[slot].count == 0) inventory[slot].type = NONE;
+            if(inventory.size > 0){
+                stack_pop(inventory);
+                inventory.size--;
+                if(inventory.size == 0) inventory.type = NONE;
             }
         break;
 
         case INSERT:
+            if(butStack.size == 0){
+                if(inventory.size > 0){
+                    transferBetweenStacks(inventory, butStack);
+                }
+            }
+            else{
+                if(inventory.size == 0){
+                    transferBetweenStacks(butStack, inventory);
+                }
+            }
+        break;
+
         case STACK:
-            if (button.target == nullptr) return;   // botão mal configurado
+            printf("Entrou\n");
+            // if (button.target == nullptr) return;   // botão mal configurado
+            printf("Entrou1\n");
             // usa player.inventory[...] como origem e *button.target como destino
+            if(IsKeyDown(KEY_LEFT_SHIFT)){
+                printf("Entrou shift\n");
+                //Pega o ítem da stack e joga no inventário do player
+                if(butStack.type != NONE){
+                    if(inventory.size < inventory.capacity){
+                        //Only necessary if we implement the player inventory to have more than 1 item per slot
+                        if(inventory.type == NONE || inventory.type == butStack.type){
+                            transferBetweenStacks(butStack, inventory);
+                        }
+                    }
+                }
+            }
+            else{
+                //Pega o ítem do player e joga no stack
+                printf("Entrou not shift\n");
+                if(butStack.size < butStack.capacity){
+                    if(inventory.type != NONE){
+                        if(butStack.type == NONE || inventory.type == butStack.type){
+                            transferBetweenStacks(inventory, butStack);
+                        }
+                    }
+                }
+            }
         break;
     }
 }

@@ -47,13 +47,20 @@ int buttonTargetCapacityOf(ButtonType type){
     }
 }
 
+// void zeroButTarget(Button b){
+//     b.targetSize = 0;
+//     b.targetType = NONE;
+// }
+
 static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
     b.type  = type;
     b.shape = { x, y, w, h };
     snprintf(b.text, sizeof(b.text), "%s", text);
-    b.target = nullptr;
-    b.targetCapacity = buttonTargetCapacityOf(type);
-    b.targetSize = 0;
+    // b.target = nullptr;
+    stack_init(b.target);
+    b.target.capacity = buttonTargetCapacityOf(type);
+    b.target.size = 0;
+    b.target.type = NONE;
 }
 
 void declareButtons(ButtonVec *screenButtons) {
@@ -173,9 +180,9 @@ int setSquareButtons(Button *buttons, int startInd, int quantity, int delta, Rec
 //     for(int i = 0)
 // }
 
-void processClick(){
+// void processClick(){
 
-}
+// }
 
 bool usesCamera(MatchScreen screen) {
     switch (screen) {

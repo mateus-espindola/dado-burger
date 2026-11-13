@@ -79,13 +79,15 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
 void drawPrepare(Match &match, int butUnderMouseInd) {
     BeginDrawing();
-    ClearBackground(GREEN);
+    ClearBackground(RAYWHITE);
 
     const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
     drawButtons(buttonsVec);
 
     drawButGlow(buttonsVec.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
+
+    drawInventory(match.player);
 
     EndDrawing();
 }
@@ -193,13 +195,13 @@ static Color ingredientColor(IngredientType t) {
     switch (t) {
         case LETTUCE: return GREEN;
         case TOMATO:  return RED;
-        default:      return GRAY;   // ingrediente sem cor definida ainda
+        default:      return BLANK;   // ingrediente sem cor definida ainda
     }
 }
 
 void drawInventory(const Player &player) {
     for (int i = 0; i < INVENTORY_SLOTS; i++) {
-        const Slot &slot = player.inventory[i];
+        const Stack &slot = player.inventory[i];
 
         Rectangle r = { INV_X + i * (INV_SLOT_SIZE + INV_SLOT_GAP), INV_Y,
                         INV_SLOT_SIZE, INV_SLOT_SIZE };
@@ -214,13 +216,13 @@ void drawInventory(const Player &player) {
             DrawRectangleLinesEx(r, 1, Fade(WHITE, 0.4f));
 
         // item, se houver
-        if (slot.count > 0 && slot.type != NONE) {
+        if (slot.size > 0 && slot.type != NONE) {
             Vector2 center = { r.x + r.width / 2, r.y + r.height / 2 };
             DrawCircleV(center, INV_SLOT_SIZE * 0.3f, ingredientColor(slot.type));
 
             // quantidade no canto inferior direito
-            if (slot.count > 1)
-                DrawText(TextFormat("%d", slot.count),
+            if (slot.size > 1)
+                DrawText(TextFormat("%d", slot.size),
                          (int)(r.x + r.width - 22), (int)(r.y + r.height - 22), 20, WHITE);
         }
     }
@@ -334,16 +336,21 @@ void drawButtons(const ButtonVec& screen){
         // drawButGlow(b.shape, WHITE, CAMADAS_DE_BRILHO, BRILHO);
         DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
-        if(b.type == STACK){
+        switch(b.type){
+            case STACK:
             Color color;
-            if(b.targetSize <= (int) (b.targetCapacity/4)) color = GREEN;
-            else if(b.targetSize > (int) (b.targetCapacity/4) && b.targetSize <= (3*b.targetCapacity/4)) color = YELLOW;
+            if(b.target.size <= (int) (b.target.capacity/4)) color = GREEN;
+            else if(b.target.size > (int) (b.target.capacity/4) && b.target.size <= (3*b.target.capacity/4)) color = YELLOW;
             else color = RED;
-            DrawText(TextFormat("%d", b.targetSize), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+            DrawText(TextFormat("%d", b.target.size), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+
+            case INSERT:
+            case PICK:
+            Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
+            DrawCircleV(center, b.shape.width/2, ingredientColor(b.target.type));
+
         }
-
     }
-
 }
 
 //Camadas: Grossura do brilho. Alpha: O quanto brilha. Ambas são constantes em button_constants.hpp
