@@ -41,18 +41,11 @@ struct PlayerInfo{
     int score;
 };
 
-struct Slot {
-    Stack<Ingredient> items;   // ingredientes empilhados neste slot
-    int count;                 // quantidade atual na pilha
-    int capacity;              // máximo que o slot aguenta
-    IngredientType type;       // tipo do ingrediente no slot (NONE se vazio)
-};
-
 struct Player {
     Object object;              //The constant bellow is defined in the struct WORLD in match.hpp
     Vector2 savedPos[WORLD_COUNT]; //Number of scenes that require camera2D. This is used to not lose the player position after each scene change
     PlayerInfo info;
-    Slot inventory[INVENTORY_SLOTS];
+    Stack inventory[INVENTORY_SLOTS];
     int selectedSlot;
     Direction direction;
 };

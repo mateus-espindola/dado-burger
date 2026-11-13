@@ -37,9 +37,11 @@ struct Button {
     ButtonType type;
     Rectangle shape;
     char text[20];
-    Stack<Ingredient> *target;
-    int targetCapacity;
-    int targetSize;
+    Stack target;
+    // int targetCapacity;
+    // int targetSize;
+    // //We need targetType because target->top.data.type could be an invalid pointer, thus using it would cause problems when the stack is empty
+    // IngredientType targetType;
 };
 
 struct ButtonVec {

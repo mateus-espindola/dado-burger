@@ -21,15 +21,15 @@
 struct Items{
 
     //Hamburguers montando
-    Stack<Ingredient> balcony[PREPARING_SPACE];
+    Stack balcony[PREPARING_SPACE];
     //Coisas do fogao
-    Stack<Ingredient> cooking_plate[PLATE_SIZE]; //Essa aqui é pra hamburguer
-    Stack<Ingredient> pans[PAN_NUMBER]; //Essa aqui é pra ovo
+    Stack cooking_plate[PLATE_SIZE]; //Essa aqui é pra hamburguer
+    Stack pans[PAN_NUMBER]; //Essa aqui é pra ovo
     //Coisas da tabua
     //Tres pilhas para 3 ingredientes diferentes
     //VAMOS SEPARAR OS PRONTOS DA TABUA COM OS PRONTOS DO FOGAO OU DEIXA
     //TUDO NO MESMO VETOR DE PILHAS?
-    Stack<Ingredient> post_prepare_space[STOARGE_SIZE];
+    Stack post_prepare_space[STOARGE_SIZE];
 
 };
 

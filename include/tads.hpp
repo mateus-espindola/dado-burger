@@ -2,63 +2,36 @@
 #define TADS_HPP
 
 #include <cstddef>
+#include "food.hpp"
 
 // ---------- Pilha ----------
-template<typename T>
 struct Stack_node {
-    Stack_node<T> *below;
-    T data;
+    Stack_node *below;
+    Ingredient data;
 };
 
-template<typename T>
 struct Stack {
-    Stack_node<T> *top;
+    Stack_node *top;
+    int capacity;
+    int size;
+    IngredientType type;
 }; // The Hamburguer struct is a stack of ingredients
 
-// Inicializa a pilha vazia (chame sempre ao criar)
-template<typename T>
-void stack_init(Stack<T>& s) {
-    s.top = nullptr;
-}
+void stack_init(Stack& s);
 
-template<typename T>
-bool stack_empty(const Stack<T>& s) {
-    return s.top == nullptr;
-}
+bool stack_empty(const Stack& s);
 
-// Quantidade de elementos: O(n), pois a pilha não guarda contador
-template<typename T>
-size_t stack_size(const Stack<T>& s) {
-    size_t n = 0;
-    for (Stack_node<T> *p = s.top; p != nullptr; p = p->below) n++;
-    return n;
-}
+void stack_push(Stack& s, const Ingredient& value);
 
-// Empilha no topo: O(1)
-template<typename T>
-void stack_push(Stack<T>& s, const T& value) {
-    s.top = new Stack_node<T>{ s.top, value };
-}
+bool stack_pop(Stack& s);
 
-// Desempilha o topo. Retorna false se vazia: O(1)
-template<typename T>
-bool stack_pop(Stack<T>& s) {
-    if (s.top == nullptr) return false;
-    Stack_node<T> *rem = s.top;
-    s.top = rem->below;
-    delete rem;
-    return true;
-}
+bool stack_pop(Stack& s, Ingredient& out);
 
-// Desempilha e copia o valor para out. Retorna false se vazia
-template<typename T>
-bool stack_pop(Stack<T>& s, T& out) {
-    if (s.top == nullptr) return false;
-    out = s.top->data;
-    return stack_pop(s);
-}
+bool stack_top(const Stack& s, Ingredient& out);
 
+size_t stack_size(const Stack& s);
 
+void stack_destroy(Stack& s);
 
 
 

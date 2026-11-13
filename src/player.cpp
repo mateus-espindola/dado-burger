@@ -30,10 +30,10 @@ void setPlayer(Player& player) {
     player.direction = DIR_RIGHT;
 
     for (int i = 0; i < INVENTORY_SLOTS; i++) {
-        stack_init(player.inventory[i].items);
+        stack_init(player.inventory[i]);
 
-        player.inventory[i].count = 0;
-        player.inventory[i].capacity = 1; // Exemplo
+        player.inventory[i].size = 0;
+        player.inventory[i].capacity = 1;
         player.inventory[i].type = NONE;
     }
 

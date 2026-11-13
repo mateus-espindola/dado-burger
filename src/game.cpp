@@ -78,7 +78,10 @@ void ambientProcess(Game& game, Vector2 mouse){
     int selectedInvSlot = changeInvSlot();
     if(selectedInvSlot != -1 && selectedInvSlot < INVENTORY_SLOTS)
         match.player.selectedSlot = selectedInvSlot;
-    printf("%d\n", selectedInvSlot);
+    printf("%d ", match.player.selectedSlot + 1);
+    printf("%d ", match.player.inventory[match.player.selectedSlot].size);
+    printf("%d ", match.player.inventory[match.player.selectedSlot].capacity);
+    printf("%d\n", match.player.inventory[match.player.selectedSlot].type);
 
     // for (int i = 0; i < INVENTORY_SLOTS; i++) {
     // printf("Slot %d: count=%d, top=%p\n",
