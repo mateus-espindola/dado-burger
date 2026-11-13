@@ -1,7 +1,8 @@
 #ifndef CONSTANTS_HPP
 #define CONSTANTS_HPP
 
-// #include <iostream>
+#include <iostream>
+#include <stdio.h>
 #include "raylib.h"
 
 constexpr int WINDOW_WIDTH = 1280;

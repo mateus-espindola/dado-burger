@@ -9,6 +9,14 @@
 // #include "raylib.h"
 
 int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        fprintf ( stderr , " Uso : %s < pedidos > < historico >\n" , argv[0]) ;
+        return 1;
+    }
+
+    FILE * fp = fopen ( argv[1] , "r") ; /* abre o arquivo de pedidos */
+    FILE * fh = fopen ( argv[2] , "r") ; /* abre o arquivo de historico */
+
     Game game = {};
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
