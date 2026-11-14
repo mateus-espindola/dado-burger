@@ -49,19 +49,6 @@ struct Queue {
     Queue_node<T> *last;
 };
 
-// ---------- AVL ----------
-template<typename T>
-struct AVL_node {
-    T data;
-    AVL_node<T> *right;
-    AVL_node<T> *left;
-};
-
-template<typename T>
-struct AVL {
-    AVL_node<T> *root;
-};
-
 // ---------- Lista ----------
 template<typename T>
 struct List_node {

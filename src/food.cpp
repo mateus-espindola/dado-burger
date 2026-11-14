@@ -63,7 +63,7 @@ CookPoint cookingStateOf(IngredientType type) {
 
 float cookTimeOf(IngredientType type) {
     switch (type) {
-        default:      return FPS * 10; //Time in seconds to cook
+        default:      return FPS * 14; //Time in seconds to cook
     }
 }
 
