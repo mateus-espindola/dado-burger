@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 #include "match.hpp"
+#include "hashtable.hpp"
 #include "sprites.hpp"
 
 
@@ -30,11 +31,16 @@ struct Game{
     Match current_match;
     GameState state;
     Sprite spritesMenu[QUANTITY_OF_SPRITES];
+
+    AVL avl_orders;
+    HashTable hashtable_orders;
 };
 
 /* ============================== */
 /*      FUNCTION PROTOTYPES       */
 /* ============================== */
+
+void readFiles(Game& game, FILE* fp, FILE* fh);
 
 void gameStart(Game& game);
 void gameProcess(Game& game);

@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <string>
 
 #include "../include/game.hpp"
 #include "../include/graphics.hpp"
@@ -9,7 +10,33 @@
 
 #include "raylib.h"
 
+void readFiles(Game& game, FILE* fp, FILE* fh) {
+    if (fp == nullptr || fh == nullptr) {
+        std::cout << "There was an error while trying to read the archive." << std::endl;
+    }
+
+    int cod;
+    while (fscanf(fp, "%d\n", &cod) == 1) {
+        std::string ingredients;
+
+        char buffer[16];
+        if (fgets(buffer, sizeof(buffer), fp)) {
+            // Fazer essa maracutaia pra remover o \n do final da string
+            std::string strIngredient(buffer);
+            if (!strIngredient.empty() && strIngredient.back() == '\n') {
+                strIngredient.pop_back();
+            }
+
+            Order newOrder = {cod, strIngredient};
+
+            game.avl_orders.root = insertAVL(game.avl_orders.root, newOrder);
+        }
+    }
+
+}
+
 void gameStart(Game& game){
+
 
     Match &match = game.current_match;
     // loadSpritesheet(game.spritesMenu);

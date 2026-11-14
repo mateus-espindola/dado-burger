@@ -19,6 +19,8 @@ int main(int argc, char* argv[]) {
 
     Game game = {};
 
+    readFiles(game, fp, fh);
+
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
     SetTargetFPS(FPS);
 

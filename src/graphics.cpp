@@ -79,11 +79,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
 void drawPrepare(Match &match, int butUnderMouseInd) {
     BeginDrawing();
-<<<<<<< HEAD
     ClearBackground(DARKGRAY);
-=======
-    ClearBackground(RAYWHITE);
->>>>>>> refs/remotes/origin/main
 
     const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
