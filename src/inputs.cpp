@@ -107,6 +107,7 @@ void processButClick(Match& match, Button& button) {
             if(butStack.size == 0){
                 if(inventory.size > 0 && canInsert(match.screen, inventory.type)){
                     transferBetweenStacks(inventory, butStack);
+                    butStack.top->data.cook_state.cooking = true;
                 }
             }
             else{

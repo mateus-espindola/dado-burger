@@ -139,6 +139,8 @@ void ambientProcess(Game& game, Vector2 mouse){
         default: break;
     }
 
+    cookAll(match.buttonsVec, COOK_SPEED);
+
 }
 
 void gameOver(Game& game){

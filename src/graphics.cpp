@@ -79,11 +79,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
 void drawPrepare(Match &match, int butUnderMouseInd) {
     BeginDrawing();
-<<<<<<< HEAD
     ClearBackground(DARKGRAY);
-=======
-    ClearBackground(RAYWHITE);
->>>>>>> refs/remotes/origin/main
 
     const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
@@ -341,6 +337,74 @@ int drawNearestBut(const Player& player, const ButtonVec& screen) {
 }
 
 
+
+
+static float cookFraction(CookPoint p) {
+    if (p <= RAW) return 0.0f;
+    return (float)p / (float)OVER_COOKED;
+}
+
+// Desenha uma barra vermelha por lado (cookPoint[0] e cookPoint[1])
+// na parte de baixo do botão.
+void drawCookBar(Rectangle button, const CookState& cs, IngredientType type) {
+    const float barH = 5.0f;
+    const float pad  = 3.0f;
+    const float barW = button.width - 2 * pad;
+    const float stageTime = cookTimeOf(type);
+
+    // progresso dentro do estágio atual: 0 logo após mudar de estágio, 1 quando vai mudar
+    float stageProgress = 1.0f - (cs.cook_time / stageTime);
+    if (stageProgress < 0.0f) stageProgress = 0.0f;
+    if (stageProgress > 1.0f) stageProgress = 1.0f;
+
+    for (int side = 0; side < 2; side++) {
+        if (cs.cookPoint[side] < RAW) continue;   // ainda não cozinhável
+
+        // queimado não avança mais: barra cheia
+        float frac = (cs.cookPoint[side] >= OVER_COOKED) ? 1.0f : stageProgress;
+
+        Rectangle bg = {
+            button.x + pad,
+            button.y + button.height - (barH + pad) * (2 - side),
+            barW, barH
+        };
+        Rectangle fill = { bg.x, bg.y, bg.width * frac, bg.height };
+
+        DrawRectangleRec(bg, DARKGRAY);
+        DrawRectangleRec(fill, RED);
+        DrawRectangleLinesEx(bg, 1.0f, BLACK);
+    }
+}
+
+
+static const char* cookPointName(CookPoint p) {
+    switch (p) {
+        case NEEDS_TO_CUT: return "NEEDS TO BE CUT";
+        case READY:        return "PRONTO";
+        case RAW:          return "RAW";
+        case RARE:         return "RARE";
+        case MEDIUM_RARE:  return "MEDIUM RARE";
+        case WELL_DONE:    return "WELL DONE";
+        case OVER_COOKED:  return "OVERCOOKED";
+    }
+    return "?";
+}
+
+// Escreve o estado de cozimento abaixo do botão
+void drawCookText(Rectangle button, const CookState& cs) {
+    const int fs = 18;
+    int x = (int)button.x;
+    int y = (int)(button.y + button.height + 5);
+
+    DrawText(TextFormat("Lado 1: %s", cookPointName(cs.cookPoint[0])), x, y, fs, GREEN);
+    DrawText(TextFormat("Lado 2: %s", cookPointName(cs.cookPoint[1])), x, y + fs + 2, fs, GREEN);
+
+    if (cs.cooking) {
+        DrawText(TextFormat("Cooking")/*"Cozinhando" (%.1f)", cs.cook_time)*/, x, y + 2 * (fs + 2), fs, RED);
+    }
+}
+
+
 void drawButtons(const ButtonVec& screen){
 
     for (int i = 0; i < screen.size; i++) {
@@ -348,22 +412,30 @@ void drawButtons(const ButtonVec& screen){
         const Button &b = screen.buttons[i];
 
         DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, GRAY);
-        // drawButGlow(b.shape, WHITE, CAMADAS_DE_BRILHO, BRILHO);
         DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
         switch(b.type){
-            case STACK:
-            Color color;
-            if(b.target.size <= (int) (b.target.capacity/4)) color = GREEN;
-            else if(b.target.size > (int) (b.target.capacity/4) && b.target.size <= (3*b.target.capacity/4)) color = YELLOW;
-            else color = RED;
-            DrawText(TextFormat("%d", b.target.size), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+            case STACK: {
+                Color color;
+                if(b.target.size <= (int)(b.target.capacity/4)) color = GREEN;
+                else if(b.target.size <= (3*b.target.capacity/4)) color = YELLOW;
+                else color = RED;
+                DrawText(TextFormat("%d", b.target.size), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+            }
+            // sem break: cai no círculo, como no original
 
             case INSERT:
-            case PICK:
-            Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
-            DrawCircleV(center, b.shape.width/2, ingredientColor(b.target.type));
+            case PICK: {
+                Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
+                DrawCircleV(center, b.shape.width/2, ingredientColor(b.target.type));
 
+                if (b.type != STACK && b.target.size > 0) {
+                    const CookState& cs = b.target.top->data.cook_state;
+                    drawCookBar(b.shape, cs, screen.buttons->target.type);
+                    drawCookText(b.shape, cs);
+                }
+                break;
+            }
         }
     }
 }

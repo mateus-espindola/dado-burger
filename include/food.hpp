@@ -19,7 +19,8 @@ enum IngredientType{
     PICKLES = 'p',
     CHEDDAR = 'q',
     SWISS_CHEESE = 's',
-    TOMATO = 't',
+    TOMATO = 'T',
+    SLICED_TOMATO = 't',
     UPPER_BREAD = 'z'
 
 };
@@ -63,6 +64,13 @@ struct Ingredient {
 // };
 
 void initIngredient(Ingredient &ing, char ingType);
+
+
+struct ButtonVec; //Declaracao antecipada
+
+void cookAll(ButtonVec *butonVec, float dt);
+
+float cookTimeOf(IngredientType type);
 
 
 #endif

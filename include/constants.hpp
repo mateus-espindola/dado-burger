@@ -34,7 +34,7 @@ constexpr float INV_Y         = 20.0f;
 #define PREPARING_SPACE 3
 #define STOARGE_SIZE 8
 
-#define COOK_SPEED 0.2
+constexpr float COOK_SPEED = 1.0f;
 #define COOK_TIME 2
 
 

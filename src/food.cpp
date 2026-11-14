@@ -21,17 +21,6 @@
 // }
 
 
-
-
-//E ALGUMA MALUQUICE QUE DEIXA DAR ++ NOS ENUM. E TIPO DEFINIR UMA OPERACAO NOVA
-//NOTA: O ++ TEM QUE SER ANTES POR ALGUM MOTIVO
-CookPoint& operator++(CookPoint& c) {
-    if (c != READY && c < OVER_COOKED)
-        c = static_cast<CookPoint>(c + 1);
-    return c;
-}
-
-
 IngredientType charToIngType(char c) {
     switch (c) {
         case 'L': return LETTUCE;
@@ -60,13 +49,21 @@ int perishTimeOf(IngredientType type) {
 
 CookPoint cookingStateOf(IngredientType type) {
     switch (type) {
-        default:      return NEEDS_TO_CUT;
+        case TOMATO:
+        case ONION: return NEEDS_TO_CUT;
+        case MEAT:
+        case VEGAN_PROTEIN:
+        case BACON:
+        case EGG:
+        case SWISS_CHEESE:
+        case CHEDDAR: return RAW;
+        default:      return READY;
     }
 }
 
 float cookTimeOf(IngredientType type) {
     switch (type) {
-        default:      return 0.0;
+        default:      return FPS * 10; //Time in seconds to cook
     }
 }
 
@@ -84,6 +81,15 @@ void initIngredient(Ingredient &ing, char ingType) {
     ing.cook_state.cook_time    = cookTimeOf(type);
 
     ing.perish_time = perishTimeOf(type);
+}
+
+
+//E ALGUMA MALUQUICE QUE DEIXA DAR ++ NOS ENUM. E TIPO DEFINIR UMA OPERACAO NOVA
+//NOTA: O ++ TEM QUE SER ANTES POR ALGUM MOTIVO
+CookPoint& operator++(CookPoint& c) {
+    if (c != READY && c < OVER_COOKED)
+        c = static_cast<CookPoint>(c + 1);
+    return c;
 }
 
 
@@ -111,6 +117,31 @@ void cook_egg(Ingredient& ing, Stack& ready_ing){
 
 }
 
+
+void cookAll(ButtonVec *butonVec, float dt) {
+    for (int i = 0; i < STATE_QUANTITY; i++) {
+        ButtonVec& screen = butonVec[i];
+        if (screen.buttons == nullptr) continue;
+
+        for (int j = 0; j < screen.size; j++) {
+            Button& b = screen.buttons[j];
+
+            if (b.type != INSERT) continue;
+            if (b.target.size <= 0) continue;   // top é inválido com a pilha vazia
+
+            CookState& cs = b.target.top->data.cook_state;
+            if (!cs.cooking) continue;
+
+            cs.cook_time -= dt;
+
+            if (cs.cook_time < 0) {
+                ++cs.cookPoint[0];
+                ++cs.cookPoint[1];
+                cs.cook_time = cookTimeOf(b.target.type);
+            }
+        }
+    }
+}
 
 
 
