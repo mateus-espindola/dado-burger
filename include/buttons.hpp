@@ -29,7 +29,7 @@ enum ButtonType {
     PICK,   //Click to pick an item
     DROP,   //Click to drop an item
     INSERT, //Click to put or pick an item
-    STACK   //Click to put or take an item (usa shift (ou outra tecla) para diferenciar o click de tirar e colocar)
+    STACK,  //Click to put or take an item (usa shift (ou outra tecla) para diferenciar o click de tirar e colocar)
 };
 
 struct Button {
@@ -37,10 +37,6 @@ struct Button {
     Rectangle shape;
     char text[20];
     Stack target;
-    // int targetCapacity;
-    // int targetSize;
-    // //We need targetType because target->top.data.type could be an invalid pointer, thus using it would cause problems when the stack is empty
-    // IngredientType targetType;
 };
 
 struct ButtonVec {

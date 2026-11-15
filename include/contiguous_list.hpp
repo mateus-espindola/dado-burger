@@ -7,4 +7,4 @@ struct ContiguousList {
     T *data;
     int size;
     int capacity;
-}
+};

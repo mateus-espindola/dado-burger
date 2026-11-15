@@ -47,8 +47,11 @@ static bool isCookable(IngredientType t) {
         || t == EGG  || t == SWISS_CHEESE  || t == CHEDDAR;
 }
 
-static bool isCuttable(IngredientType t) {
+bool isCuttable(IngredientType t) {
     return t == TOMATO || t == ONION;
+}
+bool canFlip(IngredientType t){
+    return t == MEAT || t == VEGAN_PROTEIN;
 }
 
 bool canInsert(MatchScreen screen, IngredientType type) {
@@ -66,6 +69,20 @@ void transferBetweenStacks(Stack& orig, Stack& dest){
 }
 
 
+void processInputButAction(Ingredient& ing, const MatchScreen& screen){
+    switch(screen){
+        case OVEN:
+            flipMeat(ing);
+        break;
+        case BOARD:
+            cutIngredient(ing);
+        break;
+        default: break;
+    }
+}
+
+
+
 void processButClick(Match& match, Button& button) {
     Player& player = match.player;
 
@@ -78,10 +95,6 @@ void processButClick(Match& match, Button& button) {
         break;
 
         case PICK:
-            // if (button.target == nullptr) {
-            //     printf("ERRO: button.target e nullptr!\n");
-            //     return;
-            // }
             if(inventory.size < inventory.capacity){
                 Ingredient ing;
                 initIngredient(ing, button.text[0]);
@@ -107,10 +120,16 @@ void processButClick(Match& match, Button& button) {
             if(butStack.size == 0){
                 if(inventory.size > 0 && canInsert(match.screen, inventory.type)){
                     transferBetweenStacks(inventory, butStack);
+                    butStack.top->data.cook_state.cooking = true;
                 }
             }
-            else{
-                if(inventory.size == 0){
+            else{ //if(butStack.size > 0){}
+                Ingredient& ing = butStack.top->data;
+                if(IsKeyDown(KEY_LEFT_CONTROL) && canFlip(ing.type)){
+                    processInputButAction(ing, match.screen);
+                }
+                if(inventory.size == 0 && !IsKeyDown(KEY_LEFT_CONTROL)){
+                    ing.cook_state.cooking = false;
                     transferBetweenStacks(butStack, inventory);
                 }
             }
@@ -147,29 +166,3 @@ void processButClick(Match& match, Button& button) {
         break;
     }
 }
-
-
-// void processButClick(MatchScreen& matchScreen, const ButtonVec& screen, int clickInd){
-//     Button &button = screen.buttons[clickInd];
-//     switch(button.type){
-//         case CLICK:
-//             matchScreen = screenFromName(button.text);
-//         break;
-
-//         case PICK:
-
-//         break;
-
-//         case DROP:
-
-//         break;
-
-//         case INSERT:
-
-//         break;
-
-//         case STACK:
-
-//         break;
-//     }
-// }

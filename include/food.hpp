@@ -21,6 +21,7 @@ enum IngredientType{
     CHEDDAR = 'q',
     SWISS_CHEESE = 's',
     TOMATO = 't',
+    // SLICED_TOMATO = 't',
     UPPER_BREAD = 'z'
 
 };
@@ -35,11 +36,14 @@ enum CookPoint {
     OVER_COOKED
 };
 
+struct CookInfo{
+    CookPoint cookPoint; //Indica o quao cozido ele esta
+    float cook_time; //Indica o tempo até mudar o estágio de cozimento
+};
+
 struct CookState {
     bool cooking; //Indica se o ingrediente está cozinhando. Se sim ele nao diminui seu tempo ate estragar
-    CookPoint cookPoint[2]; //Indica o quao cozido ele esta
-    float cook_time; //Indica o tempo até mudar o estágio de cozimento
-
+    CookInfo cookInfo[2];
 };
 
 struct Ingredient {
@@ -83,3 +87,13 @@ struct Costumer{
 // struct hamburger {
 //     Stack<Ingredient> hamburger;
 // };
+
+struct ButtonVec; //Declaracao antecipada
+
+void cookAll(ButtonVec *butonVec, float dt);
+
+float cookTimeOf(IngredientType type);
+
+void cutIngredient(Ingredient& ing /*, Stack& ready_ing*/);
+
+void flipMeat(Ingredient& ing);

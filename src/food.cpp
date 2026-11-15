@@ -2,35 +2,6 @@
 #include "../include/match.hpp"
 //#include "game.hpp"
 
-// int findClick(MouseInput &mouse, Button *button_vec/*jeito de passar vetor*/, int size){
-
-//     //A funcao recebe a coordenada do click e um vetor [x + 1]
-//     //PRECISO DE UMA OPINIAO: A posicao inicial do vetor pode indicar quantos elementos tem no vetor, que que tu acha? Ou a gente passa de parametro o tamanho por constantes?
-//     //dos botoes do comodo onde x e a quantidade de botoes desse comodo
-//     //Ai tem um for que testa a colisao com todos os botoes
-//     //e devolve o valor do indice do botao com o qual houve colisao
-
-//     //for(int i = 1;  i < button_vec[0] + 1; i++){
-//     for(int i = 0;  i < size; i++){
-//         if (mouse.x >= button_vec[i].x1 && mouse.x <= button_vec[i].x2 &&
-//             mouse.y >= button_vec[i].y1 && mouse.y <= button_vec[i].y2) {
-//             return i;
-//         }
-//     }
-//     return -1; // nenhum botão clicado
-// }
-
-
-
-
-//E ALGUMA MALUQUICE QUE DEIXA DAR ++ NOS ENUM. E TIPO DEFINIR UMA OPERACAO NOVA
-//NOTA: O ++ TEM QUE SER ANTES POR ALGUM MOTIVO
-CookPoint& operator++(CookPoint& c) {
-    if (c != READY && c < OVER_COOKED)
-        c = static_cast<CookPoint>(c + 1);
-    return c;
-}
-
 
 IngredientType charToIngType(char c) {
     switch (c) {
@@ -60,13 +31,22 @@ int perishTimeOf(IngredientType type) {
 
 CookPoint cookingStateOf(IngredientType type) {
     switch (type) {
-        default:      return NEEDS_TO_CUT;
+        case TOMATO:
+        case ONION: return NEEDS_TO_CUT;
+        case MEAT:
+        case VEGAN_PROTEIN:
+        case BACON:
+        case EGG:
+        case SWISS_CHEESE:
+        case CHEDDAR: return RAW;
+        default:      return READY;
     }
 }
 
 float cookTimeOf(IngredientType type) {
     switch (type) {
-        default:      return 0.0;
+        default:      return FPS * 14; //Time in seconds to cook
+        // default: return COOK_TIME;
     }
 }
 
@@ -79,62 +59,120 @@ void initIngredient(Ingredient &ing, char ingType) {
     ing.type = type;
 
     ing.cook_state.cooking      = false;
-    ing.cook_state.cookPoint[0] = cookingStateOf(type);
-    ing.cook_state.cookPoint[1] = cookingStateOf(type);
-    ing.cook_state.cook_time    = cookTimeOf(type);
+    ing.cook_state.cookInfo[0].cookPoint = cookingStateOf(type);
+    ing.cook_state.cookInfo[1].cookPoint = cookingStateOf(type);
+    ing.cook_state.cookInfo[0].cook_time = cookTimeOf(type);
+    ing.cook_state.cookInfo[1].cook_time = cookTimeOf(type);
 
     ing.perish_time = perishTimeOf(type);
 }
 
 
-void cut_ingredient(Ingredient& ing, Stack& ready_ing){
-    ing.cook_state.cookPoint[1] = READY;
+void cutIngredient(Ingredient& ing /*, Stack& ready_ing*/){
+    ing.cook_state.cookInfo[0].cookPoint = READY;
+    ing.cook_state.cookInfo[1].cookPoint = READY;
 
+    /*
     Stack_node *node = new Stack_node;
 
     node->data = ing;
     node->below = ready_ing.top;
     ready_ing.top = node;
+    */
+}
+
+void flipMeat(Ingredient& ing){
+    CookInfo aux = ing.cook_state.cookInfo[1];
+    ing.cook_state.cookInfo[1] = ing.cook_state.cookInfo[0];
+    ing.cook_state.cookInfo[0] = aux;
+    // std::swap(ing.cook_state.cookInfo[0], ing.cook_state.cookInfo[1]);
 }
 
 
+void cookDefault(Ingredient& ing){
 
-
-void cook_egg(Ingredient& ing, Stack& ready_ing){
-
-    if(ing.cook_state.cook_time > 0)
-        ing.cook_state.cook_time -= COOK_SPEED;
+    if(ing.cook_state.cookInfo[0].cook_time > 0 || ing.cook_state.cookInfo[1].cook_time > 0){
+        ing.cook_state.cookInfo[0].cook_time -= COOK_SPEED;
+        ing.cook_state.cookInfo[1].cook_time -= COOK_SPEED;
+    }
     else{
-        ++ing.cook_state.cookPoint[1];
-        ing.cook_state.cook_time = COOK_TIME;
+        if(ing.cook_state.cookInfo[0].cookPoint == RAW || ing.cook_state.cookInfo[1].cookPoint == RAW){
+            ing.cook_state.cookInfo[0].cookPoint = READY;
+            ing.cook_state.cookInfo[1].cookPoint = READY;
+        }
+        else{
+            ing.cook_state.cookInfo[0].cookPoint = OVER_COOKED;
+            ing.cook_state.cookInfo[1].cookPoint = OVER_COOKED;
+        }
+        ing.cook_state.cookInfo[0].cook_time = cookTimeOf(ing.type);
+        ing.cook_state.cookInfo[1].cook_time = cookTimeOf(ing.type);
+    }
+
+}
+
+//E ALGUMA MALUQUICE QUE DEIXA DAR ++ NOS ENUM. E TIPO DEFINIR UMA OPERACAO NOVA
+//NOTA: O ++ TEM QUE SER ANTES POR ALGUM MOTIVO
+CookPoint& operator++(CookPoint& c) {
+    if (c != READY && c < OVER_COOKED)
+        c = static_cast<CookPoint>(c + 1);
+    return c;
+}
+
+void cookMeat(Ingredient& ing){
+
+    if(ing.cook_state.cookInfo[0].cook_time > 0)
+        ing.cook_state.cookInfo[0].cook_time -= COOK_SPEED;
+    else{
+        ++ing.cook_state.cookInfo[0].cookPoint;
+        ing.cook_state.cookInfo[0].cook_time = cookTimeOf(ing.type);
     }
 
 }
 
 
+void cookAll(ButtonVec *butonVec, float dt) {
+    for (int i = 0; i < STATE_QUANTITY; i++) {
+        ButtonVec& screen = butonVec[i];
+        if (screen.buttons == nullptr) continue;
 
+        for (int j = 0; j < screen.size; j++) {
+            Button& b = screen.buttons[j];
 
-void cook_meat(Ingredient& ing, Stack& ready_ing){
+            if (b.type != INSERT) continue;
+            if (b.target.size <= 0) continue;   // top é inválido com a pilha vazia
 
-    if(ing.cook_state.cook_time > 0)
-        ing.cook_state.cook_time -= COOK_SPEED;
-    else{
-        ++ing.cook_state.cookPoint[1];
-        ing.cook_state.cook_time = COOK_TIME;
+            Ingredient& ing = b.target.top->data;
+            // if (!cs.cooking) continue;
+
+            // cs.cookInfo[0].cook_time -= dt;
+
+            // if (cs.cookInfo[0].cook_time < 0) {
+            //     ++cs.cookInfo[0].cookPoint;
+            //     // ++cs.cookPoint[1];
+            //     cs.cookInfo[0].cook_time = cookTimeOf(b.target.type);
+            // }
+
+            if(ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED || 
+                ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) continue;
+
+            switch(b.target.type){
+                case MEAT:
+                case VEGAN_PROTEIN:
+                    cookMeat(ing);
+                break;
+                case EGG:
+                case BACON:
+                case CHEDDAR:
+                case SWISS_CHEESE:
+                    cookDefault(ing);
+                break;
+                default: break;
+            }
+        }
     }
-
 }
 
-void flip_meat(Ingredient& ing){
-    CookPoint aux = ing.cook_state.cookPoint[1];
-    ing.cook_state.cookPoint[1] = ing.cook_state.cookPoint[0];
-    ing.cook_state.cookPoint[0] = aux;
-}
 
-// void cook_cheese(){
-//     return;
-// }
-//EU NAO LEMBRO O QUE MAIS TEM QUE COZINHAR TLG
 
 void compare_hamburger_with_order(Stack *hamburger, LinkedList<Ingredient> *order){
     return;

@@ -3,44 +3,8 @@
 #include "../include/graphics.hpp"
 #include "../include/camera.hpp"
 #include "../include/button_constants.hpp"
+#include "../include/inputs.hpp"
 #include "raylib.h"
-
-
-// void gameDraw(Game &game){
-//     BeginDrawing();
-//     ClearBackground(RAYWHITE);
-
-//     switch(game.state) {
-
-//         case MENU:
-//             // menuDraw();
-//         break;
-
-//         case HOW_TO_PLAY:
-//             // tutorialDraw();
-//         break;
-
-//         case HISTORY:
-//             // historyDraw();
-//         break;
-
-//         case SETTINGS:
-//             // settingsDraw();
-//         break;
-
-//         case PLAYING:
-
-//         BeginMode2D(game.current_match.camera);
-//             spriteDraw(game.sprites[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
-//             //drawNearestBut(game.current_match.player, game.current_match.buttons);
-//             matchDraw(game.current_match);
-//         EndMode2D();
-
-//         break;
-
-//     }
-//     EndDrawing();
-// }
 
 
 void drawKitchen(Match& match, int butUnderMouseInd){
@@ -55,10 +19,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
             int visible = -1;   //Index of the visible button in drawNearesBut
 
             if(match.screen == FRIDGE){
-                drawButtons(buttonsVec);
-
-                if(butUnderMouseInd != -1)
-                    drawButGlow(buttonsVec.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
+                drawButtons(buttonsVec, butUnderMouseInd, match.screen);
             }
             else{
                 visible = drawNearestBut(match.player, buttonsVec);
@@ -83,9 +44,7 @@ void drawPrepare(Match &match, int butUnderMouseInd) {
 
     const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
-    drawButtons(buttonsVec);
-
-    drawButGlow(buttonsVec.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
+    drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
     drawInventory(match.player);
 
@@ -179,8 +138,7 @@ void drawStove(Match& match, int butUnderMouseInd) {
             drawCircleGrid(circles, 1, 3, 80);
 
             const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
-            drawButtons(buttonsVec);
-            drawButGlow(buttonsVec.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
+            drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
         EndMode2D();
 
@@ -239,65 +197,9 @@ void drawInventory(const Player &player) {
     }
 }
 
-// void drawPrepare(Match match, int butUnderMouseInd){
-
-// }
-
-
-// void matchDraw(Match& match){
-
-//     // BeginMode2D(match.camera);
-
-//         playerDraw(match.player);
-//         printf("%f, %f\n", match.player.object.pos.x, match.player.object.pos.y);
-
-//     // EndMode2D();
-//     switch(match.state){
-
-//         case PAUSED:
-
-//         break;
-
-//         case DEFEAT:
-
-//         break;
-
-//         case VICTORY:
-
-//         break;
-
-//     }
-//         hitboxDraw(match.player.object);
-//         // playerDraw(match.player);
-// }
-
 Vector2 getSpritePos(Object& object) {
     return (Vector2){object.pos.x - (object.sprite.width * GAME_SCALE) / 2, object.pos.y - (object.sprite.height * GAME_SCALE) / 2};
 }
-
-
-//MOVIDOS PARA SPRITES.HPP
-// void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint) {
-//     DrawTexturePro(
-//         sprite.texture,
-//         (Rectangle){0, 0, (float)sprite.width, (float)sprite.height},
-//         (Rectangle){pos.x, pos.y, (float)sprite.width * scale, (float)sprite.height * scale},
-//         (Vector2){0, 0},
-//         0.0f,
-//         tint
-//     );
-// }
-
-// void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint) {
-//     DrawTexturePro(
-//         sprite.texture,
-//         (Rectangle){(float)sprite.width, 0, (float)sprite.width * -1, (float)sprite.height},
-//         (Rectangle){pos.x, pos.y, (float)sprite.width * scale, (float)sprite.height * scale},
-//         (Vector2){0, 0},
-//         0.0f,
-//         tint
-//     );
-// }
 
 void hitboxDraw(const Object& object) {
     DrawCircleV(object.pos, object.radius, RED);
@@ -315,19 +217,12 @@ void playerDraw(Player& player) {
     }
 }
 
-int drawNearestBut(const Player& player, const ButtonVec& screen) {
-    // for (int i = 0; i < STATE_QUANTITY; i++) {
-    //     if (buttons[i] == nullptr) continue;   // estado sem botões
+int drawNearestBut(const Player& player, const ButtonVec& screenButtons) {
 
-    //     const Button &b = buttons[i][0];
-    //     DrawRectangle((int)b.pos.x, (int)b.pos.y, (int)b.size.x, (int)b.size.y, GRAY);
-    //     DrawText(b.text, (int)b.pos.x + 10, (int)b.pos.y + 10, 30, BLACK);
-    // }
-
-    int index = nearestButtonIndex(player.object.pos.x, screen);
+    int index = nearestButtonIndex(player.object.pos.x, screenButtons);
 
     if(index != -1){
-        const Button &b = screen.buttons[index];
+        const Button &b = screenButtons.buttons[index];
         DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, GRAY);
         // drawButGlow(b.shape, WHITE, CAMADAS_DE_BRILHO, BRILHO);
         DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
@@ -337,32 +232,175 @@ int drawNearestBut(const Player& player, const ButtonVec& screen) {
 }
 
 
-void drawButtons(const ButtonVec& screen){
+static bool isCookable(CookPoint p) {
+    return p != NEEDS_TO_CUT;
+}
 
-    for (int i = 0; i < screen.size; i++) {
 
-        const Button &b = screen.buttons[i];
+static float cookFraction(CookPoint p) {
+    if (p <= RAW) return 0.0f;
+    return (float)p / (float)OVER_COOKED;
+}
 
-        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, GRAY);
-        // drawButGlow(b.shape, WHITE, CAMADAS_DE_BRILHO, BRILHO);
-        DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
+static const char* cookPointName(CookPoint p) {
+    switch (p) {
+        case NEEDS_TO_CUT: return "NEEDS TO BE CUT";
+        case READY:        return "READY";
+        case RAW:          return "RAW";
+        case RARE:         return "RARE";
+        case MEDIUM_RARE:  return "MEDIUM RARE";
+        case WELL_DONE:    return "WELL DONE";
+        case OVER_COOKED:  return "OVERCOOKED";
+    }
+    return "?";
+}
 
-        switch(b.type){
-            case STACK:
-            Color color;
-            if(b.target.size <= (int) (b.target.capacity/4)) color = GREEN;
-            else if(b.target.size > (int) (b.target.capacity/4) && b.target.size <= (3*b.target.capacity/4)) color = YELLOW;
-            else color = RED;
-            DrawText(TextFormat("%d", b.target.size), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+static void drawCookBar(float rightEdge, float y, float barW, float barH, float frac) {
+    Rectangle bg   = { rightEdge - barW, y, barW, barH };
+    Rectangle fill = { bg.x, bg.y, bg.width * frac, bg.height };
 
-            case INSERT:
-            case PICK:
-            Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
-            DrawCircleV(center, b.shape.width/2, ingredientColor(b.target.type));
+    DrawRectangleRec(bg, DARKGRAY);
+    DrawRectangleRec(fill, RED);
+    DrawRectangleLinesEx(bg, 1.0f, BLACK);
+}
 
+// progresso dentro do estágio atual: 0 logo após mudar de estágio, 1 quando vai mudar
+static float stageProgressOf(const CookInfo& ci, float stageTime) {
+    if (ci.cookPoint >= OVER_COOKED) return 1.0f;  // queimado: barra cheia
+    if (stageTime <= 0.0f) return 0.0f;
+
+    float p = 1.0f - (ci.cook_time / stageTime);
+    if (p < 0.0f) p = 0.0f;
+    if (p > 1.0f) p = 1.0f;
+    return p;
+}
+
+void drawCookInfo(Rectangle button, const CookState& cs, IngredientType type) {
+    const int   fs     = 18;
+    const float barH   = 6.0f;
+    const float barW   = 130.0f;
+    const float gap    = 4.0f;    // espaço entre texto e barra
+    const float margin = 8.0f;    // espaço entre o bloco e o botão
+    const int   lineH  = fs + (int)barH + 2 * (int)gap;
+
+    const float stageTime = cookTimeOf(type);
+
+    float rightEdge = button.x - margin;
+    float y = button.y;
+
+    const bool twoSided = (type == MEAT || type == VEGAN_PROTEIN);
+
+    if (twoSided) {
+        // índice 0 = Baixo, índice 1 = Cima
+        const char* labels[2] = { "Baixo", "Cima" };
+
+        for (int side = 0; side < 2; side++) {
+            const CookInfo& ci = cs.cookInfo[side];
+
+            const char* txt = TextFormat("%s: %s", labels[side], cookPointName(ci.cookPoint));
+            DrawText(txt, (int)(rightEdge - MeasureText(txt, fs)), (int)y, fs, GREEN);
+
+            // só o lado de baixo avança; o de cima fica com a barra vazia
+            float frac = 0.0f;
+            if (isCookable(ci.cookPoint))
+                frac = stageProgressOf(ci, stageTime);
+
+            drawCookBar(rightEdge, y + fs + gap, barW, barH, frac);
+
+            y += lineH;
         }
+    } else {
+        const CookInfo& ci = cs.cookInfo[0];
+
+        // nome do estágio de cozimento (ex.: "Cru", "Pronto", ...)
+        const char* txt = cookPointName(ci.cookPoint);
+        DrawText(txt, (int)(rightEdge - MeasureText(txt, fs)), (int)y, fs, GREEN);
+
+        // barra logo abaixo do texto
+        float frac = isCookable(ci.cookPoint) ? stageProgressOf(ci, stageTime) : 0.0f;
+        drawCookBar(rightEdge, y + fs + gap, barW, barH, frac);
+
+        y += lineH;
+    }
+
+    if (cs.cooking) {
+        const char* c = "Cooking";
+        DrawText(c, (int)(rightEdge - MeasureText(c, fs)), (int)y, fs, RED);
     }
 }
+
+
+
+void drawStackDetails(Button b){
+    Color color;
+    if (b.target.size <= (int)(b.target.capacity/4)) color = GREEN;
+    else if (b.target.size <= (3*b.target.capacity/4)) color = YELLOW;
+    else color = RED;
+    DrawText(TextFormat("%d", b.target.size), (int)b.shape.x + 45, (int)b.shape.y - 30, 30, color);
+}
+
+
+// Desenha um hint de 2 linhas à direita do botão
+static void drawCtrlHint(Rectangle button, const char* line2) {
+    const int   fs     = 18;
+    const float margin = 8.0f;
+
+    float x = button.x + button.width + margin;
+    float y = button.y;
+
+    DrawText("CLICK", (int)x, (int)y,        fs, YELLOW);
+    DrawText(line2,   (int)x, (int)y + fs + 2, fs, YELLOW);
+}
+
+void drawCtrlHintFor(Rectangle button, int screen) {
+    if (!IsKeyDown(KEY_LEFT_CONTROL)) return;
+    if (!CheckCollisionPointRec(GetMousePosition(), button)) return;
+
+    if (screen == OVEN)       drawCtrlHint(button, "TO FLIP");
+    else if (screen == BOARD) drawCtrlHint(button, "TO CUT");
+}
+
+
+
+void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScreen screenId){
+
+    for (int i = 0; i < screenButtons.size; i++) {
+
+        const Button &b = screenButtons.buttons[i];
+
+        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, GRAY);
+        DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
+
+        // Parte comum: círculo do ingrediente
+        if (b.type == STACK || b.type == INSERT || b.type == PICK) {
+            Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
+            DrawCircleV(center, b.shape.width/2, ingredientColor(b.target.type));
+        }
+
+        // Parte exclusiva de cada tipo
+        switch (b.type) {
+            case STACK: {
+                drawStackDetails(b);
+            } break;
+
+            case INSERT: {
+                if (b.target.size > 0) {
+                    const Ingredient& ing = b.target.top->data;
+                    drawCookInfo(b.shape, ing.cook_state, ing.type);
+
+                if (i == butUnderMouseInd && (canFlip(ing.type) || isCuttable(ing.type)))
+                    drawCtrlHintFor(b.shape, screenId);
+                }
+            } break;
+
+            case PICK:
+            default: break;
+        }
+    }
+    if(butUnderMouseInd != -1)
+        drawButGlow(screenButtons.buttons[butUnderMouseInd].shape, WHITE, BRIGHTNESS_LAYERS, BRIGHTNESS);
+}
+
 
 //Camadas: Grossura do brilho. Alpha: O quanto brilha. Ambas são constantes em button_constants.hpp
 //Essa função faz os botões brilharem

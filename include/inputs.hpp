@@ -14,3 +14,7 @@ bool keyDownClicked(void);
 int changeInvSlot(void);
 
 void processButClick(Match& match, Button& button);
+
+bool isCuttable(IngredientType t);
+
+bool canFlip(IngredientType t);
