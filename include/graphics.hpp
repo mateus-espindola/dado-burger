@@ -23,9 +23,9 @@ void hitboxDraw(const Object&);
 void playerDraw(Player&);
 
 // void drawNearestBut(const Player &player, Button **buttons);
-int drawNearestBut(const Player& player, const ButtonVec& screen);
+int drawNearestBut(const Player& player, const ButtonVec& screenButtons);
 
-void drawButtons(const ButtonVec& screen);
+void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScreen screenId);
 
 void drawKitchen(Match& match, int butUnderMouseInd);
 
@@ -38,5 +38,7 @@ void drawStove(Match& match, int butUnderMouseInd);
 void drawPrepare(Match& match, int butUnderMouseInd);
 
 void drawInventory(const Player &player);
+
+void drawCtrlHintFor(Rectangle button, int screen);
 
 #endif

@@ -56,10 +56,4 @@ struct Match{
 
 void matchStart(Match& match);
 
-// void matchProcess(Match& match);
-// void matchProcess(Match& match, Sprite background, Vector2 mouse);
-// void playerProcess(Player& player); Transferido para player.hpp
-
-
-
 #endif
