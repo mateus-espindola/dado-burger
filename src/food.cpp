@@ -136,6 +136,6 @@ void flip_meat(Ingredient& ing){
 // }
 //EU NAO LEMBRO O QUE MAIS TEM QUE COZINHAR TLG
 
-void compare_hamburger_with_order(Stack *hamburger, List<Ingredient> *order){
+void compare_hamburger_with_order(Stack *hamburger, LinkedList<Ingredient> *order){
     return;
 }

@@ -1,5 +1,4 @@
-#ifndef INPUTS_HPP
-#define INPUTS_HPP
+#pragma once
 
 #include "raylib.h"
 #include "match.hpp"
@@ -15,5 +14,3 @@ bool keyDownClicked(void);
 int changeInvSlot(void);
 
 void processButClick(Match& match, Button& button);
-
-#endif

@@ -1,5 +1,6 @@
-#ifndef FOOD_HPP
-#define FOOD_HPP
+#pragma once
+
+#include "linked_list.hpp"
 
 /* ============================ */
 /*          INGREDIENT         */
@@ -38,7 +39,7 @@ struct CookState {
     bool cooking; //Indica se o ingrediente está cozinhando. Se sim ele nao diminui seu tempo ate estragar
     CookPoint cookPoint[2]; //Indica o quao cozido ele esta
     float cook_time; //Indica o tempo até mudar o estágio de cozimento
-    
+
 };
 
 struct Ingredient {
@@ -57,12 +58,28 @@ struct Ingredient {
 
 };
 
+void initIngredient(Ingredient &ing, char ingType);
+
+/* ============================ */
+/*          COSTUMERS           */
+/* ============================ */
+
+enum CostumerType{
+
+    CHILL_GUY,
+    NORMAL,
+    VEGAN,
+    TONY
+
+};
+
+struct Costumer{
+    int patience;
+    LinkedList<Ingredient> order;
+    CostumerType type;
+};
+
 // //This is necessary so that the player can hold a burger. The player inventory doesen't comport stacks, but it comports a type
 // struct hamburger {
 //     Stack<Ingredient> hamburger;
 // };
-
-void initIngredient(Ingredient &ing, char ingType);
-
-
-#endif

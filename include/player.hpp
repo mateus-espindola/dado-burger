@@ -1,5 +1,4 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#pragma once
 
 #include "food.hpp"
 #include "tads.hpp"
@@ -61,27 +60,3 @@ void setPlayer(Player&);
 void playerProcess(Player& player, float minX, float maxX);
 
 // void playerProcessNoSprite(Player& player);
-
-
-
-
-/* ============================ */
-/*          COSTUMERS           */
-/* ============================ */
-
-enum CostumerType{
-
-    CHILL_GUY,
-    NORMAL,
-    VEGAN,
-    TONY
-
-};
-
-struct Costumer{
-    int patience;
-    List<Ingredient> order;
-    CostumerType type;
-};
-
-#endif

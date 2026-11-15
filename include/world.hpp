@@ -1,5 +1,4 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#pragma once
 
 #include "match_enums.hpp"
 
@@ -15,5 +14,3 @@ World worldOf(MatchScreen s);
 struct Limits { float min, max; };
 
 Limits playerLimitsOf(const Match &match);
-
-#endif

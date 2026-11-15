@@ -1,16 +1,10 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#pragma once
 
 #include "raylib.h"
 
 #include "match.hpp"
 #include "hashtable.hpp"
 #include "sprites.hpp"
-
-
-
-
-
 
 /* ============================ */
 /*             GAME             */
@@ -99,5 +93,3 @@ void ambientProcess(Game& game, Vector2 mouse);
 //No botao balcao aparace excalamacao se tiver algum cliente a um turno de te mandar tomar no cu
 
 //Tres clientes no balcao por vez
-
-#endif

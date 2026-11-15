@@ -1,5 +1,4 @@
-#ifndef GRAPHICS_HPP
-#define GRAPHICS_HPP
+#pragma once
 
 #include "game.hpp"
 
@@ -38,5 +37,3 @@ void drawStove(Match& match, int butUnderMouseInd);
 void drawPrepare(Match& match, int butUnderMouseInd);
 
 void drawInventory(const Player &player);
-
-#endif

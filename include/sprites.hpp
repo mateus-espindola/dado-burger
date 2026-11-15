@@ -1,5 +1,4 @@
-#ifndef SPRITES_HPP
-#define SPRITES_HPP
+#pragma once
 
 #include "raylib.h"
 
@@ -26,5 +25,3 @@ void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint);
 void loadSpritesheet(Sprite sprites[]);
 
 void unloadSpritesheet(Sprite sprites[]);
-
-#endif

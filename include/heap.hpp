@@ -1,5 +1,4 @@
-#ifndef HEAP_HPP
-#define HEAP_HPP
+#pragma once
 
 #include <iostream>
 
@@ -107,5 +106,3 @@ void exterminateHeap(Heap<T>& heap) {
     heap.size = 0;
     heap.capacity = 0;
 }
-
-#endif

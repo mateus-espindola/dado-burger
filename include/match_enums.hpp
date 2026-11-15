@@ -1,5 +1,4 @@
-#ifndef MATCH_ENUMS_HPP
-#define MATCH_ENUMS_HPP
+#pragma once
 
 //This file was created to evade ciclic incldues with match.hpp
 //There are files wich only include the enums of match.hpp, so we took them apart in another file
@@ -24,5 +23,3 @@ enum MatchScreen{
     STATE_QUANTITY
 
 };
-
-#endif

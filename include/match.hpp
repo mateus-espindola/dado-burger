@@ -1,9 +1,7 @@
-#ifndef MATCH_HPP
-#define MATCH_HPP
+#pragma once
 
 #include "raylib.h"
 
-// #include "constants.hpp" //Usa mas o include nao e necessario. O inclide das constantes vem de player.hpp
 #include "tads.hpp"
 #include "food.hpp"
 #include "sprites.hpp"
@@ -59,7 +57,3 @@ void matchStart(Match& match);
 // void matchProcess(Match& match);
 // void matchProcess(Match& match, Sprite background, Vector2 mouse);
 // void playerProcess(Player& player); Transferido para player.hpp
-
-
-
-#endif

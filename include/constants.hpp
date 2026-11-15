@@ -1,5 +1,4 @@
-#ifndef CONSTANTS_HPP
-#define CONSTANTS_HPP
+#pragma once
 
 #include <iostream>
 #include <stdio.h>
@@ -77,5 +76,3 @@ constexpr float CIRCLES_W = STOVE_WORLD_WIDTH - 2 * STOVE_MARGIN
 constexpr float PLATE_X   = STOVE_MARGIN;
 constexpr float SQUARES_X = PLATE_X + PLATE_W + PANEL_GAP;
 constexpr float CIRCLES_X = SQUARES_X + SQUARES_W + PANEL_GAP;
-
-#endif
