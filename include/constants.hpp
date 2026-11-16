@@ -36,6 +36,7 @@ constexpr float INV_Y         = 20.0f;
 constexpr float COOK_SPEED = 1.0f;
 #define COOK_TIME 2
 
+constexpr float COSTUMERS_SPEED = 1.0f;
 
 #define DRAW_HITBOX 0
 

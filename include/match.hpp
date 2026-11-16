@@ -33,7 +33,7 @@ struct Items{
 
 struct Match{
     MatchScreen screen;
-    MatchScreen prevScreen; //Used to detect screen changes during the matc
+    MatchScreen prevScreen; //Used to detect screen changes during the match
     ButtonVec buttonsVec[STATE_QUANTITY];
     Camera2D camera;
     Player player;

@@ -59,10 +59,19 @@ struct Ingredient {
     bool operator>(const Ingredient& other) const {
         return this->perish_time > other.perish_time;
     }
-
 };
 
+// //This is necessary so that the player can hold a burger. The player inventory doesen't comport stacks, but it comports a type
+// struct hamburger {
+//     Stack<Ingredient> hamburger;
+// };
+
 void initIngredient(Ingredient &ing, char ingType);
+struct ButtonVec; //Declaracao antecipada
+void cookAll(ButtonVec *butonVec, float dt);
+float cookTimeOf(IngredientType type);
+void cutIngredient(Ingredient& ing /*, Stack& ready_ing*/);
+void flipMeat(Ingredient& ing);
 
 /* ============================ */
 /*          COSTUMERS           */
@@ -82,18 +91,3 @@ struct Costumer{
     LinkedList<Ingredient> order;
     CostumerType type;
 };
-
-// //This is necessary so that the player can hold a burger. The player inventory doesen't comport stacks, but it comports a type
-// struct hamburger {
-//     Stack<Ingredient> hamburger;
-// };
-
-struct ButtonVec; //Declaracao antecipada
-
-void cookAll(ButtonVec *butonVec, float dt);
-
-float cookTimeOf(IngredientType type);
-
-void cutIngredient(Ingredient& ing /*, Stack& ready_ing*/);
-
-void flipMeat(Ingredient& ing);

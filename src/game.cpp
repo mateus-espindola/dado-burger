@@ -36,8 +36,6 @@ void readFiles(Game& game, FILE* fp, FILE* fh) {
 }
 
 void gameStart(Game& game){
-
-
     Match &match = game.current_match;
     // loadSpritesheet(game.spritesMenu);
     loadSpritesheet(match.spriteMatch);
