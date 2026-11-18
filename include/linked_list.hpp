@@ -1,5 +1,6 @@
 #pragma once
 
+#include "queue.hpp"
 #include <cstddef>
 
 // ---------- Lista ----------
@@ -14,25 +15,25 @@ struct LinkedList {
     LinkedList_node<T> *start;
 }; // The Recipe struct is a list of ingredients
 
-// Inicializa a lista vazia (chame sempre ao criar)
+
+// MAIN FUNCTIONS
 template<typename T>
-void list_init(LinkedList<T>& l) {
+void initializeLinkedList(LinkedList<T>& l) {
     l.start = nullptr;
 }
 
 template<typename T>
-bool list_empty(const LinkedList<T>& l) {
+bool isEmptyLinkedList(const LinkedList<T>& l) {
     return l.start == nullptr;
 }
 
 template<typename T>
-size_t list_size(const LinkedList<T>& l) {
-    size_t n = 0;
+int lengthLinkedList(const LinkedList<T>& l) {
+    int n = 0;
     for (LinkedList_node<T> *p = l.start; p != nullptr; p = p->prox) n++;
     return n;
 }
 
-// Insere no início: O(1)
 template<typename T>
 void push_front(LinkedList<T>& l, const T& value) {
     l.start = new LinkedList_node<T>{ l.start, value };

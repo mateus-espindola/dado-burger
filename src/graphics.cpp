@@ -14,6 +14,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
         const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
         BeginMode2D(match.camera);
+            drawCostumers(match.costumer_line);
+
             spriteDraw(match.spriteMatch[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
 
             int visible = -1;   //Index of the visible button in drawNearesBut
@@ -410,5 +412,30 @@ void drawButGlow(Rectangle r, Color cor, int camadas, float alpha){
         Rectangle g = { r.x - i, r.y - i, r.width + i * 2, r.height + i * 2 };
         float a = alpha * (1.0f - (float)i / (camadas + 1));   // some com a distância
         DrawRectangleLinesEx(g, 1, Fade(cor, a));
+    }
+}
+
+void drawCostumers(Queue<Costumer>& queue) {
+    for (Queue_node<Costumer>* aux = queue.first; aux != nullptr; aux = aux->prox) {
+            Costumer cost = aux->data;
+
+            Color color;
+            switch (cost.type) {
+                case CHILL_GUY:
+                    color = BLUE;
+                    break;
+                case NORMAL:
+                    color = LIGHTGRAY;
+                    break;
+                case VEGAN:
+                    color = DARKGREEN;
+                    break;
+                case TONY:
+                    color = MAROON;
+                    break;
+            }
+
+            std::cout << cost.type << " drawn at: " << cost.obj.pos.x << "\n";
+            DrawCircleV(cost.obj.pos, cost.obj.radius, color);
     }
 }

@@ -7,6 +7,7 @@
 #include "sprites.hpp"
 #include "buttons.hpp"
 #include "player.hpp"
+#include "costumer.hpp"
 #include "match_enums.hpp"
 
 

@@ -131,6 +131,16 @@ AVL_node* searchAVL(AVL_node* root, int cod) {
     }
 }
 
+int getLastCodAVL(AVL_node* root) {
+    AVL_node* aux = root;
+
+    while (aux->right != nullptr) {
+        aux = aux->right;
+    }
+
+    return aux->data.cod;
+}
+
 
 // #define MAX_NODES 999
 // int main() {

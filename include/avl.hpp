@@ -17,6 +17,7 @@ struct AVL_node {
 
 struct AVL {
     AVL_node *root;
+    int last_cod;
 };
 
 // AUX FUNCTIONS
@@ -35,3 +36,4 @@ AVL_node* insertAVL(AVL_node* root, const Order& order);
 void printInOrderAVL(const AVL_node* avl);
 void exterminateAVL(AVL_node* root);
 AVL_node* searchAVL(AVL_node* root, int cod);
+int getLastCodAVL(AVL_node* root);

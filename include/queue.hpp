@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constants.hpp"
 #include <iostream>
 
 template<typename T>
@@ -12,12 +13,17 @@ template<typename T>
 struct Queue {
     Queue_node<T> *first;
     Queue_node<T> *last;
+    int size;
+
+    float costumer_timer; // We did the queue generic but realistically it's worth it to store costumer-related information
 };
 
 template <typename T>
 void initializeQueue(Queue<T>& queue) {
     queue.first = nullptr;
     queue.last = nullptr;
+    queue.size = 0;
+    queue.costumer_timer = COSTUMER_TIMER_MAX;
     return;
 }
 
@@ -38,6 +44,8 @@ void enqueue(Queue<T>& queue, T data) {
         queue.last->prox = newNode;     // o último atual passa a apontar para o novo
     }
     queue.last = newNode;
+
+    queue.size++;
 }
 
 template <typename T>
@@ -49,6 +57,9 @@ bool dequeue(Queue<T>& queue, T *out) {
     queue.first = aux->prox;
     if (queue.first == nullptr) queue.last = nullptr;  // esvaziou: zera o last também
     delete aux;
+
+    queue.size--;
+
     return true;
 }
 

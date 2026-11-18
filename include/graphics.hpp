@@ -39,3 +39,5 @@ void drawPrepare(Match& match, int butUnderMouseInd);
 void drawInventory(const Player &player);
 
 void drawCtrlHintFor(Rectangle button, int screen);
+
+void drawCostumers(Queue<Costumer>& queue);

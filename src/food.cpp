@@ -130,7 +130,7 @@ void cookMeat(Ingredient& ing){
 }
 
 
-void cookAll(ButtonVec *butonVec, float dt) {
+void cookAll(ButtonVec *butonVec) {
     for (int i = 0; i < STATE_QUANTITY; i++) {
         ButtonVec& screen = butonVec[i];
         if (screen.buttons == nullptr) continue;
@@ -142,17 +142,8 @@ void cookAll(ButtonVec *butonVec, float dt) {
             if (b.target.size <= 0) continue;   // top é inválido com a pilha vazia
 
             Ingredient& ing = b.target.top->data;
-            // if (!cs.cooking) continue;
 
-            // cs.cookInfo[0].cook_time -= dt;
-
-            // if (cs.cookInfo[0].cook_time < 0) {
-            //     ++cs.cookInfo[0].cookPoint;
-            //     // ++cs.cookPoint[1];
-            //     cs.cookInfo[0].cook_time = cookTimeOf(b.target.type);
-            // }
-
-            if(ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED || 
+            if(ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED ||
                 ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) continue;
 
             switch(b.target.type){

@@ -21,13 +21,26 @@ constexpr int COUNTER_SIZE = 3;
 constexpr int INVENTORY_SLOTS = 3;
 
 
+//Costumer constants
+constexpr float AVERAGE_COSTUMER_PATIENCE = 6.0f;
+
+constexpr float COSTUMER_TIMER_MAX = FPS * 6.7f;
+constexpr float COSTUMER_TIMER_SPEED = 1.0f;
+
+constexpr int MAX_COSTUMER_QUEUE_SIZE = 10;
+
+constexpr float FIRST_COSTUMER_IN_QUEUE_POS_X = 900.0f;
+constexpr float COSTUMER_POS_Y = WINDOW_HEIGHT / 2;
+constexpr float COSTUMER_DELTA = 130.0f;
+constexpr float COSTUMER_SPEED = 5.0f;
+
+
 //Inventory draw constants
 constexpr float INV_SLOT_SIZE = 90.0f;
 constexpr float INV_SLOT_GAP  = 15.0f;
 constexpr float INV_X         = 20.0f;   // canto superior esquerdo do inventário
 constexpr float INV_Y         = 20.0f;
 
-//CONSTANTES ADICIONADAS:
 #define PLATE_SIZE 6
 #define PAN_NUMBER 3
 #define PREPARING_SPACE 3
@@ -35,8 +48,6 @@ constexpr float INV_Y         = 20.0f;
 
 constexpr float COOK_SPEED = 1.0f;
 #define COOK_TIME 2
-
-constexpr float COSTUMERS_SPEED = 1.0f;
 
 #define DRAW_HITBOX 0
 

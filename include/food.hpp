@@ -68,26 +68,7 @@ struct Ingredient {
 
 void initIngredient(Ingredient &ing, char ingType);
 struct ButtonVec; //Declaracao antecipada
-void cookAll(ButtonVec *butonVec, float dt);
+void cookAll(ButtonVec *butonVec);
 float cookTimeOf(IngredientType type);
 void cutIngredient(Ingredient& ing /*, Stack& ready_ing*/);
 void flipMeat(Ingredient& ing);
-
-/* ============================ */
-/*          COSTUMERS           */
-/* ============================ */
-
-enum CostumerType{
-
-    CHILL_GUY,
-    NORMAL,
-    VEGAN,
-    TONY
-
-};
-
-struct Costumer{
-    int patience;
-    LinkedList<Ingredient> order;
-    CostumerType type;
-};

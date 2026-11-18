@@ -32,6 +32,7 @@ void readFiles(Game& game, FILE* fp, FILE* fh) {
             game.avl_orders.root = insertAVL(game.avl_orders.root, newOrder);
         }
     }
+    game.avl_orders.last_cod = cod;
 
 }
 
@@ -154,8 +155,8 @@ void ambientProcess(Game& game, Vector2 mouse){
         default: break;
     }
 
-    cookAll(match.buttonsVec, COOK_SPEED);
-
+    cookAll(match.buttonsVec);
+    processCostumers(match.costumer_line, game.avl_orders, game.hashtable_orders);
 }
 
 void gameOver(Game& game){
