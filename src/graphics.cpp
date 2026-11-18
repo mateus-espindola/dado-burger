@@ -457,10 +457,6 @@ void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorl
 
             std::cout << cost.type << " drawn at: " << cost.obj.pos.x << " | ideal pos: " << cost.ideal_pos_x << "\n";
             DrawCircleV(cost.obj.pos, cost.obj.radius, color);
-
-            if (CheckCollisionPointCircle(mouseWorld, cost.obj.pos, cost.obj.radius)) {
-                drawOrderBurger(cost);
-            }
     }
 
     for (int i=0; i<COUNTER_SIZE; i++) {
