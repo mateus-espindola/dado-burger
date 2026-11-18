@@ -156,7 +156,7 @@ void ambientProcess(Game& game, Vector2 mouse){
     }
 
     cookAll(match.buttonsVec);
-    processCostumers(match.costumer_line, game.avl_orders, game.hashtable_orders);
+    processCostumers(match.costumer_line, match.costumer_counter, game.avl_orders, game.hashtable_orders);
 }
 
 void gameOver(Game& game){

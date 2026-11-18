@@ -6,18 +6,30 @@
 IngredientType charToIngType(char c) {
     switch (c) {
         case 'L': return LETTUCE;
+        case 'a': return LETTUCE;
         case 'B': return BACON;
+        case 'b': return BACON;
         case 'O': return ONION;
+        case 'c': return ONION;
         case 'K': return KETCHUP;
+        case 'k': return KETCHUP;
         case 'm': return MUSTARD;
         case 'M': return MEAT;
+        case 'n': return MEAT;
         case 'V': return VEGAN_PROTEIN;
+        case 'v': return VEGAN_PROTEIN;
         case 'E': return EGG;
+        case 'o': return EGG;
         case 'P': return PICKLES;
+        case 'p': return PICKLES;
         case 'C': return CHEDDAR;
+        case 'q': return CHEDDAR;
         case 'S': return SWISS_CHEESE;
+        case 's': return SWISS_CHEESE;
         case 'T': return TOMATO;
+        case 't': return TOMATO;
         case 'U': return UPPER_BREAD;
+        case 'z': return UPPER_BREAD;
         default:  return NONE;   // inclui '0' e qualquer letra desconhecida
     }
 }

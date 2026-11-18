@@ -20,7 +20,7 @@ int buttonTargetCapacityOf(ButtonType type){
 //     b.targetType = NONE;
 // }
 
-static void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
+void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type) {
     b.type  = type;
     b.shape = { x, y, w, h };
     snprintf(b.text, sizeof(b.text), "%s", text);
@@ -64,6 +64,7 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(kitchenBut[1], BOARD_LEFT_X,   BOARD_LEFT_Y,   BOARD_LEFT_W,   BOARD_LEFT_H,   "BOARD",   CLICK);
     setButton(kitchenBut[2], OVEN_LEFT_X,    OVEN_LEFT_Y,    OVEN_LEFT_W,    OVEN_LEFT_H,    "OVEN",    CLICK);
     setButton(kitchenBut[3], TRASH_KITCHEN_LEFT_X, TRASH_KITCHEN_LEFT_Y, TRASH_KITCHEN_LEFT_W, TRASH_KITCHEN_LEFT_H, "TRASH", DROP);
+    setButton(kitchenBut[4], COSTUMER_BELL_LEFT_X, COSTUMER_BELL_LEFT_Y, COSTUMER_BELL_WIDTH, COSTUMER_BELL_HEIGHT, COSTUMER_BELL_TEXT, CLICK);
 
     int fridgeIndex = 0;
     fridgeIndex = setSquareButtons(fridgeBut, fridgeIndex, 4, KITCHEN_BUTTON_DELTA, fridge_item_frst_row_but_rect, "NONE", PICK, false);

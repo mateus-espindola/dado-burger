@@ -14,7 +14,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
         const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
         BeginMode2D(match.camera);
-            drawCostumers(match.costumer_line);
+            Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), match.camera);
+            drawCostumers(match.costumer_line, match.costumer_counter, mouseWorld);
 
             spriteDraw(match.spriteMatch[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
 
@@ -415,7 +416,23 @@ void drawButGlow(Rectangle r, Color cor, int camadas, float alpha){
     }
 }
 
-void drawCostumers(Queue<Costumer>& queue) {
+#define ORDER_RECT_W 40
+#define ORDER_RECT_H 16
+#define ORDER_RECT_GAP 2
+
+static void drawOrderBurger(const Costumer& cost) {
+    float x = cost.obj.pos.x - ORDER_RECT_W / 2.0f;
+    float y = cost.obj.pos.y - cost.obj.radius - ORDER_RECT_H - ORDER_RECT_GAP;
+
+    for (LinkedList_node<Ingredient>* p = cost.order.start; p != nullptr; p = p->prox) {
+        Rectangle r = { x, y, ORDER_RECT_W, ORDER_RECT_H };
+        DrawRectangleRec(r, ingredientColor(p->data.type));
+        DrawRectangleLinesEx(r, 1, BLACK);
+        y -= ORDER_RECT_H + ORDER_RECT_GAP;
+    }
+}
+
+void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorld) {
     for (Queue_node<Costumer>* aux = queue.first; aux != nullptr; aux = aux->prox) {
             Costumer cost = aux->data;
 
@@ -433,9 +450,49 @@ void drawCostumers(Queue<Costumer>& queue) {
                 case TONY:
                     color = MAROON;
                     break;
+                default:
+                    color = PURPLE;
+                    break;
             }
 
-            std::cout << cost.type << " drawn at: " << cost.obj.pos.x << "\n";
+            std::cout << cost.type << " drawn at: " << cost.obj.pos.x << " | ideal pos: " << cost.ideal_pos_x << "\n";
             DrawCircleV(cost.obj.pos, cost.obj.radius, color);
+
+            if (CheckCollisionPointCircle(mouseWorld, cost.obj.pos, cost.obj.radius)) {
+                drawOrderBurger(cost);
+            }
+    }
+
+    for (int i=0; i<COUNTER_SIZE; i++) {
+            Costumer cost = counter[i];
+
+            if (cost.type != EMPTY) {
+
+                Color color;
+                switch (cost.type) {
+                    case CHILL_GUY:
+                        color = BLUE;
+                        break;
+                    case NORMAL:
+                        color = LIGHTGRAY;
+                        break;
+                    case VEGAN:
+                        color = DARKGREEN;
+                        break;
+                    case TONY:
+                        color = MAROON;
+                        break;
+                    default:
+                        color = PURPLE;
+                        break;
+                }
+
+                std::cout << cost.type << " drawn at: " << cost.obj.pos.x << "\n";
+                DrawCircleV(cost.obj.pos, cost.obj.radius, color);
+
+                if (CheckCollisionPointCircle(mouseWorld, cost.obj.pos, cost.obj.radius)) {
+                    drawOrderBurger(cost);
+                }
+            }
     }
 }

@@ -8,6 +8,7 @@
 
 enum CostumerType{
 
+    EMPTY = -1,
     CHILL_GUY = 0,
     NORMAL,
     VEGAN,
@@ -26,4 +27,6 @@ struct Costumer{
 
 void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, const HashTable& ht);
 void initializeCostumer(Costumer& cost);
-void processCostumers(Queue<Costumer>& queue, const AVL& avl, const HashTable& ht);
+void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, const HashTable& ht);
+bool callCostumer(Queue<Costumer>& queue, Costumer counter[]);
+std::string costumerOrderString(const Costumer& cost);

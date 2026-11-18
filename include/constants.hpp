@@ -31,6 +31,8 @@ constexpr int MAX_COSTUMER_QUEUE_SIZE = 10;
 
 constexpr float FIRST_COSTUMER_IN_QUEUE_POS_X = 900.0f;
 constexpr float COSTUMER_POS_Y = WINDOW_HEIGHT / 2;
+constexpr float COSTUMER_COUNTER_POS_X[COUNTER_SIZE] = {1700, 1600, 1500};
+
 constexpr float COSTUMER_DELTA = 130.0f;
 constexpr float COSTUMER_SPEED = 5.0f;
 

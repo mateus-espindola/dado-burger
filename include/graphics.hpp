@@ -40,4 +40,4 @@ void drawInventory(const Player &player);
 
 void drawCtrlHintFor(Rectangle button, int screen);
 
-void drawCostumers(Queue<Costumer>& queue);
+void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorld);

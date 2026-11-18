@@ -38,9 +38,10 @@ struct Match{
     ButtonVec buttonsVec[STATE_QUANTITY];
     Camera2D camera;
     Player player;
+
     Queue<Costumer> costumer_line;
     Costumer costumer_counter[COUNTER_SIZE];
-    // int turn;
+
     Items items;
     Sprite spriteMatch[QUANTITY_OF_SPRITES];
 

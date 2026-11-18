@@ -2,6 +2,7 @@
 
 //BUTTON CONSTANTS
 #include "constants.hpp"
+#include <iostream>
 #define MAX_ACESS_DIST 300 //Distancia maxima que o player pode abrir uma parte do cenario
 
 #define BRIGHTNESS_LAYERS 12
@@ -15,6 +16,12 @@
 #define BUTTONS_BOARD 10
 #define BUTTONS_OVEN 10
 
+
+constexpr float COSTUMER_BELL_LEFT_X = 1800;
+constexpr float COSTUMER_BELL_LEFT_Y = 425;
+constexpr float COSTUMER_BELL_WIDTH = 50;
+constexpr float COSTUMER_BELL_HEIGHT = 30;
+constexpr const char *COSTUMER_BELL_TEXT = "BELL";
 
 #define PREPARE_LEFT_X 2300
 #define PREPARE_LEFT_Y 200

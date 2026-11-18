@@ -3,6 +3,9 @@
 
 void matchStart(Match& match) {
     initializeQueue(match.costumer_line);
+    for (int i = 0; i < COUNTER_SIZE; i++) {
+        match.costumer_counter[i].type = EMPTY;
+    }
 
     match.screen = KITCHEN;
 

@@ -91,7 +91,12 @@ void processButClick(Match& match, Button& button) {
 
     switch (button.type) {
         case CLICK:
-            match.screen = screenFromName(button.text);
+            if (std::strcmp(button.text, COSTUMER_BELL_TEXT) == 0) {
+                callCostumer(match.costumer_line, match.costumer_counter);
+            } // Handles the costumer bell
+            else {
+                match.screen = screenFromName(button.text);
+            } // Handles the screen changes
         break;
 
         case PICK:
@@ -102,9 +107,9 @@ void processButClick(Match& match, Button& button) {
                 stack_push(inventory, ing);
                 //SÓ USAR ESSE PRINTF SE EXTREMAMENTE NECESSÁRIO PARA DEBUG. ELE PODE ORIGINAR ACESSO À PONTEIRO NULL E CRASHAR A PORRA TODA
                 // printf("ITEM: %d\n", match.player.inventory->top->data.type);
-                printf("%c ", button.text[0]);
-                printf("%d ", inventory.size);
-                printf("%d\n", inventory.type);
+                // printf("%c ", button.text[0]);
+                // printf("%d ", inventory.size);
+                // printf("%d\n", inventory.type);
             }
 
         break;
