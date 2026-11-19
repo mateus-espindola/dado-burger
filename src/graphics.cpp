@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 
 #include "../include/graphics.hpp"
 #include "../include/camera.hpp"
@@ -23,6 +24,53 @@ void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd){
             DrawRectangleLinesEx(b.shape, 3, DARKBROWN);
 
             int fs = 28;
+            int textW = MeasureText(b.text, fs);
+            DrawText(b.text, (int)(b.shape.x + b.shape.width / 2 - textW / 2),
+                     (int)(b.shape.y + b.shape.height / 2 - fs / 2), fs, DARKBROWN);
+        }
+
+    EndDrawing();
+}
+
+void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const ButtonVec& historyButtons, int butUnderMouseInd){
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        const char* title = "HISTORY";
+        int titleFs = 50;
+        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 60, titleFs, DARKBROWN);
+
+        int totalPages = (historico.size + HISTORY_ENTRIES_PER_PAGE - 1) / HISTORY_ENTRIES_PER_PAGE;
+        if (totalPages < 1) totalPages = 1;
+
+        int start = page * HISTORY_ENTRIES_PER_PAGE;
+        int end   = start + HISTORY_ENTRIES_PER_PAGE;
+        if (end > historico.size) end = historico.size;
+
+        int y = HISTORY_LIST_TOP_Y;
+        for (int i = start; i < end; i++) {
+            const PlayerInfo &info = historico.data[i];
+            DrawText(info.nome.c_str(), HISTORY_LIST_LEFT_X, y, 24, BLACK);
+            DrawText(TextFormat("%d", info.score), HISTORY_LIST_LEFT_X + HISTORY_LIST_NAME_W, y, 24, BLACK);
+            y += HISTORY_LIST_ROW_H;
+        }
+
+        const char* pageTxt = TextFormat("Page %d / %d", page + 1, totalPages);
+        DrawText(pageTxt, WINDOW_WIDTH / 2 - MeasureText(pageTxt, 24) / 2, HISTORY_NAV_BUTTON_Y - 40, 24, DARKGRAY);
+
+        for (int i = 0; i < historyButtons.size; i++) {
+            const Button &b = historyButtons.buttons[i];
+
+            bool atFirst = page == 0;
+            bool atLast  = page == totalPages - 1;
+            bool disabled = ((strcmp(b.text, "PREV") == 0 || strcmp(b.text, "<<") == 0) && atFirst)
+                          || ((strcmp(b.text, "NEXT") == 0 || strcmp(b.text, ">>") == 0) && atLast);
+
+            Color fill = disabled ? LIGHTGRAY : ((i == butUnderMouseInd) ? ORANGE : BEIGE);
+            DrawRectangleRec(b.shape, fill);
+            DrawRectangleLinesEx(b.shape, 3, DARKBROWN);
+
+            int fs = 22;
             int textW = MeasureText(b.text, fs);
             DrawText(b.text, (int)(b.shape.x + b.shape.width / 2 - textW / 2),
                      (int)(b.shape.y + b.shape.height / 2 - fs / 2), fs, DARKBROWN);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "contiguous_list.hpp"
+#include "player.hpp"
 #include "raylib.h"
 
 #include "match.hpp"
@@ -26,9 +28,13 @@ struct Game{
     GameState state;
     Sprite spritesMenu[QUANTITY_OF_SPRITES];
     ButtonVec menuButtons;
+    ButtonVec historyButtons;
+    int historyPage;
 
     AVL avl_orders;
     HashTable hashtable_orders;
+
+    ContiguousList<PlayerInfo> historico;
 };
 
 /* ============================== */
@@ -46,7 +52,7 @@ void unloadSpritesheet(Sprite sprites[]);
 
 void menuProcess(Game& game, Vector2 mouse);
 // void tutorialProcess();
-// void historyProcess();
+void historyProcess(Game& game, Vector2 mouse);
 // void settingsProcess();
 
 //Movida para match.hpp

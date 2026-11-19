@@ -36,7 +36,7 @@ enum Direction {
 
 
 struct PlayerInfo{
-    char nome[50];
+    std::string nome;
     int score;
 };
 

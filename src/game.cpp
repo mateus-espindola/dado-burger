@@ -12,9 +12,10 @@
 
 void readFiles(Game& game, FILE* fp, FILE* fh) {
     if (fp == nullptr || fh == nullptr) {
-        std::cout << "There was an error while trying to read the archive." << std::endl;
+        std::cout << "There was an error while trying to read the archives." << std::endl;
     }
 
+    // Loads fp
     int cod;
     while (fscanf(fp, "%d\n", &cod) == 1) {
         std::string ingredients;
@@ -34,6 +35,30 @@ void readFiles(Game& game, FILE* fp, FILE* fh) {
     }
     game.avl_orders.last_cod = cod;
 
+    // Loads fh
+    int historyLines = 0;
+    char countBuffer[HISTORY_NAME_BUFFER];
+    while (fgets(countBuffer, sizeof(countBuffer), fh)) historyLines++;
+    rewind(fh);
+    initializeContiguousList(game.historico, historyLines / 2 + 1);
+
+    char buffer[HISTORY_NAME_BUFFER];
+    int pos = 0;
+    while (fgets(buffer, sizeof(buffer), fh)) {
+        std::string strName(buffer);
+        if (!strName.empty() && strName.back() == '\n') {
+            strName.pop_back();
+        }
+
+        int score;
+        if (fscanf(fh, "%d\n", &score)) {
+            PlayerInfo newInfo = {strName, score};
+
+            insertContiguousList(game.historico, newInfo, pos);
+            pos++;
+        }
+    }
+
 }
 
 void gameStart(Game& game){
@@ -48,6 +73,8 @@ void gameStart(Game& game){
     matchStart(match);
 
     declareMenuButtons(game.menuButtons);
+    declareHistoryButtons(game.historyButtons);
+    game.historyPage = 0;
 
     game.state = MENU;
     game.quit = false;
@@ -56,18 +83,42 @@ void gameStart(Game& game){
 void processMenuButClick(Game& game, Button& button){
     if      (strcmp(button.text, "PLAY") == 0)        game.state = PLAYING;
     else if (strcmp(button.text, "HOW TO PLAY") == 0) game.state = HOW_TO_PLAY;
-    else if (strcmp(button.text, "HISTORY") == 0)     game.state = HISTORY;
+    else if (strcmp(button.text, "HISTORY") == 0)     { game.state = HISTORY; game.historyPage = 0; }
     else if (strcmp(button.text, "SETTINGS") == 0)    game.state = SETTINGS;
     else if (strcmp(button.text, "QUIT") == 0)        game.quit = true;
 }
 
 void menuProcess(Game& game, Vector2 mouse){
-    int butUnderMouseInd = findMenuButtonUnderMouse(mouse, game.menuButtons);
+    int butUnderMouseInd = findUIButtonUnderMouse(mouse, game.menuButtons);
 
     drawMenu(game.menuButtons, butUnderMouseInd);
 
     if (butUnderMouseInd != -1 && mouseKeyLeftClicked())
         processMenuButClick(game, game.menuButtons.buttons[butUnderMouseInd]);
+}
+
+int historyTotalPages(const Game& game){
+    int totalPages = (game.historico.size + HISTORY_ENTRIES_PER_PAGE - 1) / HISTORY_ENTRIES_PER_PAGE;
+    return (totalPages < 1) ? 1 : totalPages;
+}
+
+void processHistoryButClick(Game& game, Button& button){
+    int totalPages = historyTotalPages(game);
+
+    if      (strcmp(button.text, "BACK") == 0) game.state = MENU;
+    else if (strcmp(button.text, "<<")   == 0) game.historyPage = 0;
+    else if (strcmp(button.text, "PREV") == 0) { if (game.historyPage > 0) game.historyPage--; }
+    else if (strcmp(button.text, "NEXT") == 0) { if (game.historyPage < totalPages - 1) game.historyPage++; }
+    else if (strcmp(button.text, ">>")   == 0) game.historyPage = totalPages - 1;
+}
+
+void historyProcess(Game& game, Vector2 mouse){
+    int butUnderMouseInd = findUIButtonUnderMouse(mouse, game.historyButtons);
+
+    drawHistory(game.historico, game.historyPage, game.historyButtons, butUnderMouseInd);
+
+    if (butUnderMouseInd != -1 && mouseKeyLeftClicked())
+        processHistoryButClick(game, game.historyButtons.buttons[butUnderMouseInd]);
 }
 
 void gameProcess(Game& game){
@@ -87,8 +138,7 @@ void gameProcess(Game& game){
         break;
 
         case HISTORY:
-            // historyProcess();
-            // drawHistory();
+            historyProcess(game, mouse);
         break;
 
         case SETTINGS:

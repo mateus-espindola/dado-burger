@@ -108,9 +108,20 @@ void declareMenuButtons(ButtonVec &menuButtons) {
     setButton(menuBut[4], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 4 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "QUIT", CLICK);
 }
 
-int findMenuButtonUnderMouse(Vector2 mouse, const ButtonVec &menuButtons) {
-    for (int i = menuButtons.size - 1; i >= 0; i--) {
-        if (CheckCollisionPointRec(mouse, menuButtons.buttons[i].shape)) return i;
+void declareHistoryButtons(ButtonVec &historyButtons) {
+    static Button historyBut[BUTTONS_HISTORY];
+    historyButtons = { historyBut, BUTTONS_HISTORY };
+
+    setButton(historyBut[0], HISTORY_BACK_BUTTON_X,  HISTORY_BACK_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, "BACK", CLICK);
+    setButton(historyBut[1], HISTORY_FIRST_BUTTON_X, HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, "<<",   CLICK);
+    setButton(historyBut[2], HISTORY_PREV_BUTTON_X,  HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, "PREV", CLICK);
+    setButton(historyBut[3], HISTORY_NEXT_BUTTON_X,  HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, "NEXT", CLICK);
+    setButton(historyBut[4], HISTORY_LAST_BUTTON_X,  HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, ">>",   CLICK);
+}
+
+int findUIButtonUnderMouse(Vector2 mouse, const ButtonVec &buttons) {
+    for (int i = buttons.size - 1; i >= 0; i--) {
+        if (CheckCollisionPointRec(mouse, buttons.buttons[i].shape)) return i;
     }
     return -1;
 }

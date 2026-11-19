@@ -4,6 +4,7 @@
 
 // void gameDraw(Game& game);
 void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd);
+void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const ButtonVec& historyButtons, int butUnderMouseInd);
 // void tutorialDraw();
 // void historyDraw();
 // void settingsDraw();
