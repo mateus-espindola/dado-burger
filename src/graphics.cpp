@@ -7,6 +7,30 @@
 #include "raylib.h"
 
 
+void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd){
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        const char* title = "DADO BURGER";
+        int titleFs = 60;
+        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 150, titleFs, DARKBROWN);
+
+        for (int i = 0; i < menuButtons.size; i++) {
+            const Button &b = menuButtons.buttons[i];
+
+            Color fill = (i == butUnderMouseInd) ? ORANGE : BEIGE;
+            DrawRectangleRec(b.shape, fill);
+            DrawRectangleLinesEx(b.shape, 3, DARKBROWN);
+
+            int fs = 28;
+            int textW = MeasureText(b.text, fs);
+            DrawText(b.text, (int)(b.shape.x + b.shape.width / 2 - textW / 2),
+                     (int)(b.shape.y + b.shape.height / 2 - fs / 2), fs, DARKBROWN);
+        }
+
+    EndDrawing();
+}
+
 void drawKitchen(Match& match, int butUnderMouseInd){
     BeginDrawing();
     ClearBackground(RAYWHITE);

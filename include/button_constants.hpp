@@ -140,3 +140,14 @@ constexpr Rectangle fridge_item_scnd_row_but_rect = {FRIDGE_SCND_ROW, FRIDGE_SCN
 
 //Pra fazer o botao aparecer acima do movel, mas o ideal e fazer uma quantidade acima do fim do desenho do balcao no sprite
 #define PREPARE_BUT_HEIGHT 100
+
+// Main menu buttons
+#define BUTTONS_MENU 5
+
+constexpr int MENU_BUTTON_WIDTH  = 300;
+constexpr int MENU_BUTTON_HEIGHT = 70;
+constexpr int MENU_BUTTON_GAP    = 30;
+constexpr int MENU_BUTTON_DELTA  = MENU_BUTTON_HEIGHT + MENU_BUTTON_GAP;
+
+constexpr int MENU_BUTTON_LEFT_X = (WINDOW_WIDTH / 2) - (MENU_BUTTON_WIDTH / 2);
+constexpr int MENU_BUTTON_FIRST_Y = 320;

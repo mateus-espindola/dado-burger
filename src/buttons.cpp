@@ -97,6 +97,24 @@ void declareButtons(ButtonVec *screenButtons) {
     // setButton(ovenBut[2], COOK_TOP_3_LEFT_X, COOK_TOP_3_LEFT_Y, COOK_TOP_3_LEFT_W, COOK_TOP_3_LEFT_H, "COOK", INSERT);
 }
 
+void declareMenuButtons(ButtonVec &menuButtons) {
+    static Button menuBut[BUTTONS_MENU];
+    menuButtons = { menuBut, BUTTONS_MENU };
+
+    setButton(menuBut[0], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 0 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "PLAY", CLICK);
+    setButton(menuBut[1], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 1 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "HOW TO PLAY", CLICK);
+    setButton(menuBut[2], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 2 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "HISTORY", CLICK);
+    setButton(menuBut[3], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 3 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "SETTINGS", CLICK);
+    setButton(menuBut[4], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 4 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "QUIT", CLICK);
+}
+
+int findMenuButtonUnderMouse(Vector2 mouse, const ButtonVec &menuButtons) {
+    for (int i = menuButtons.size - 1; i >= 0; i--) {
+        if (CheckCollisionPointRec(mouse, menuButtons.buttons[i].shape)) return i;
+    }
+    return -1;
+}
+
 int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
     int nearest = -1;
     float bestDist = INFINITY;

@@ -3,7 +3,7 @@
 #include "game.hpp"
 
 // void gameDraw(Game& game);
-// void menuDraw();
+void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd);
 // void tutorialDraw();
 // void historyDraw();
 // void settingsDraw();

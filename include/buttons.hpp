@@ -46,9 +46,13 @@ struct ButtonVec {
 
 void declareButtons(ButtonVec *screenButtons);
 
+void declareMenuButtons(ButtonVec &menuButtons);
+
 int nearestButtonIndex(const float playerX, const ButtonVec screenButtons);
 
 int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen);
+
+int findMenuButtonUnderMouse(Vector2 mouse, const ButtonVec &menuButtons);
 
 void setButton(Button &b, float x, float y, float w, float h, const char *text, ButtonType type);
 

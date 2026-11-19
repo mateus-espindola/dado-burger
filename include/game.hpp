@@ -25,6 +25,7 @@ struct Game{
     Match current_match;
     GameState state;
     Sprite spritesMenu[QUANTITY_OF_SPRITES];
+    ButtonVec menuButtons;
 
     AVL avl_orders;
     HashTable hashtable_orders;
@@ -43,7 +44,7 @@ void gameOver(Game& game);
 void loadSpritesheet(Sprite sprites[]);
 void unloadSpritesheet(Sprite sprites[]);
 
-// void menuProcess();
+void menuProcess(Game& game, Vector2 mouse);
 // void tutorialProcess();
 // void historyProcess();
 // void settingsProcess();

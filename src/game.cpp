@@ -47,8 +47,27 @@ void gameStart(Game& game){
     // AJEITAR DESPUES
     matchStart(match);
 
-    game.state = PLAYING;
+    declareMenuButtons(game.menuButtons);
+
+    game.state = MENU;
     game.quit = false;
+}
+
+void processMenuButClick(Game& game, Button& button){
+    if      (strcmp(button.text, "PLAY") == 0)        game.state = PLAYING;
+    else if (strcmp(button.text, "HOW TO PLAY") == 0) game.state = HOW_TO_PLAY;
+    else if (strcmp(button.text, "HISTORY") == 0)     game.state = HISTORY;
+    else if (strcmp(button.text, "SETTINGS") == 0)    game.state = SETTINGS;
+    else if (strcmp(button.text, "QUIT") == 0)        game.quit = true;
+}
+
+void menuProcess(Game& game, Vector2 mouse){
+    int butUnderMouseInd = findMenuButtonUnderMouse(mouse, game.menuButtons);
+
+    drawMenu(game.menuButtons, butUnderMouseInd);
+
+    if (butUnderMouseInd != -1 && mouseKeyLeftClicked())
+        processMenuButClick(game, game.menuButtons.buttons[butUnderMouseInd]);
 }
 
 void gameProcess(Game& game){
@@ -59,8 +78,7 @@ void gameProcess(Game& game){
     switch(game.state) {
 
         case MENU:
-            // menuProcess();
-            // drawMenu();
+            menuProcess(game, mouse);
         break;
 
         case HOW_TO_PLAY:
