@@ -76,20 +76,21 @@ constexpr float COOK_SPEED = 1.0f;
 
 
 // Mundo do fogão: duas vezes a largura da tela
-constexpr int STOVE_WORLD_WIDTH  = WINDOW_WIDTH * 2;   // 2560
+constexpr int STOVE_WORLD_WIDTH  = WINDOW_WIDTH;   // 2560
 constexpr int STOVE_WORLD_HEIGHT = WINDOW_HEIGHT;
 
-constexpr float STOVE_MARGIN = 60.0f;
+constexpr float STOVE_MARGIN = 30;
 constexpr float PANEL_Y      = STOVE_MARGIN;
 constexpr float PANEL_H      = STOVE_WORLD_HEIGHT - 2 * STOVE_MARGIN;
-constexpr float PANEL_GAP    = 60.0f;
 
 // Larguras das três seções (somam o que cabe entre as margens)
-constexpr float PLATE_W   = 1000.0f;   // chapa (esquerda)
-constexpr float SQUARES_W = 800.0f;    // 2 colunas de quadrados (meio)
-constexpr float CIRCLES_W = STOVE_WORLD_WIDTH - 2 * STOVE_MARGIN
-                            - PLATE_W - SQUARES_W - 2 * PANEL_GAP;   // coluna de círculos (direita)
+constexpr float SQUARES_W = WINDOW_WIDTH / 4 - 2*STOVE_MARGIN;   // Stacks a serem grilladas
+constexpr float PLATE_W   = WINDOW_WIDTH / 2 - 2*STOVE_MARGIN;   // chapa
+constexpr float READIES_W = SQUARES_W;
 
-constexpr float PLATE_X   = STOVE_MARGIN;
-constexpr float SQUARES_X = PLATE_X + PLATE_W + PANEL_GAP;
-constexpr float CIRCLES_X = SQUARES_X + SQUARES_W + PANEL_GAP;
+constexpr float SQUARES_X = STOVE_MARGIN;
+constexpr float PLATE_X   = SQUARES_X + SQUARES_W + 2*STOVE_MARGIN;
+constexpr float READIES_X = PLATE_X + PLATE_W + 2*STOVE_MARGIN;
+
+constexpr float READIES_Y = PANEL_Y + PANEL_H / 3;
+constexpr float READIES_H = PANEL_H * 2/3;

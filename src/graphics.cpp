@@ -194,23 +194,23 @@ void drawStove(Match& match, int butUnderMouseInd) {
             // corpo do fogão (cobre o mundo todo)
             DrawRectangle(0, 0, STOVE_WORLD_WIDTH, STOVE_WORLD_HEIGHT, LIGHTGRAY);
 
+            // 2) espaço do meio: 2 colunas x 3 quadrados
+            Rectangle squares = { SQUARES_X, PANEL_Y, SQUARES_W, PANEL_H };
+            DrawRectangleRec(squares, GRAY);
+            DrawRectangleLinesEx(squares, 6, DARKGRAY);
+            drawSquareGrid(squares, 1, 3, 140);
+
             // 1) chapa à esquerda: 6 círculos (2 colunas x 3 linhas)
             Rectangle plate = { PLATE_X, PANEL_Y, PLATE_W, PANEL_H };
             DrawRectangleRec(plate, DARKGRAY);
             DrawRectangleLinesEx(plate, 6, GRAY);
             drawCircleGrid(plate, 2, 3, 80);
 
-            // 2) espaço do meio: 2 colunas x 3 quadrados
-            Rectangle squares = { SQUARES_X, PANEL_Y, SQUARES_W, PANEL_H };
-            DrawRectangleRec(squares, GRAY);
-            DrawRectangleLinesEx(squares, 6, DARKGRAY);
-            drawSquareGrid(squares, 2, 3, 140);
-
             // 3) seção da direita: 1 coluna x 3 círculos
-            Rectangle circles = { CIRCLES_X, PANEL_Y, CIRCLES_W, PANEL_H };
-            DrawRectangleRec(circles, GRAY);
-            DrawRectangleLinesEx(circles, 6, DARKGRAY);
-            drawCircleGrid(circles, 1, 3, 80);
+            Rectangle readies = { READIES_X, READIES_Y, READIES_W, READIES_H };
+            DrawRectangleRec(readies, GRAY);
+            DrawRectangleLinesEx(readies, 6, DARKGRAY);
+            drawSquareGrid(readies, 1, 2, 140);
 
             const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
             drawButtons(buttonsVec, butUnderMouseInd, match.screen);

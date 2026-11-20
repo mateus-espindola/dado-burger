@@ -85,12 +85,14 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(prepareBut[prepare_start_index], PREPARE_BURGER_BUT_LEFT_X, PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
 
     int cook_start_index = 0;
-    Rectangle rect1 = { COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    Rectangle rect2 = { COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    Rectangle rect3 = { OVEN_STACK_SCND_CLMN_LEFT_X, OVEN_STACK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect1, "COOK", INSERT, true);
-    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect2, "COOK", INSERT, true);
-    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect3, "STACK", STACK, true);
+    Rectangle rect1 = { OVEN_STACK_FIRTS_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    Rectangle rect2 = { OVEN_GRILL_FIRST_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    Rectangle rect3 = { OVEN_GRILL_SECOND_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    Rectangle rect4 = { OVEN_READIES_BUT_LEFT_X, OVEN_READIES_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect2, "COOK", INSERT, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect3, "COOK", INSERT, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect4, "STACK", STACK, true);
 
     // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
     // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
@@ -149,21 +151,6 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
 
     return nearest;
 }
-
-// x e firstY sao o canto superior esquerdo do primeiro botao
-//Devolve o proximo indice livre do botao
-// int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
-//     for (int k = 0; k < CIRCLE_BUTTON_COUNT; k++) {
-//         setButton(buttons[startInd + k],
-//                   x,
-//                   firstY + k * CIRCLE_BUTTON_STEP_Y,
-//                   CIRCLE_BUTTON_DIAMETER,
-//                   CIRCLE_BUTTON_DIAMETER,
-//                   text,
-//                   type);
-//     }
-//     return startInd + CIRCLE_BUTTON_COUNT;
-// }
 
 int setSquareButtons(Button *buttons, int startInd, int quantity, int delta, Rectangle shape, const char *text, ButtonType type, bool vertical) {
     if (vertical) {
