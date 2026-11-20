@@ -94,9 +94,15 @@ void declareButtons(ButtonVec *screenButtons) {
     cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect3, "COOK", INSERT, true);
     cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect4, "STACK", STACK, true);
 
-    // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
-    // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
-    // setButton(ovenBut[2], COOK_TOP_3_LEFT_X, COOK_TOP_3_LEFT_Y, COOK_TOP_3_LEFT_W, COOK_TOP_3_LEFT_H, "COOK", INSERT);
+    int board_start_index = 0;
+    rect1.x -= BOARD_STACK_BUT_DELTA_X;
+    board_start_index = setSquareButtons(boardBut, board_start_index, 3, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    rect1.x += 2*BOARD_STACK_BUT_DELTA_X; // Aproveitar as constantes definidas acima neeeaaahhhhh
+    rect1.y = (WINDOW_HEIGHT/2) - (BOARD_STACK_BUT_HEIGHT + BOARD_STACK_BUT_DELTA_Y/2);
+    board_start_index = setSquareButtons(boardBut, board_start_index, 2, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    board_start_index = setSquareButtons(boardBut, board_start_index, 2, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect4, "STACK", STACK, true);
+    setButton(boardBut[board_start_index], BOARD_X, BOARD_Y, BOARD_W, BOARD_H, "CUTTING BOARD", INSERT);
+
 }
 
 void declareMenuButtons(ButtonVec &menuButtons) {

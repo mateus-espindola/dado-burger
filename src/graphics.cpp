@@ -156,6 +156,9 @@ void drawBoard(Match match, int butUnderMouseInd) {
         // 2 stacks à direita
         drawStackColumn(BOARD_X + BOARD_W + STACK_MARGIN, STACKS_RIGHT);
 
+        const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+        drawButtons(buttonsVec, butUnderMouseInd, match.screen);
+
         drawInventory(match.player);
 
     EndDrawing();

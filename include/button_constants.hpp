@@ -62,6 +62,15 @@ constexpr float OVEN_READIES_BUT_LEFT_Y = READIES_Y + OVEN_STACK_BUT_DELTA/2;
 
 
 
+// Board buttons
+constexpr float BOARD_STACK_BUT_WIDTH = 100.0f;
+constexpr float BOARD_STACK_BUT_HEIGHT = 100.0f;
+
+constexpr float BOARD_STACK_BUT_DELTA_Y = OVEN_STACK_BUT_DELTA;
+constexpr float BOARD_STACK_BUT_DELTA_X = 67.0f;
+
+
+
 // Prepare buttons
 constexpr int PREPARE_SALAD_BUT_WIDTH = 120;
 constexpr int PREPARE_SALAD_BUT_HEIGHT= 90;
