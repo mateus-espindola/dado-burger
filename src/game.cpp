@@ -10,9 +10,14 @@
 
 #include "raylib.h"
 
-void readFiles(Game& game, FILE* fp, FILE* fh) {
-    if (fp == nullptr || fh == nullptr) {
-        std::cout << "There was an error while trying to read the archives." << std::endl;
+bool readFiles(Game& game, FILE* fp, FILE* fh) {
+    if (fp == nullptr) {
+        std::cout << "There was an error while trying to read the orders archive." << std::endl;
+        return false;
+    }
+    if (fh == nullptr) {
+        std::cout << "There was an error while trying to read the history archive." << std::endl;
+        return false;
     }
 
     // Loads fp
@@ -59,6 +64,7 @@ void readFiles(Game& game, FILE* fp, FILE* fh) {
         }
     }
 
+    return true;
 }
 
 void gameStart(Game& game){
@@ -75,6 +81,7 @@ void gameStart(Game& game){
     declareMenuButtons(game.menuButtons);
     declareHistoryButtons(game.historyButtons);
     game.historyPage = 0;
+    game.historySortByName = false;
 
     game.state = MENU;
     game.quit = false;
@@ -102,6 +109,11 @@ int historyTotalPages(const Game& game){
     return (totalPages < 1) ? 1 : totalPages;
 }
 
+void sortHistory(Game& game){
+    if (game.historySortByName) stringRadixSort(game.historico);
+    else                         partitionSort(game.historico);
+}
+
 void processHistoryButClick(Game& game, Button& button){
     int totalPages = historyTotalPages(game);
 
@@ -110,6 +122,12 @@ void processHistoryButClick(Game& game, Button& button){
     else if (strcmp(button.text, "PREV") == 0) { if (game.historyPage > 0) game.historyPage--; }
     else if (strcmp(button.text, "NEXT") == 0) { if (game.historyPage < totalPages - 1) game.historyPage++; }
     else if (strcmp(button.text, ">>")   == 0) game.historyPage = totalPages - 1;
+    else if (strncmp(button.text, "SORT:", 5) == 0) {
+        game.historySortByName = !game.historySortByName;
+        snprintf(button.text, sizeof(button.text), "%s", game.historySortByName ? "SORT: NAME" : "SORT: SCORE");
+        sortHistory(game);
+        game.historyPage = 0;
+    }
 }
 
 void historyProcess(Game& game, Vector2 mouse){

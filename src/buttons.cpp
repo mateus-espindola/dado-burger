@@ -79,7 +79,7 @@ void declareButtons(ButtonVec *screenButtons) {
 
     int prepare_start_index = 0;
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "SALAD", STACK, false);
-    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_BOTTLE_BUT_DELTA + PREPARE_BOTTLE_BUT_HEIGHT, prepare_bottle_button_rect, "BOTTLE", STACK, true);
+    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_BOTTLE_BUT_DELTA + PREPARE_BOTTLE_BUT_HEIGHT, prepare_bottle_button_rect, "BOTTLE", CLICK, true);
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_PROTEIN_BUT_DELTA + PREPARE_PROTEIN_BUT_HEIGHT, prepare_protein_button_rect, "PROTEIN", STACK, true);
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 2, PREPARE_BREAD_BUT_DELTA + PREPARE_BREAD_BUT_WIDTH, prepare_bread_button_rect, "BREAD", PICK, false);
     setButton(prepareBut[prepare_start_index], PREPARE_BURGER_BUT_LEFT_X, PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
@@ -117,6 +117,7 @@ void declareHistoryButtons(ButtonVec &historyButtons) {
     setButton(historyBut[2], HISTORY_PREV_BUTTON_X,  HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, "PREV", CLICK);
     setButton(historyBut[3], HISTORY_NEXT_BUTTON_X,  HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, "NEXT", CLICK);
     setButton(historyBut[4], HISTORY_LAST_BUTTON_X,  HISTORY_NAV_BUTTON_Y, HISTORY_NAV_BUTTON_WIDTH, HISTORY_NAV_BUTTON_HEIGHT, ">>",   CLICK);
+    setButton(historyBut[5], HISTORY_SORT_BUTTON_X,  HISTORY_SORT_BUTTON_Y, HISTORY_SORT_BUTTON_WIDTH, HISTORY_SORT_BUTTON_HEIGHT, "SORT: SCORE", CLICK);
 }
 
 int findUIButtonUnderMouse(Vector2 mouse, const ButtonVec &buttons) {

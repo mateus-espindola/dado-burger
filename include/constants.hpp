@@ -20,6 +20,9 @@ constexpr int COUNTER_SIZE = 3;
 constexpr int INVENTORY_SLOTS = 3;
 
 constexpr int HISTORY_NAME_BUFFER = 50;
+constexpr int MIN_ASCII_CODE_SUPPORTED = 32;
+constexpr int MAX_ASCII_CODE_SUPPORTED = 126;
+
 
 //Costumer constants
 constexpr float AVERAGE_COSTUMER_PATIENCE = 6.0f;

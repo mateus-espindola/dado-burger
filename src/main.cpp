@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
 
     Game game = {};
 
-    readFiles(game, fp, fh);
+    bool files_read = readFiles(game, fp, fh);
+    if (!files_read) return 1;
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
     SetTargetFPS(FPS);

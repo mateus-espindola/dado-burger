@@ -30,6 +30,7 @@ struct Game{
     ButtonVec menuButtons;
     ButtonVec historyButtons;
     int historyPage;
+    bool historySortByName;
 
     AVL avl_orders;
     HashTable hashtable_orders;
@@ -41,7 +42,7 @@ struct Game{
 /*      FUNCTION PROTOTYPES       */
 /* ============================== */
 
-void readFiles(Game& game, FILE* fp, FILE* fh);
+bool readFiles(Game& game, FILE* fp, FILE* fh);
 
 void gameStart(Game& game);
 void gameProcess(Game& game);
