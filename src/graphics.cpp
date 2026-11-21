@@ -242,7 +242,7 @@ static Color ingredientColor(IngredientType t) {
         case CHEDDAR:       return ORANGE;
         case SWISS_CHEESE:  return GOLD;
         case UPPER_BREAD:   return BEIGE;
-        case LOWER_BREAD:   return BROWN;
+        case LOWER_BREAD:   return BEIGE;
         default:            return BLANK;   // NONE ou ingrediente sem cor definida
     }
 }
@@ -272,7 +272,7 @@ void drawInventory(const Player &player) {
                 Vector2 base = { center.x, r.y + r.height - INV_SLOT_SIZE * 0.3f };
                 drawStack(slot, base, INV_SLOT_SIZE * 0.22f, INV_SLOT_SIZE * 0.12f);
             } else {
-                DrawCircleV(center, INV_SLOT_SIZE * 0.3f, ingredientColor(slot.type));
+                drawIngredient(center, INV_SLOT_SIZE * 0.3f, slot.top->data);
             }
 
             // quantidade no canto inferior direito
@@ -283,6 +283,41 @@ void drawInventory(const Player &player) {
     }
 }
 
+// Texto curto do ponto de preparo pra mostrar acima do ingrediente, ou nullptr se nao ha nada a mostrar
+static const char* shortCookLabel(const Ingredient& ing) {
+    CookPoint point = ing.cook_state.cookInfo[0].cookPoint;
+
+    if (ing.type == MEAT || ing.type == VEGAN_PROTEIN) {
+        switch (point) {
+            case RARE:        return "Rare";
+            case MEDIUM_RARE: return "Medium";
+            case WELL_DONE:
+            case OVER_COOKED: return "Well";
+            default:          return nullptr; // RAW: ainda nao tem ponto pra mostrar
+        }
+    }
+
+    if (point == READY) return "Ready";
+    return nullptr;
+}
+
+// Desenha um ingrediente (circulo + contorno + texto pequeno do ponto de preparo acima, se houver)
+void drawIngredient(Vector2 center, float radius, const Ingredient& ing) {
+    Color color = ingredientColor(ing.type);
+    if (ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED || ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) {
+        color = BLACK;
+    }
+    DrawCircleV(center, radius, color);
+    DrawCircleLinesV(center, radius, BLACK);
+
+    const char* label = shortCookLabel(ing);
+    if (label != nullptr) {
+        const int fs = 10;
+        int tw = MeasureText(label, fs);
+        DrawText(label, (int)(center.x - tw / 2.0f), (int)(center.y - radius - fs - 2), fs, WHITE);
+    }
+}
+
 // Desenha os nós da pilha a partir do fundo (recursão desce até o fundo e desenha ao voltar)
 static int drawStackRec(Stack_node* node, Vector2 basePos, float radius, float offset) {
     if (node == nullptr) return 0;
@@ -290,14 +325,23 @@ static int drawStackRec(Stack_node* node, Vector2 basePos, float radius, float o
     int depthBelow = drawStackRec(node->below, basePos, radius, offset);
 
     Vector2 center = { basePos.x, basePos.y - depthBelow * offset };
-    DrawCircleV(center, radius, ingredientColor(node->data.type));
-    DrawCircleLinesV(center, radius, BLACK);
+    drawIngredient(center, radius, node->data);
 
     return depthBelow + 1;
 }
 
 void drawStack(const Stack& stack, Vector2 basePos, float radius, float offset) {
     drawStackRec(stack.top, basePos, radius, offset);
+}
+
+// Desenha o heap como uma pilha visual: a raiz (mais perto de estragar) fica no topo,
+// os demais ficam abaixo em qualquer ordem (o heap nao tem ordem total alem da raiz).
+void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius, float offset) {
+    for (int i = heap.size - 1; i >= 0; i--) {
+        float depthFromBottom = (float)((heap.size - 1) - i);
+        Vector2 center = { basePos.x, basePos.y - depthFromBottom * offset };
+        drawIngredient(center, radius, heap.data[i]);
+    }
 }
 
 void drawStackButtons(const ButtonVec& screenButtons) {
@@ -485,13 +529,17 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
         DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
         // Parte comum: círculo do ingrediente
-        if (b.type == STACK) {
+        if (b.type == STACK || b.type == READIES_STACK) {
             Vector2 basePos = { b.shape.x + b.shape.width / 2, b.shape.y + b.shape.height / 2 };
             drawStack(b.target, basePos, INGREDIENT_RADIUS);
         }
-        if (b.type == INSERT || b.type == PICK) {
+        if ((b.type == INSERT || b.type == PICK) && b.target.size > 0) {
             Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
-            DrawCircleV(center, INGREDIENT_RADIUS, ingredientColor(b.target.type));
+            drawIngredient(center, INGREDIENT_RADIUS, b.target.top->data);
+        }
+        if (b.type == HEAP || b.type == READIES_HEAP) {
+            Vector2 basePos = { b.shape.x + b.shape.width / 2, b.shape.y + b.shape.height / 2 };
+            drawHeap(b.heap, basePos, INGREDIENT_RADIUS);
         }
 
         // Parte exclusiva de cada tipo
@@ -511,6 +559,8 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
             } break;
 
             case PICK:
+            case READIES_STACK:
+            case HEAP:
             default: break;
         }
     }

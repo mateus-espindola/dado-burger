@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "food.hpp"
 
 constexpr int INITIAL_HEAP_CAPACITY = 32;
 
@@ -9,6 +10,7 @@ struct Heap {
     T *data;
     int size;
     int capacity;
+    IngredientType type;
 };
 
 // AUX FUNCTIONS
@@ -57,6 +59,7 @@ void initializeHeap(Heap<T>& heap) {
     heap.capacity = INITIAL_HEAP_CAPACITY;
     heap.size = 0;
     heap.data = new T[heap.capacity];
+    heap.type = NONE;
 }
 
 // drawHeap()
@@ -65,38 +68,53 @@ template <typename T>
 int insertHeap(Heap<T>& heap, T value) {
     if (heap.size == heap.capacity) {
         std::cout << "You cannot insert more items on this heap\n";
-        return 0;    
+        return 0;
     }
+
+    bool wasEmpty = heap.size == 0;
 
     heap.size++;
     int i = heap.size - 1;
     heap.data[i] = value;
-    
+
     while (i != 0 && heap.data[i] < heap.data[father(i)]) {
         swap(heap.data[i], heap.data[father(i)]);
         i = father(i);
     }
 
+    // So define o tipo do heap a partir do ingrediente se ele estava vazio,
+    // igual ao stack_push: evita que o tipo do heap mude a cada insercao.
+    if (wasEmpty) heap.type = value.type;
+
     return 67;
+}
+
+// Olha o menor valor sem remover. Retorna false se vazio
+template <typename T>
+bool peekMinHeap(const Heap<T>& heap, T& out) {
+    if (heap.size == 0) return false;
+    out = heap.data[0];
+    return true;
 }
 
 template <typename T>
 T getMinValueHeap(Heap<T>& heap) {
     if (heap.size == 0) {
-        return T(); 
+        return T();
     }
 
     if (heap.size == 1) {
         heap.size--;
+        heap.type = NONE;
         return heap.data[0];
     }
-        
+
     T min = heap.data[0];
     heap.data[0] = heap.data[heap.size - 1];
     heap.size--;
-    heapify(heap, 0);    
+    heapify(heap, 0);
 
-    return min;    
+    return min;
 }
 
 template <typename T>

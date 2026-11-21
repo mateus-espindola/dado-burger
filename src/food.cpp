@@ -46,13 +46,14 @@ int perishTimeOf(IngredientType type) {
 CookPoint cookingStateOf(IngredientType type) {
     switch (type) {
         case TOMATO:
+        case SWISS_CHEESE:
+        case CHEDDAR:
+        case LETTUCE:
         case ONION: return NEEDS_TO_CUT;
         case MEAT:
         case VEGAN_PROTEIN:
         case BACON:
-        case EGG:
-        case SWISS_CHEESE:
-        case CHEDDAR: return RAW;
+        case EGG:     return RAW;
         default:      return READY;
     }
 }
@@ -167,8 +168,6 @@ void cookAll(ButtonVec *butonVec) {
                 break;
                 case EGG:
                 case BACON:
-                case CHEDDAR:
-                case SWISS_CHEESE:
                     cookDefault(ing);
                 break;
                 default: break;

@@ -19,8 +19,12 @@ void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const A
             ing.cook_state.cookInfo[0].cookPoint = meat_point;
             ing.cook_state.cookInfo[1].cookPoint = meat_point;
         }
+        else {
+            ing.cook_state.cookInfo[0].cookPoint = READY;
+            ing.cook_state.cookInfo[1].cookPoint = READY;
+        }
 
-        push_front(list, ing);
+        push_back(list, ing);
     }
 }
 

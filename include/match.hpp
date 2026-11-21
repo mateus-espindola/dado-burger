@@ -55,3 +55,5 @@ struct Match{
 /* ============================ */
 
 void matchStart(Match& match);
+
+void setIngredients(ButtonVec screens[], int screenCount);

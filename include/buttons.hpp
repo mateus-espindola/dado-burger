@@ -4,6 +4,7 @@
 #include "match_enums.hpp"
 #include "tads.hpp"
 #include "food.hpp"
+#include "heap.hpp"
 
 
 /* ============================ */
@@ -30,6 +31,9 @@ enum ButtonType {
     DROP,   //Click to drop an item
     INSERT, //Click to put or pick an item
     STACK,  //Click to put or take an item
+    READIES_STACK, // Can have different Ingredients
+    HEAP,   // For perishable ingredients
+    READIES_HEAP
 };
 
 struct Button {
@@ -37,6 +41,7 @@ struct Button {
     Rectangle shape;
     char text[20];
     Stack target;
+    Heap<Ingredient> heap;
 };
 
 struct ButtonVec {
