@@ -6,3 +6,4 @@
 #include "queue.hpp"
 #include "hashtable.hpp"
 #include "avl.hpp"
+#include "heap.hpp"

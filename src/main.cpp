@@ -25,8 +25,8 @@ int main(int argc, char* argv[]) {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Dado Burger");
     SetTargetFPS(FPS);
 
-    gameStart(game);
     declareButtons(game.current_match.buttonsVec);
+    gameStart(game);
 
     while (!WindowShouldClose() && !game.quit) {
         gameProcess(game);

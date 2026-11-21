@@ -19,3 +19,5 @@ void processButClick(Match& match, Button& button);
 bool isCuttable(IngredientType t);
 
 bool canFlip(IngredientType t);
+
+bool canCtrlAction(MatchScreen screen, IngredientType type);

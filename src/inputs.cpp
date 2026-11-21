@@ -15,11 +15,11 @@ bool mouseKeyLeftClicked(){
 }
 
 bool keyUpClicked(){
-    return IsKeyPressed(KEY_UP);
+    return IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W);
 }
 
 bool keyDownClicked(){
-    return IsKeyPressed(KEY_DOWN);
+    return IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S);
 }
 
 int changeInvSlot(){
@@ -43,15 +43,23 @@ MatchScreen screenFromName(const char *name)
 
 
 static bool isCookable(IngredientType t) {
-    return t == MEAT || t == VEGAN_PROTEIN || t == BACON
-        || t == EGG  || t == SWISS_CHEESE  || t == CHEDDAR;
+    return t == MEAT || t == VEGAN_PROTEIN || t == BACON || t == EGG;
 }
 
 bool isCuttable(IngredientType t) {
-    return t == TOMATO || t == ONION;
+    return t == TOMATO || t == ONION || t == SWISS_CHEESE || t == CHEDDAR || t == LETTUCE;
 }
 bool canFlip(IngredientType t){
     return t == MEAT || t == VEGAN_PROTEIN;
+}
+
+// Gate da acao de Ctrl+click dentro do INSERT: cada tela tem sua propria acao manual
+bool canCtrlAction(MatchScreen screen, IngredientType type) {
+    switch (screen) {
+        case OVEN:  return canFlip(type);
+        case BOARD: return isCuttable(type);
+        default:    return false;
+    }
 }
 
 bool canInsert(MatchScreen screen, IngredientType type) {
@@ -68,11 +76,18 @@ void transferBetweenStacks(Stack& orig, Stack& dest){
     stack_push(dest, ing);
 }
 
-// Move todos os itens, preservando a ordem (pop do topo de uma, push no topo da outra)
+// Move todos os itens preservando a ordem. Um pop+push simples inverteria a pilha
+// (propriedade classica de pilha), entao desce recursivamente ate o fundo e so
+// empilha no destino ao desenrolar, do mais fundo para o topo.
 void transferAllBetweenStacks(Stack& orig, Stack& dest){
-    while (orig.size > 0) {
-        transferBetweenStacks(orig, dest);
-    }
+    if (orig.size == 0) return;
+
+    Ingredient ing;
+    stack_pop(orig, ing);
+
+    transferAllBetweenStacks(orig, dest);
+
+    stack_push(dest, ing);
 }
 
 
@@ -97,26 +112,38 @@ void processButClick(Match& match, Button& button) {
     Stack& butStack = button.target;
 
     switch (button.type) {
-        case CLICK:
+        case CLICK: {
+            bool isMustard = std::strcmp(button.text, "MUSTARD") == 0;
+            bool bottle = std::strcmp(button.text, "KETCHUP") == 0 || isMustard || std::strcmp(button.text, "PICKLES") == 0;
+            if (bottle) {
+                Stack& burger = match.buttonsVec[PREPARE].buttons[16].target;
+
+                if (burger.type == BURGER) {
+                    Ingredient ing;
+                    // 'M' mapeia pra MEAT em charToIngType; so o MUSTARD usa o 'm' minusculo pra nao colidir
+                    initIngredient(ing, isMustard ? 'm' : button.text[0]);
+
+                    stack_push(burger, ing);
+                }
+
+                break;
+            }
             if (std::strcmp(button.text, COSTUMER_BELL_TEXT) == 0) {
                 callCostumer(match.costumer_line, match.costumer_counter);
+
+                break;
             } // Handles the costumer bell
             else {
                 match.screen = screenFromName(button.text);
             } // Handles the screen changes
         break;
+        }
 
         case PICK:
             if(inventory.size < inventory.capacity){
                 Ingredient ing;
                 initIngredient(ing, button.text[0]);
-                //The function stack_push already incremetns the size and assigns the type
                 stack_push(inventory, ing);
-                //SÓ USAR ESSE PRINTF SE EXTREMAMENTE NECESSÁRIO PARA DEBUG. ELE PODE ORIGINAR ACESSO À PONTEIRO NULL E CRASHAR A PORRA TODA
-                // printf("ITEM: %d\n", match.player.inventory->top->data.type);
-                // printf("%c ", button.text[0]);
-                // printf("%d ", inventory.size);
-                // printf("%d\n", inventory.type);
             }
 
         break;
@@ -137,7 +164,7 @@ void processButClick(Match& match, Button& button) {
             }
             else{ //if(butStack.size > 0){}
                 Ingredient& ing = butStack.top->data;
-                if(IsKeyDown(KEY_LEFT_CONTROL) && canFlip(ing.type)){
+                if(IsKeyDown(KEY_LEFT_CONTROL) && canCtrlAction(match.screen, ing.type)){
                     processInputButAction(ing, match.screen);
                 }
                 if(inventory.size == 0 && !IsKeyDown(KEY_LEFT_CONTROL)){
@@ -146,6 +173,66 @@ void processButClick(Match& match, Button& button) {
                 }
             }
         break;
+
+        case READIES_HEAP: {
+            Heap<Ingredient>& heap = button.heap;
+
+            if (inventory.type == NONE) break; // so recebe, nunca devolve
+
+            // Olha o item no topo da mao ANTES de tirar: depois do pop inventory.type
+            // ja vira NONE (capacidade 1) e a checagem nunca passaria.
+            Ingredient& top = inventory.top->data;
+
+            bool ingReady = top.cook_state.cookInfo[0].cookPoint != RAW && top.cook_state.cookInfo[1].cookPoint != RAW
+                         && top.cook_state.cookInfo[0].cookPoint != NEEDS_TO_CUT && top.cook_state.cookInfo[1].cookPoint != NEEDS_TO_CUT;
+
+            if (ingReady && heap.size < heap.capacity) {
+                Ingredient aux;
+                stack_pop(inventory, aux);
+                insertHeap(heap, aux);
+            }
+
+            break;
+        }
+
+        case HEAP: {
+            Heap<Ingredient>& heap = button.heap;
+
+            if (inventory.type == NONE) {
+                // Mao vazia: pega o ingrediente mais perto de estragar (topo do heap)
+                Ingredient ing;
+                if (peekMinHeap(heap, ing) && inventory.size < inventory.capacity) {
+                    stack_push(inventory, getMinValueHeap(heap));
+                }
+                break;
+            }
+
+            // Mao ocupada: so aceita ingrediente cozinhavel, e o heap so aceita um tipo por vez
+            bool typeOk = heap.type == NONE || heap.type == inventory.type;
+
+            if (isCookable(inventory.type) && typeOk && heap.size < heap.capacity) {
+                Ingredient aux;
+                stack_pop(inventory, aux);
+                insertHeap(heap, aux);
+            }
+        break;
+        }
+
+        case READIES_STACK:
+            if (inventory.type != NONE && inventory.type != BURGER) {
+                Ingredient aux;
+                stack_pop(inventory, aux);
+
+                bool ingReady = aux.cook_state.cookInfo[0].cookPoint == READY && aux.cook_state.cookInfo[1].cookPoint == READY;
+
+                if (ingReady && isCuttable(aux.type)) {
+                    stack_push(butStack, aux);
+                    break;
+                }
+
+                stack_push(inventory, aux);
+                break;
+            }
 
         case STACK: {
             if (inventory.type == NONE) {
