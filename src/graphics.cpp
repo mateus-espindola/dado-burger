@@ -285,14 +285,14 @@ void drawInventory(const Player &player) {
 
 // Texto curto do ponto de preparo pra mostrar acima do ingrediente, ou nullptr se nao ha nada a mostrar
 static const char* shortCookLabel(const Ingredient& ing) {
-    CookPoint point = ing.cook_state.cookInfo[0].cookPoint;
+    CookPoint point = practicalCookingStateOf(ing);
 
     if (ing.type == MEAT || ing.type == VEGAN_PROTEIN) {
         switch (point) {
             case RARE:        return "Rare";
             case MEDIUM_RARE: return "Medium";
-            case WELL_DONE:
-            case OVER_COOKED: return "Well";
+            case WELL_DONE:   return "Well";
+            case OVER_COOKED: return "Hell naw";
             default:          return nullptr; // RAW: ainda nao tem ponto pra mostrar
         }
     }

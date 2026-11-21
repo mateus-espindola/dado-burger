@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../include/costumer.hpp"
 #include "raylib.h"
 
@@ -41,6 +43,8 @@ void initializeCostumer(Costumer& cost, const AVL& avl, const HashTable& ht) {
     cost.obj.pos.y = COSTUMER_POS_Y;
     cost.obj.pos.x = -100; // Starts off the screen
     cost.obj.radius = 67;
+
+    cost.leaving = false;
 }
 
 void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, const HashTable& ht) {
@@ -74,10 +78,41 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
     // 3. Process counter positions
     for (int i = 0; i < COUNTER_SIZE; i++) {
         if (counter[i].type == EMPTY) continue;
-        if (counter[i].obj.pos.x < counter[i].ideal_pos_x) {
-            counter[i].obj.pos.x += COSTUMER_SPEED;
+
+        // Antes so movia pra direita (pos.x < ideal_pos_x). Pra sair pela esquerda
+        // apos ser atendido precisa andar nos dois sentidos.
+        float diff = counter[i].ideal_pos_x - counter[i].obj.pos.x;
+
+        if (fabsf(diff) > COSTUMER_SPEED) {
+            counter[i].obj.pos.x += (diff > 0 ? COSTUMER_SPEED : -COSTUMER_SPEED);
+        } else {
+            counter[i].obj.pos.x = counter[i].ideal_pos_x;
+            if (counter[i].leaving) counter[i].type = EMPTY; // chegou fora da tela, libera o balcao
         }
     }
+}
+
+bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld) {
+    Stack& inventory = player.inventory[player.selectedSlot];
+    if (inventory.type != BURGER) return false;
+
+    for (int i = 0; i < COUNTER_SIZE; i++) {
+        if (counter[i].type == EMPTY || counter[i].leaving) continue;
+        if (!CheckCollisionPointCircle(mouseWorld, counter[i].obj.pos, counter[i].obj.radius)) continue;
+
+        // TODO: comparar o hamburguer (inventory) com o pedido (counter[i].order)
+        // antes de aceitar, quando a funcao de comparacao estiver pronta.
+
+        stack_destroy(inventory); // consome o hamburguer da mao (ja deixa type/size zerados)
+        inventory.capacity = 1;  // devolve a capacidade padrao da mao (foi ampliada pra caber o hamburguer)
+
+        counter[i].leaving = true;
+        counter[i].ideal_pos_x = -200.0f; // sai pela esquerda da tela
+
+        return true;
+    }
+
+    return false;
 }
 
 bool callCostumer(Queue<Costumer>& queue, Costumer counter[]) {

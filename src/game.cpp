@@ -171,7 +171,69 @@ void gameProcess(Game& game){
     }
 }
 
+void sortReadyIngredients(Match& match, MatchScreen screen) {
+    Button* prepareBut = match.buttonsVec[PREPARE].buttons;
 
+    if (screen == BOARD) {
+        Stack& readyStack = match.buttonsVec[BOARD].buttons[5].target;
+
+        int count = readyStack.size; // cachear: stack_pop muda o size a cada volta
+        for (int i = 0; i < count; i++) {
+            Ingredient aux;
+            stack_pop(readyStack, aux);
+
+            switch (aux.type) {
+                case SWISS_CHEESE: stack_push(prepareBut[0].target, aux); break;
+                case CHEDDAR:      stack_push(prepareBut[1].target, aux); break;
+                case LETTUCE:      stack_push(prepareBut[2].target, aux); break;
+                case TOMATO:       stack_push(prepareBut[3].target, aux); break;
+                case ONION:        stack_push(prepareBut[4].target, aux); break;
+                default: break;
+            }
+        }
+    }
+
+    if (screen == OVEN) {
+        Heap<Ingredient>& readyHeap = match.buttonsVec[OVEN].buttons[9].heap;
+
+        int count = readyHeap.size; // mesmo motivo acima
+        for (int i = 0; i < count; i++) {
+            Ingredient aux = getMinValueHeap(readyHeap);
+
+            switch (aux.type) {
+                case MEAT:
+                    if (practicalCookingStateOf(aux) == RARE) {
+                        insertHeap(prepareBut[8].heap, aux);
+                        break;
+                    }
+                    if (practicalCookingStateOf(aux) == MEDIUM_RARE) {
+                        insertHeap(prepareBut[9].heap, aux);
+                        break;
+                    }
+                    insertHeap(prepareBut[10].heap, aux); // WELL_DONE, OVER_COOKED ou qualquer outro caso
+                break;
+
+                case EGG:
+                    insertHeap(prepareBut[11].heap, aux);
+                break;
+
+                case BACON:
+                    insertHeap(prepareBut[12].heap, aux);
+                break;
+
+                default: break;
+            }
+        }
+    }
+}
+
+void leaveScreen(Match& match) {
+    MatchScreen curentScreen = match.screen;
+    if (curentScreen == OVEN || curentScreen == BOARD) {
+        sortReadyIngredients(match, curentScreen);
+    }
+    match.screen = KITCHEN;
+}
 
 
 void ambientProcess(Game& game, Vector2 mouse){
@@ -225,11 +287,16 @@ void ambientProcess(Game& game, Vector2 mouse){
             int nearest = nearestButtonIndex(match.player.object.pos.x, match.buttonsVec[match.screen]);
             if (keyUpClicked() && nearest != -1)
                 processButClick(match, match.buttonsVec[match.screen].buttons[nearest]);
+
+            if (mouseKeyLeftClicked()) {
+                Vector2 mouseWorld = GetScreenToWorld2D(mouse, match.camera);
+                giveBurgerToCostumer(match.costumer_counter, match.player, mouseWorld);
+            }
         } break;
         case PREPARE:
         case OVEN:
         case BOARD:
-            if(keyDownClicked()) match.screen = KITCHEN;
+            if(keyDownClicked()) leaveScreen(match);
         case FRIDGE:
             if(butUnderMouseInd != -1){
                 Button& but = match.buttonsVec[match.screen].buttons[butUnderMouseInd];

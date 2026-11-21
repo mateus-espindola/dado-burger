@@ -67,6 +67,7 @@ struct Ingredient {
 //     Stack<Ingredient> hamburger;
 // };
 
+CookPoint practicalCookingStateOf(Ingredient ing);
 void initIngredient(Ingredient &ing, char ingType);
 struct ButtonVec; //Declaracao antecipada
 void cookAll(ButtonVec *butonVec);

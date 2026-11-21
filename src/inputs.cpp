@@ -183,8 +183,8 @@ void processButClick(Match& match, Button& button) {
             // ja vira NONE (capacidade 1) e a checagem nunca passaria.
             Ingredient& top = inventory.top->data;
 
-            bool ingReady = top.cook_state.cookInfo[0].cookPoint != RAW && top.cook_state.cookInfo[1].cookPoint != RAW
-                         && top.cook_state.cookInfo[0].cookPoint != NEEDS_TO_CUT && top.cook_state.cookInfo[1].cookPoint != NEEDS_TO_CUT;
+            bool ingReady = practicalCookingStateOf(top) == RARE || practicalCookingStateOf(top) == MEDIUM_RARE ||
+                            practicalCookingStateOf(top) == WELL_DONE || practicalCookingStateOf(top) == READY;
 
             if (ingReady && heap.size < heap.capacity) {
                 Ingredient aux;

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../include/food.hpp"
 #include "../include/match.hpp"
 //#include "game.hpp"
@@ -56,6 +58,14 @@ CookPoint cookingStateOf(IngredientType type) {
         case EGG:     return RAW;
         default:      return READY;
     }
+}
+
+CookPoint practicalCookingStateOf(Ingredient ing) {
+    if (ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED || ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) {
+        return OVER_COOKED;
+    }
+
+    return (CookPoint) std::min(ing.cook_state.cookInfo[0].cookPoint, ing.cook_state.cookInfo[1].cookPoint);
 }
 
 float cookTimeOf(IngredientType type) {

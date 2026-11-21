@@ -23,6 +23,7 @@ struct Costumer{
     CostumerType type;
     Object obj;
     float ideal_pos_x;
+    bool leaving; // true quando ja foi atendido e esta saindo de tela pra esquerda
 };
 
 void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, const HashTable& ht);
@@ -30,3 +31,5 @@ void initializeCostumer(Costumer& cost);
 void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, const HashTable& ht);
 bool callCostumer(Queue<Costumer>& queue, Costumer counter[]);
 std::string costumerOrderString(const Costumer& cost);
+bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld);
+// void compareBurgerWithOrder(const Stack& burger, const Costumer& cost); // proximo passo
