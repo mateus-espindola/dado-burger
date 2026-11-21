@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 
 #include "../include/graphics.hpp"
 #include "../include/camera.hpp"
@@ -54,6 +55,64 @@ void drawPause(Match& match, int butUnderMouseInd){
             DrawText(b.text, (int)(b.shape.x + b.shape.width / 2 - textW / 2),
                      (int)(b.shape.y + b.shape.height / 2 - fs / 2), fs, DARKBROWN);
         }
+
+    EndDrawing();
+}
+
+// Inspirado na desenhaTextoVitoria do TrabalhoFinalAlgProg: nome digitado em tempo real
+// com cursor piscando (pisca via GetTime(), nao precisa guardar contador em lugar nenhum)
+void drawVictory(Match& match, int butUnderMouseInd){
+    (void)butUnderMouseInd; // tela nao tem botoes, so o campo de nome
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        const char* title = "VOCE VENCEU!";
+        int titleFs = 60;
+        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 120, titleFs, GREEN);
+
+        const char* moneyTxt = TextFormat("Dinheiro ganho: $ %d", match.player.money);
+        int moneyFs = 28;
+        DrawText(moneyTxt, WINDOW_WIDTH / 2 - MeasureText(moneyTxt, moneyFs) / 2, 220, moneyFs, DARKGREEN);
+
+        const char* prompt = "Digite seu nome:";
+        int promptFs = 26;
+        DrawText(prompt, WINDOW_WIDTH / 2 - MeasureText(prompt, promptFs) / 2, 300, promptFs, DARKBROWN);
+
+        Rectangle inputBox = { WINDOW_WIDTH / 2.0f - 220, 350, 440, 50 };
+        DrawRectangleRec(inputBox, RAYWHITE);
+        DrawRectangleLinesEx(inputBox, 2, DARKBROWN);
+
+        int textFs = 26;
+        DrawText(match.nameInput, (int)(inputBox.x + 10), (int)(inputBox.y + inputBox.height / 2 - textFs / 2), textFs, BLACK);
+
+        // cursor piscando: liga/desliga 2x por segundo
+        if (fmodf(GetTime(), 1.0f) < 0.5f) {
+            int cursorX = (int)(inputBox.x + 10 + MeasureText(match.nameInput, textFs) + 2);
+            DrawText("|", cursorX, (int)(inputBox.y + inputBox.height / 2 - textFs / 2), textFs, BLACK);
+        }
+
+        const char* hint = "Pressione ENTER para salvar";
+        int hintFs = 20;
+        DrawText(hint, WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, (int)(inputBox.y + inputBox.height + 20), hintFs, GRAY);
+
+    EndDrawing();
+}
+
+void drawDefeat(Match& match, int butUnderMouseInd){
+    (void)match;
+    (void)butUnderMouseInd;
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        const char* title = "VOCE PERDEU!";
+        int titleFs = 60;
+        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, WINDOW_HEIGHT / 2 - titleFs, titleFs, RED);
+
+        const char* hint = "Pressione ENTER para voltar ao menu";
+        int hintFs = 24;
+        DrawText(hint, WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, WINDOW_HEIGHT / 2 + 20, hintFs, GRAY);
 
     EndDrawing();
 }
@@ -134,7 +193,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
         EndMode2D();
 
-        drawHUD(match.player);
+        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
 
     EndDrawing();
 }
@@ -147,7 +206,7 @@ void drawPrepare(Match &match, int butUnderMouseInd) {
 
     drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
-    drawHUD(match.player);
+    drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
 
     EndDrawing();
 }
@@ -185,7 +244,7 @@ void drawBoard(Match match, int butUnderMouseInd) {
         const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
         drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
-        drawHUD(match.player);
+        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
 
     EndDrawing();
 }
@@ -246,7 +305,7 @@ void drawStove(Match& match, int butUnderMouseInd) {
 
         EndMode2D();
 
-        drawHUD(match.player);
+        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
 
     EndDrawing();
 }
@@ -347,10 +406,21 @@ void drawMoney(const Player &player) {
     DrawText(text, (int)(r.x + r.width / 2 - tw / 2), (int)(r.y + r.height / 2 - fs / 2), fs, GREEN);
 }
 
+// Avisa que ja deu pra encerrar a partida (sem mais clientes pra gerar), desenhado do
+// lado do inventario
+void drawFinishMatchHint() {
+    const char* text = "Press F to finish the match";
+    const int fs = 20;
+
+    DrawText(text, (int)INV_X, (int)(INV_Y + INV_SLOT_SIZE + 10), fs, YELLOW);
+}
+
 // Tudo que fica sempre na tela durante a partida
-void drawHUD(const Player &player) {
+void drawHUD(const Player &player, bool showFinishHint) {
     drawInventory(player);
     drawMoney(player);
+
+    if (showFinishHint) drawFinishMatchHint();
 }
 
 // Texto curto do ponto de preparo pra mostrar acima do ingrediente, ou nullptr se nao ha nada a mostrar
@@ -404,13 +474,41 @@ void drawStack(const Stack& stack, Vector2 basePos, float radius, float offset) 
     drawStackRec(stack.top, basePos, radius, offset);
 }
 
+// Barra vertical de decaimento do ingrediente mais perto de estragar (raiz do heap),
+// desenhada do lado do heap quando o mouse esta por cima. perish_time == -1 nunca estraga.
+static void drawHeapRotBar(const Ingredient& closest, Vector2 basePos, float radius) {
+    float maxPerish = (float) perishTimeOf(closest.type);
+    if (maxPerish <= 0) return; // nao estraga, nada a mostrar
+
+    float frac = closest.perish_time / maxPerish;
+    if (frac < 0) frac = 0;
+    if (frac > 1) frac = 1;
+
+    Color color = (frac >= 0.5f) ? GREEN : (frac >= 0.2f) ? YELLOW : RED;
+
+    float barH = radius * 2;
+    Rectangle bg   = { basePos.x + radius + ROT_BAR_GAP, basePos.y - radius, ROT_BAR_W, barH };
+    Rectangle fill = { bg.x, bg.y + bg.height * (1.0f - frac), bg.width, bg.height * frac };
+
+    DrawRectangleRec(bg, Fade(BLACK, 0.4f));
+    DrawRectangleRec(fill, color);
+    DrawRectangleLinesEx(bg, 1.0f, BLACK);
+}
+
 // Desenha o heap como uma pilha visual: a raiz (mais perto de estragar) fica no topo,
 // os demais ficam abaixo em qualquer ordem (o heap nao tem ordem total alem da raiz).
-void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius, float offset) {
+void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius, float offset, bool hovered) {
     for (int i = heap.size - 1; i >= 0; i--) {
         float depthFromBottom = (float)((heap.size - 1) - i);
         Vector2 center = { basePos.x, basePos.y - depthFromBottom * offset };
         drawIngredient(center, radius, heap.data[i]);
+    }
+
+    if (hovered && heap.size > 0) {
+        // raiz (data[0]) e o mais perto de estragar e e desenhado no topo da pilha visual,
+        // ou seja na maior profundidade (heap.size - 1); a barra tem que ficar do lado dele
+        Vector2 topCenter = { basePos.x, basePos.y - (heap.size - 1) * offset };
+        drawHeapRotBar(heap.data[0], topCenter, radius);
     }
 }
 
@@ -609,7 +707,7 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
         }
         if (b.type == HEAP || b.type == READIES_HEAP) {
             Vector2 basePos = { b.shape.x + b.shape.width / 2, b.shape.y + b.shape.height / 2 };
-            drawHeap(b.heap, basePos, INGREDIENT_RADIUS);
+            drawHeap(b.heap, basePos, INGREDIENT_RADIUS, 6.0f, i == butUnderMouseInd);
         }
 
         // Parte exclusiva de cada tipo
@@ -650,13 +748,34 @@ void drawButGlow(Rectangle r, Color cor, int camadas, float alpha){
     }
 }
 
+#define PATIENCE_BAR_W 60
+#define PATIENCE_BAR_H 8
+#define PATIENCE_BAR_GAP 6
+
+// Barra de paciencia acima do costumer: verde (100-50%), amarelo (49-20%), vermelho (<20%)
+static void drawPatienceBar(const Object& obj, float patience_time) {
+    float pct = (patience_time / AVERAGE_COSTUMER_PATIENCE) * 100.0f;
+    if (pct < 0)   pct = 0;
+    if (pct > 100) pct = 100;
+
+    Color color = (pct >= 50.0f) ? GREEN : (pct >= 20.0f) ? YELLOW : RED;
+
+    Rectangle bg   = { obj.pos.x - PATIENCE_BAR_W / 2.0f, obj.pos.y - obj.radius - PATIENCE_BAR_H - PATIENCE_BAR_GAP, PATIENCE_BAR_W, PATIENCE_BAR_H };
+    Rectangle fill = { bg.x, bg.y, bg.width * (pct / 100.0f), bg.height };
+
+    DrawRectangleRec(bg, Fade(BLACK, 0.4f));
+    DrawRectangleRec(fill, color);
+    DrawRectangleLinesEx(bg, 1, BLACK);
+}
+
 #define ORDER_RECT_W 40
 #define ORDER_RECT_H 16
 #define ORDER_RECT_GAP 2
 
 static void drawOrderBurger(const Costumer& cost) {
     float x = cost.obj.pos.x - ORDER_RECT_W / 2.0f;
-    float yBase = cost.obj.pos.y - cost.obj.radius - ORDER_RECT_H - ORDER_RECT_GAP;
+    // deixa espaco acima da cabeca pra barra de paciencia nao sobrepor a lista do pedido
+    float yBase = cost.obj.pos.y - cost.obj.radius - PATIENCE_BAR_H - PATIENCE_BAR_GAP - ORDER_RECT_H - ORDER_RECT_GAP;
     float step = ORDER_RECT_H + ORDER_RECT_GAP;
 
     // getCostumerOrder usa push_front, entao a lista fica na ordem inversa da string
@@ -717,6 +836,7 @@ void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorl
 
             std::cout << cost.type << " drawn at: " << cost.obj.pos.x << " | ideal pos: " << cost.ideal_pos_x << "\n";
             DrawCircleV(cost.obj.pos, cost.obj.radius, color);
+            drawPatienceBar(cost.obj, cost.patience_time);
     }
 
     for (int i=0; i<COUNTER_SIZE; i++) {
@@ -745,6 +865,7 @@ void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorl
 
                 std::cout << cost.type << " drawn at: " << cost.obj.pos.x << "\n";
                 DrawCircleV(cost.obj.pos, cost.obj.radius, color);
+                drawPatienceBar(cost.obj, cost.patience_time);
 
                 if (CheckCollisionPointCircle(mouseWorld, cost.obj.pos, cost.obj.radius)) {
                     drawOrderBurger(cost);

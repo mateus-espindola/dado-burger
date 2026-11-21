@@ -20,6 +20,7 @@ constexpr int COUNTER_SIZE = 3;
 constexpr int INVENTORY_SLOTS = 3;
 
 constexpr int MONEY_PER_PERFECT_BURGER = 100;
+constexpr int PROFIT_GOAL = MONEY_PER_PERFECT_BURGER * 6;
 
 constexpr int HISTORY_NAME_BUFFER = 50;
 constexpr int MIN_ASCII_CODE_SUPPORTED = 32;
@@ -29,12 +30,14 @@ constexpr int INGREDIENT_RADIUS = 3*16.0f;
 
 
 //Costumer constants
-constexpr float AVERAGE_COSTUMER_PATIENCE = 6.0f;
+constexpr float AVERAGE_COSTUMER_PATIENCE = FPS* 10.0f;
+constexpr float COSTUMER_PATIENCE_DECAY = 1.0f; // por frame, cliente no balcao cai nisso; na fila cai na metade
 
-constexpr float COSTUMER_TIMER_MAX = FPS * 6.7f;
+constexpr float COSTUMER_TIMER_MAX = FPS * 3.0f;
 constexpr float COSTUMER_TIMER_SPEED = 1.0f;
 
-constexpr int MAX_COSTUMER_QUEUE_SIZE = 10;
+constexpr int MAX_COSTUMER_QUEUE_SIZE = 5;
+constexpr int COSTUMERS_PER_MATCH = 10;
 
 constexpr float FIRST_COSTUMER_IN_QUEUE_POS_X = 900.0f;
 constexpr float COSTUMER_POS_Y = WINDOW_HEIGHT / 2;
@@ -42,6 +45,15 @@ constexpr float COSTUMER_COUNTER_POS_X[COUNTER_SIZE] = {1700, 1600, 1500};
 
 constexpr float COSTUMER_DELTA = 130.0f;
 constexpr float COSTUMER_SPEED = 5.0f;
+
+
+// Decaimento de ingredientes nos heaps (perish_time)
+constexpr int INGREDIENT_DECAY_RATE = 1; // por frame
+constexpr int COOKABLE_PERISH_TIME = FPS * 90; // 90s guardado no heap antes de estragar
+
+// Barra de decaimento desenhada do lado do heap quando o mouse esta por cima
+constexpr float ROT_BAR_W   = 10.0f;
+constexpr float ROT_BAR_GAP = 10.0f;
 
 
 //Inventory draw constants

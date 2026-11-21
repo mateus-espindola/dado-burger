@@ -41,7 +41,13 @@ IngredientType charToIngType(char c) {
 // turnos até estragar; -1 = não estraga
 int perishTimeOf(IngredientType type) {
     switch (type) {
-        default:      return -1;
+        case MEAT:
+        case VEGAN_PROTEIN:
+        case BACON:
+        case EGG:
+            return COOKABLE_PERISH_TIME;
+        default:
+            return -1;
     }
 }
 
@@ -181,6 +187,37 @@ void cookAll(ButtonVec *butonVec) {
                     cookDefault(ing);
                 break;
                 default: break;
+            }
+        }
+    }
+}
+
+// Decai o perish_time de todo ingrediente guardado em HEAP/READIES_HEAP.
+// perish_time == -1 significa que o ingrediente nao estraga.
+void processRottingIngredients(ButtonVec *buttonsVec) {
+    for (int i = 0; i < STATE_QUANTITY; i++) {
+        ButtonVec& screen = buttonsVec[i];
+        if (screen.buttons == nullptr) continue;
+
+        for (int j = 0; j < screen.size; j++) {
+            Button& b = screen.buttons[j];
+
+            if (b.type != HEAP && b.type != READIES_HEAP) continue;
+
+            // removeAt troca pelo ultimo elemento e reencaixa no lugar, entao o item
+            // que cai em k pode ser outro ainda nao conferido: nao avanca k nesse caso
+            int k = 0;
+            while (k < b.heap.size) {
+                Ingredient& ing = b.heap.data[k];
+
+                if (ing.perish_time > 0) ing.perish_time -= INGREDIENT_DECAY_RATE;
+
+                if (ing.perish_time == 0 && perishTimeOf(ing.type) > 0) {
+                    removeAt(b.heap, k);
+                    continue;
+                }
+
+                k++;
             }
         }
     }

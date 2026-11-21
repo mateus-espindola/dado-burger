@@ -36,6 +36,7 @@ struct Game{
     HashTable hashtable_orders;
 
     ContiguousList<PlayerInfo> historico;
+    char historicoPath[256]; // argv[2], pra poder salvar de volta no mesmo arquivo que foi lido
 };
 
 /* ============================== */
@@ -61,6 +62,8 @@ void historyProcess(Game& game, Vector2 mouse);
 
 void ambientProcess(Game& game, Vector2 mouse);
 void processPauseButClick(Game& game, Button& button);
+
+void finishCurrentMatch(Game& game);
 
 // void matchStart(Match& match);
 

@@ -1,12 +1,15 @@
 #pragma once
 
 #include "game.hpp"
+#include "food.hpp"
 
 // void gameDraw(Game& game);
 void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd);
 void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const ButtonVec& historyButtons, int butUnderMouseInd);
 
 void drawPause(Match& match, int butUnderMouseInd);
+void drawVictory(Match& match, int butUnderMouseInd);
+void drawDefeat(Match& match, int butUnderMouseInd);
 // void tutorialDraw();
 // void historyDraw();
 // void settingsDraw();
@@ -43,13 +46,15 @@ void drawInventory(const Player &player);
 
 void drawMoney(const Player &player);
 
-void drawHUD(const Player &player);
+void drawFinishMatchHint();
+
+void drawHUD(const Player &player, bool showFinishHint = false);
 
 void drawIngredient(Vector2 center, float radius, const Ingredient& ing);
 
 void drawStack(const Stack& stack, Vector2 basePos, float radius = 20.0f, float offset = 6.0f);
 
-void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius = 20.0f, float offset = 6.0f);
+void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius = 20.0f, float offset = 6.0f, bool hovered = false);
 
 void drawStackButtons(const ButtonVec& screenButtons);
 

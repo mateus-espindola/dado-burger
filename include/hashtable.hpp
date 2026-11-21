@@ -38,6 +38,7 @@ void update_load_factor(HashTable& ht);
 
 void initializeHashTable(HashTable& ht);
 void insertHashTable(HashTable& ht, const Order& obj);
+bool searchHashTable(HashTable &ht, const int& key, Order &dst);
 void exterminateHashTable(HashTable& ht);
 
 

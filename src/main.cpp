@@ -18,6 +18,7 @@ int main(int argc, char* argv[]) {
     FILE * fh = fopen ( argv[2] , "r") ; /* abre o arquivo de historico */
 
     Game game = {};
+    snprintf(game.historicoPath, sizeof(game.historicoPath), "%s", argv[2]);
 
     bool files_read = readFiles(game, fp, fh);
     if (!files_read) return 1;

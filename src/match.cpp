@@ -8,6 +8,7 @@ void matchStart(Match& match) {
     }
 
     match.screen = KITCHEN;
+    match.profitGoal = PROFIT_GOAL;
 
     setIngredients(match.buttonsVec, STATE_QUANTITY);
 
@@ -17,6 +18,11 @@ void matchStart(Match& match) {
 }
 
 void matchEnd(Match& match) {
+    exterminateQueue(match.costumer_line);
+    for (int i=0; i<COUNTER_SIZE; i++) {
+        match.costumer_counter[i].type = EMPTY;
+    }
+
     for (int s = 0; s < STATE_QUANTITY; s++) {
         ButtonVec& screen = match.buttonsVec[s];
         if (screen.buttons == nullptr) continue;
@@ -33,6 +39,16 @@ void matchEnd(Match& match) {
             b.heap.type = NONE;
         }
     }
+}
+
+void winMatch(Match &match) {
+    match.screen = VICTORY;
+    match.nameInput[0] = '\0';
+    match.nameInputLen = 0;
+}
+
+void loseMatch(Match &match) {
+    match.screen = DEFEAT;
 }
 
 void playerProcess(Player& player) {

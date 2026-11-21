@@ -3,20 +3,21 @@
 #include "../include/costumer.hpp"
 #include "raylib.h"
 
-void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, const HashTable& ht) {
-    //
-    // DO THE HASHTABLE STUFF LATER
-    //
+void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, HashTable& ht) {
+    Order order;
 
-    AVL_node* auxiliar_node = new AVL_node;
-    auxiliar_node = searchAVL(avl.root, order_cod);
+    if (!searchHashTable(ht, order_cod, order)) {
+        AVL_node* node = searchAVL(avl.root, order_cod);
+        order = node->data;
+        insertHashTable(ht, order);
+    }
 
     Ingredient lowerBread;
     initIngredient(lowerBread, 'y');
 
     push_front(list, lowerBread);
 
-    std::string ingredient_string = auxiliar_node->data.ingredients;
+    std::string ingredient_string = order.ingredients;
     for (int i=0; i < ingredient_string.length(); i++) {
         Ingredient ing;
         initIngredient(ing, ingredient_string[i]);
@@ -35,7 +36,7 @@ void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const A
     }
 }
 
-void initializeCostumer(Costumer& cost, const AVL& avl, const HashTable& ht) {
+void initializeCostumer(Costumer& cost, const AVL& avl, HashTable& ht) {
     cost.patience_time = AVERAGE_COSTUMER_PATIENCE;
 
     CostumerType type = (CostumerType) (GetRandomValue(CHILL_GUY, COSTUMER_TYPES_QUANTITY - 1));
@@ -52,9 +53,9 @@ void initializeCostumer(Costumer& cost, const AVL& avl, const HashTable& ht) {
     cost.leaving = false;
 }
 
-void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, const HashTable& ht) {
+void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, HashTable& ht) {
     // 1. Update queue
-    if (queue.size < MAX_COSTUMER_QUEUE_SIZE) {
+    if (queue.size < MAX_COSTUMER_QUEUE_SIZE && queue.costumers_generated < COSTUMERS_PER_MATCH) {
         std::cout << "Costumer timer: " << queue.costumer_timer << "\n";
         if (queue.costumer_timer < 0) {
             Costumer newCostumer;
@@ -62,6 +63,7 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
 
             enqueue(queue, newCostumer);
 
+            queue.costumers_generated++;
             queue.costumer_timer = COSTUMER_TIMER_MAX;
         }
         queue.costumer_timer -= COSTUMER_TIMER_SPEED;
@@ -70,14 +72,47 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
 
     // 2. Process positions
     int i = 0;
-    for (Queue_node<Costumer>* aux = queue.first; aux != nullptr; aux = aux->prox) {
-        aux->data.ideal_pos_x = FIRST_COSTUMER_IN_QUEUE_POS_X - (i * COSTUMER_DELTA);
-
-        if (aux->data.obj.pos.x < aux->data.ideal_pos_x) {
-            aux->data.obj.pos.x += COSTUMER_SPEED;
+    Queue_node<Costumer>* prev = nullptr;
+    Queue_node<Costumer>* aux = queue.first;
+    while (aux != nullptr) {
+        if (!aux->data.leaving) {
+            aux->data.ideal_pos_x = FIRST_COSTUMER_IN_QUEUE_POS_X - (i * COSTUMER_DELTA);
         }
 
-        i++;
+        float diff = aux->data.ideal_pos_x - aux->data.obj.pos.x;
+
+        if (fabsf(diff) > COSTUMER_SPEED) {
+            aux->data.obj.pos.x += (diff > 0 ? COSTUMER_SPEED : -COSTUMER_SPEED);
+        } else {
+            aux->data.obj.pos.x = aux->data.ideal_pos_x;
+            if (aux->data.leaving) aux->data.type = EMPTY; // chegou fora da tela, libera o balcao
+        }
+        // na fila a paciencia cai na metade do ritmo normal
+        aux->data.patience_time -= COSTUMER_PATIENCE_DECAY / 2.0f;
+        if (aux->data.patience_time <= 0.0f) {
+            aux->data.leaving = true;
+            aux->data.ideal_pos_x = -200.0f;
+        }
+
+        Queue_node<Costumer>* next = aux->prox;
+
+        if (aux->data.type == EMPTY) {
+            // saiu de tela: remove da fila de verdade. Sem isso o no fica fantasma pra
+            // sempre e quem vem atras nunca reposiciona (ideal_pos_x usa o indice i).
+            if (prev == nullptr) queue.first = next;
+            else                 prev->prox = next;
+            if (queue.last == aux) queue.last = prev;
+
+            delete aux;
+            queue.size--;
+        } else {
+            prev = aux;
+            // quem ja esta saindo nao ocupa mais posicao na fila: isso faz os de tras
+            // avancarem no mesmo frame em que o da frente desiste, nao so depois dele sair de tela
+            if (!aux->data.leaving) i++;
+        }
+
+        aux = next;
     }
 
     // 3. Process counter positions
@@ -93,6 +128,13 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
         } else {
             counter[i].obj.pos.x = counter[i].ideal_pos_x;
             if (counter[i].leaving) counter[i].type = EMPTY; // chegou fora da tela, libera o balcao
+        }
+
+        // no balcao a paciencia cai no ritmo normal, mas para de cair depois de atendido
+        if (!counter[i].leaving) counter[i].patience_time -= COSTUMER_PATIENCE_DECAY;
+        if (counter[i].patience_time <= 0.0f ){
+            counter[i].leaving = true;
+            counter[i].ideal_pos_x = -200.0f;
         }
     }
 }

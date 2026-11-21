@@ -117,6 +117,30 @@ T getMinValueHeap(Heap<T>& heap) {
     return min;
 }
 
+// Remove o elemento no indice idx (nao precisa ser a raiz) preservando a propriedade de heap.
+// Troca pelo ultimo elemento, encolhe o size e sobe/desce esse elemento pro lugar certo.
+template <typename T>
+void removeAt(Heap<T>& heap, int idx) {
+    if (idx < 0 || idx >= heap.size) return;
+
+    heap.size--;
+
+    if (idx == heap.size) {
+        if (heap.size == 0) heap.type = NONE;
+        return; // era o ultimo, so cortar
+    }
+
+    heap.data[idx] = heap.data[heap.size];
+
+    while (idx != 0 && heap.data[idx] < heap.data[father(idx)]) {
+        swap(heap.data[idx], heap.data[father(idx)]);
+        idx = father(idx);
+    }
+    heapify(heap, idx);
+
+    if (heap.size == 0) heap.type = NONE;
+}
+
 template <typename T>
 void exterminateHeap(Heap<T>& heap) {
     delete[] heap.data;

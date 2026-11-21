@@ -26,9 +26,9 @@ struct Costumer{
     bool leaving; // true quando ja foi atendido e esta saindo de tela pra esquerda
 };
 
-void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, const HashTable& ht);
-void initializeCostumer(Costumer& cost);
-void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, const HashTable& ht);
+void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, HashTable& ht);
+void initializeCostumer(Costumer& cost, const AVL& avl, HashTable& ht);
+void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, HashTable& ht);
 bool callCostumer(Queue<Costumer>& queue, Costumer counter[]);
 std::string costumerOrderString(const Costumer& cost);
 bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld);

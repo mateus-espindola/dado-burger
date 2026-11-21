@@ -15,6 +15,7 @@ struct Queue {
     Queue_node<T> *last;
     int size;
 
+    int costumers_generated;
     float costumer_timer; // We did the queue generic but realistically it's worth it to store costumer-related information
 };
 
@@ -23,6 +24,7 @@ void initializeQueue(Queue<T>& queue) {
     queue.first = nullptr;
     queue.last = nullptr;
     queue.size = 0;
+    queue.costumers_generated = 0;
     queue.costumer_timer = COSTUMER_TIMER_MAX;
     return;
 }
@@ -80,5 +82,5 @@ int lengthQueue(const Queue<T>& queue) {
 
 template <typename T>
 void exterminateQueue(Queue<T>& queue) {
-    while (!isEmptyQueue(queue)) dequeue(queue, nullptr);
+    while (!isEmptyQueue(queue)) dequeue(queue, (T*)nullptr);
 }

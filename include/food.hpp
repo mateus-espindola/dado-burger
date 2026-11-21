@@ -68,9 +68,11 @@ struct Ingredient {
 // };
 
 CookPoint practicalCookingStateOf(Ingredient ing);
+int perishTimeOf(IngredientType type);
 void initIngredient(Ingredient &ing, char ingType);
 struct ButtonVec; //Declaracao antecipada
 void cookAll(ButtonVec *butonVec);
+void processRottingIngredients(ButtonVec *buttonsVec);
 float cookTimeOf(IngredientType type);
 void cutIngredient(Ingredient& ing /*, Stack& ready_ing*/);
 void flipMeat(Ingredient& ing);

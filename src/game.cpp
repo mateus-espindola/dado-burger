@@ -20,6 +20,8 @@ bool readFiles(Game& game, FILE* fp, FILE* fh) {
         return false;
     }
 
+    initializeHashTable(game.hashtable_orders); // capacity=0 sem isso: update_load_factor faria size/0
+
     // Loads fp
     int cod;
     while (fscanf(fp, "%d\n", &cod) == 1) {
@@ -75,8 +77,6 @@ void gameStart(Game& game){
     match.player.object.sprite = match.spriteMatch[SPR_PLAYER];
     match.player.object.radius = PLAYER_HITBOX_RADIUS;
 
-    matchStart(match);
-
     declareMenuButtons(game.menuButtons);
     declareHistoryButtons(game.historyButtons);
     game.historyPage = 0;
@@ -87,7 +87,7 @@ void gameStart(Game& game){
 }
 
 void processMenuButClick(Game& game, Button& button){
-    if      (strcmp(button.text, "PLAY") == 0)        game.state = PLAYING;
+    if      (strcmp(button.text, "PLAY") == 0)        {game.state = PLAYING; matchStart(game.current_match); }
     else if (strcmp(button.text, "HOW TO PLAY") == 0) game.state = HOW_TO_PLAY;
     else if (strcmp(button.text, "HISTORY") == 0)     { game.state = HISTORY; game.historyPage = 0; }
     else if (strcmp(button.text, "SETTINGS") == 0)    game.state = SETTINGS;
@@ -247,9 +247,11 @@ void processPauseButClick(Game& game, Button& button){
         matchStart(match); // reseta player, camera, costumers e reenche os ingredientes
     }
     else if (strcmp(button.text, "QUIT MATCH") == 0) {
-        game.state = MENU;
+        finishCurrentMatch(game);
     }
 }
+
+static void appendToHistoryFile(const char* path, const char* name, int score);
 
 void ambientProcess(Game& game, Vector2 mouse){
 
@@ -278,10 +280,18 @@ void ambientProcess(Game& game, Vector2 mouse){
         match.screen = PAUSED;
     }
 
+    if (match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH) {
+        if (IsKeyPressed(KEY_F)) {
+            finishCurrentMatch(game);
+        }
+    }
+
+    if (IsKeyPressed(KEY_M)) match.player.money += 500;
 
     // 1. update
     if (match.screen != PAUSED) {
         cookAll(match.buttonsVec);
+        processRottingIngredients(match.buttonsVec);
         processCostumers(match.costumer_line, match.costumer_counter, game.avl_orders, game.hashtable_orders);
     }
 
@@ -312,6 +322,8 @@ void ambientProcess(Game& game, Vector2 mouse){
         case BOARD:  drawBoard(match, butUnderMouseInd);    break;
         case PREPARE: drawPrepare(match, butUnderMouseInd); break;
         case PAUSED: drawPause(match, butUnderMouseInd);    break;
+        case VICTORY: drawVictory(match, butUnderMouseInd); break;
+        case DEFEAT: drawDefeat(match, butUnderMouseInd);   break;
         default: break;
     }
 
@@ -344,8 +356,61 @@ void ambientProcess(Game& game, Vector2 mouse){
                 processPauseButClick(game, match.buttonsVec[PAUSED].buttons[butUnderMouseInd]);
         break;
 
+        case VICTORY: {
+            // digita o nome (igual ao TrabalhoFinalAlgProg: GetCharPressed + filtro ASCII imprimivel)
+            if (match.nameInputLen < HISTORY_NAME_BUFFER - 1) {
+                int c = GetCharPressed();
+                if (c >= MIN_ASCII_CODE_SUPPORTED && c <= MAX_ASCII_CODE_SUPPORTED) {
+                    match.nameInput[match.nameInputLen] = (char)c;
+                    match.nameInputLen++;
+                    match.nameInput[match.nameInputLen] = '\0';
+                }
+            }
+            if (match.nameInputLen > 0 && IsKeyPressed(KEY_BACKSPACE)) {
+                match.nameInputLen--;
+                match.nameInput[match.nameInputLen] = '\0';
+            }
+            if (IsKeyPressed(KEY_ENTER) && match.nameInputLen > 0) {
+                appendToHistoryFile(game.historicoPath, match.nameInput, match.player.money);
+
+                PlayerInfo info = { std::string(match.nameInput), match.player.money };
+                insertContiguousList(game.historico, info, game.historico.size);
+
+                game.state = MENU;
+            }
+        } break;
+
+        case DEFEAT:
+            if (IsKeyPressed(KEY_ENTER)) game.state = MENU;
+        break;
+
         default: break;
     }
+}
+
+void finishCurrentMatch(Game& game) {
+    Match& match  = game.current_match;
+
+    if (match.player.money < match.profitGoal) {
+        loseMatch(match);
+    }
+    else {
+        winMatch(match);
+    }
+
+    matchEnd(match);
+
+    // game.state fica em PLAYING: a tela de VICTORY/DEFEAT (match.screen) ainda precisa
+    // ser mostrada e, no caso de vitoria, o nome precisa ser digitado antes de voltar ao menu
+}
+
+// Salva nome+pontuacao no fim do arquivo de historico (mesmo formato que readFiles le: nome\npontos\n)
+static void appendToHistoryFile(const char* path, const char* name, int score) {
+    FILE* f = fopen(path, "a");
+    if (f == nullptr) return;
+
+    fprintf(f, "%s\n%d\n", name, score);
+    fclose(f);
 }
 
 void gameOver(Game& game){

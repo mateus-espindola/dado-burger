@@ -40,6 +40,11 @@ struct Match{
     Camera2D camera;
     Player player;
 
+    int profitGoal;
+
+    char nameInput[HISTORY_NAME_BUFFER]; // nome sendo digitado na tela de VICTORY
+    int nameInputLen;
+
     Queue<Costumer> costumer_line;
     Costumer costumer_counter[COUNTER_SIZE];
 
@@ -57,5 +62,7 @@ struct Match{
 
 void matchStart(Match& match);
 void matchEnd(Match& match);
+void winMatch(Match& match);
+void loseMatch(Match& match);
 
 void setIngredients(ButtonVec screens[], int screenCount);

@@ -61,6 +61,23 @@ void insertHashTable(HashTable& ht, const Order& obj) {
 	update_load_factor(ht);
 }
 
+bool searchHashTable(HashTable &ht, const int& key, Order &dst) {
+    int i = knuth_hash(key, ht.capacity);
+    Hash_node* aux = ht.data[i];
+
+    while (aux != nullptr) {
+        if (aux->key == key) {
+            dst = aux->data;
+            ht.hits++;
+            return true;
+        }
+        aux = aux->next;
+    }
+
+    ht.misses++;
+    return false;
+}
+
 void exterminateHashTable(HashTable& ht) {
 	for (int i=0; i < HASHTABLE_CAPACITY; i++) {
 		Hash_node* current = ht.data[i];
