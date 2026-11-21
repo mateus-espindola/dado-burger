@@ -16,6 +16,25 @@ void matchStart(Match& match) {
     setKitchenCamera(match);
 }
 
+void matchEnd(Match& match) {
+    for (int s = 0; s < STATE_QUANTITY; s++) {
+        ButtonVec& screen = match.buttonsVec[s];
+        if (screen.buttons == nullptr) continue;
+
+        for (int i = 0; i < screen.size; i++) {
+            Button& b = screen.buttons[i];
+
+            stack_destroy(b.target); // esvazia os nodes e zera type/size, sem tocar na capacidade
+
+            // Nao usa exterminateHeap: ela libera o array e zera capacity, o que inviabilizaria
+            // o proximo insertHeap depois de um matchStart (size==capacity==0 rejeitaria tudo).
+            // So precisa esvaziar o que importa pro reuso.
+            b.heap.size = 0;
+            b.heap.type = NONE;
+        }
+    }
+}
+
 void playerProcess(Player& player) {
     if (IsKeyDown(KEY_RIGHT)) player.object.pos.x += 4;
     if (IsKeyDown(KEY_LEFT))  player.object.pos.x -= 4;

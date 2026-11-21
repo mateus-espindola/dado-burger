@@ -11,6 +11,11 @@ void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const A
     AVL_node* auxiliar_node = new AVL_node;
     auxiliar_node = searchAVL(avl.root, order_cod);
 
+    Ingredient lowerBread;
+    initIngredient(lowerBread, 'y');
+
+    push_front(list, lowerBread);
+
     std::string ingredient_string = auxiliar_node->data.ingredients;
     for (int i=0; i < ingredient_string.length(); i++) {
         Ingredient ing;
@@ -26,7 +31,7 @@ void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const A
             ing.cook_state.cookInfo[1].cookPoint = READY;
         }
 
-        push_back(list, ing);
+        push_front(list, ing);
     }
 }
 
@@ -100,8 +105,9 @@ bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld
         if (counter[i].type == EMPTY || counter[i].leaving) continue;
         if (!CheckCollisionPointCircle(mouseWorld, counter[i].obj.pos, counter[i].obj.radius)) continue;
 
-        // TODO: comparar o hamburguer (inventory) com o pedido (counter[i].order)
-        // antes de aceitar, quando a funcao de comparacao estiver pronta.
+        float hambAccuracy = compare_hamburger_with_order(inventory, counter[i].order);
+
+        player.money += (int) hambAccuracy * MONEY_PER_PERFECT_BURGER;
 
         stack_destroy(inventory); // consome o hamburguer da mao (ja deixa type/size zerados)
         inventory.capacity = 1;  // devolve a capacidade padrao da mao (foi ampliada pra caber o hamburguer)

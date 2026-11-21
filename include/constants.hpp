@@ -19,6 +19,8 @@ constexpr float CAMERA_INTERPOOLATION = 0.2f;
 constexpr int COUNTER_SIZE = 3;
 constexpr int INVENTORY_SLOTS = 3;
 
+constexpr int MONEY_PER_PERFECT_BURGER = 100;
+
 constexpr int HISTORY_NAME_BUFFER = 50;
 constexpr int MIN_ASCII_CODE_SUPPORTED = 32;
 constexpr int MAX_ASCII_CODE_SUPPORTED = 126;

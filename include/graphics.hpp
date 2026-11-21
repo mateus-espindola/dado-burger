@@ -5,6 +5,8 @@
 // void gameDraw(Game& game);
 void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd);
 void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const ButtonVec& historyButtons, int butUnderMouseInd);
+
+void drawPause(Match& match, int butUnderMouseInd);
 // void tutorialDraw();
 // void historyDraw();
 // void settingsDraw();
@@ -38,6 +40,10 @@ void drawStove(Match& match, int butUnderMouseInd);
 void drawPrepare(Match& match, int butUnderMouseInd);
 
 void drawInventory(const Player &player);
+
+void drawMoney(const Player &player);
+
+void drawHUD(const Player &player);
 
 void drawIngredient(Vector2 center, float radius, const Ingredient& ing);
 

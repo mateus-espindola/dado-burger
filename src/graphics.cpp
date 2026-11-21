@@ -32,6 +32,32 @@ void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd){
     EndDrawing();
 }
 
+void drawPause(Match& match, int butUnderMouseInd){
+    const ButtonVec& pauseButtons = match.buttonsVec[PAUSED];
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        const char* title = "PAUSED";
+        int titleFs = 60;
+        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 150, titleFs, DARKBROWN);
+
+        for (int i = 0; i < pauseButtons.size; i++) {
+            const Button &b = pauseButtons.buttons[i];
+
+            Color fill = (i == butUnderMouseInd) ? ORANGE : BEIGE;
+            DrawRectangleRec(b.shape, fill);
+            DrawRectangleLinesEx(b.shape, 3, DARKBROWN);
+
+            int fs = 28;
+            int textW = MeasureText(b.text, fs);
+            DrawText(b.text, (int)(b.shape.x + b.shape.width / 2 - textW / 2),
+                     (int)(b.shape.y + b.shape.height / 2 - fs / 2), fs, DARKBROWN);
+        }
+
+    EndDrawing();
+}
+
 void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const ButtonVec& historyButtons, int butUnderMouseInd){
     BeginDrawing();
     ClearBackground(RAYWHITE);
@@ -108,7 +134,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
         EndMode2D();
 
-        drawInventory(match.player);
+        drawHUD(match.player);
 
     EndDrawing();
 }
@@ -121,7 +147,7 @@ void drawPrepare(Match &match, int butUnderMouseInd) {
 
     drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
-    drawInventory(match.player);
+    drawHUD(match.player);
 
     EndDrawing();
 }
@@ -159,7 +185,7 @@ void drawBoard(Match match, int butUnderMouseInd) {
         const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
         drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
-        drawInventory(match.player);
+        drawHUD(match.player);
 
     EndDrawing();
 }
@@ -220,7 +246,7 @@ void drawStove(Match& match, int butUnderMouseInd) {
 
         EndMode2D();
 
-        drawInventory(match.player);
+        drawHUD(match.player);
 
     EndDrawing();
 }
@@ -244,6 +270,27 @@ static Color ingredientColor(IngredientType t) {
         case UPPER_BREAD:   return BEIGE;
         case LOWER_BREAD:   return BEIGE;
         default:            return BLANK;   // NONE ou ingrediente sem cor definida
+    }
+}
+
+// Nome legivel do ingrediente
+static const char* ingredientName(IngredientType t) {
+    switch (t) {
+        case LETTUCE:       return "Lettuce";
+        case TOMATO:        return "Tomato";
+        case BACON:         return "Bacon";
+        case ONION:         return "Onion";
+        case KETCHUP:       return "Ketchup";
+        case MUSTARD:       return "Mustard";
+        case MEAT:          return "Meat";
+        case VEGAN_PROTEIN: return "Vegan Protein";
+        case EGG:           return "Egg";
+        case PICKLES:       return "Pickles";
+        case CHEDDAR:       return "Cheddar";
+        case SWISS_CHEESE:  return "Swiss Cheese";
+        case UPPER_BREAD:   return "Upper Bread";
+        case LOWER_BREAD:   return "Lower Bread";
+        default:            return "?";
     }
 }
 
@@ -281,6 +328,29 @@ void drawInventory(const Player &player) {
                          (int)(r.x + r.width - 22), (int)(r.y + r.height - 22), 20, WHITE);
         }
     }
+}
+
+#define MONEY_RECT_W 160
+#define MONEY_RECT_H 50
+#define MONEY_MARGIN 20
+
+// Dinheiro do player, no canto superior direito
+void drawMoney(const Player &player) {
+    Rectangle r = { WINDOW_WIDTH - MONEY_RECT_W - MONEY_MARGIN, MONEY_MARGIN, MONEY_RECT_W, MONEY_RECT_H };
+
+    DrawRectangleRounded(r, 0.3f, 8, Fade(DARKGREEN, 0.5f));
+    DrawRectangleRoundedLinesEx(r, 0.3f, 8, 2, GREEN);
+
+    const char* text = TextFormat("$ %d", player.money);
+    const int fs = 24;
+    int tw = MeasureText(text, fs);
+    DrawText(text, (int)(r.x + r.width / 2 - tw / 2), (int)(r.y + r.height / 2 - fs / 2), fs, GREEN);
+}
+
+// Tudo que fica sempre na tela durante a partida
+void drawHUD(const Player &player) {
+    drawInventory(player);
+    drawMoney(player);
 }
 
 // Texto curto do ponto de preparo pra mostrar acima do ingrediente, ou nullptr se nao ha nada a mostrar
@@ -586,13 +656,39 @@ void drawButGlow(Rectangle r, Color cor, int camadas, float alpha){
 
 static void drawOrderBurger(const Costumer& cost) {
     float x = cost.obj.pos.x - ORDER_RECT_W / 2.0f;
-    float y = cost.obj.pos.y - cost.obj.radius - ORDER_RECT_H - ORDER_RECT_GAP;
+    float yBase = cost.obj.pos.y - cost.obj.radius - ORDER_RECT_H - ORDER_RECT_GAP;
+    float step = ORDER_RECT_H + ORDER_RECT_GAP;
 
+    // getCostumerOrder usa push_front, entao a lista fica na ordem inversa da string
+    // (cost.order.start = ultimo ingrediente lido). Contamos antes pra desenhar o
+    // primeiro no percorrido no topo (mais longe) em vez da base, restaurando a
+    // ordem original: primeiro char da string na base, ultimo no topo.
+    int count = 0;
+    for (LinkedList_node<Ingredient>* p = cost.order.start; p != nullptr; p = p->prox) count++;
+
+    int index = count - 1;
     for (LinkedList_node<Ingredient>* p = cost.order.start; p != nullptr; p = p->prox) {
-        Rectangle r = { x, y, ORDER_RECT_W, ORDER_RECT_H };
+        Rectangle r = { x, yBase - index * step, ORDER_RECT_W, ORDER_RECT_H };
         DrawRectangleRec(r, ingredientColor(p->data.type));
         DrawRectangleLinesEx(r, 1, BLACK);
-        y -= ORDER_RECT_H + ORDER_RECT_GAP;
+
+        const char* name = ingredientName(p->data.type);
+        const char* cookLabel = nullptr;
+        if (p->data.type == MEAT || p->data.type == VEGAN_PROTEIN) {
+            switch (practicalCookingStateOf(p->data)) {
+                case RARE:        cookLabel = "Rare";       break;
+                case MEDIUM_RARE: cookLabel = "Medium";     break;
+                case WELL_DONE:   cookLabel = "Well Done";  break;
+                case OVER_COOKED: cookLabel = "Overcooked"; break;
+                default: break;
+            }
+        }
+
+        const char* text = cookLabel ? TextFormat("%s (%s)", name, cookLabel) : name;
+        const int fs = 12;
+        DrawText(text, (int)(r.x + r.width + 6), (int)(r.y + r.height / 2 - fs / 2), fs, WHITE);
+
+        index--;
     }
 }
 

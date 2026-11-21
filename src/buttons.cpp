@@ -64,6 +64,8 @@ void declareButtons(ButtonVec *screenButtons) {
     screenButtons[BOARD]   = { boardBut,   BUTTONS_BOARD   };
     screenButtons[OVEN]    = { ovenBut,    BUTTONS_OVEN    };
 
+    declarePauseButtons(screenButtons[PAUSED]);
+
     setButton(kitchenBut[0], PREPARE_LEFT_X, PREPARE_LEFT_Y, PREPARE_LEFT_W, PREPARE_LEFT_H, "PREPARE", CLICK);
     setButton(kitchenBut[1], BOARD_LEFT_X,   BOARD_LEFT_Y,   BOARD_LEFT_W,   BOARD_LEFT_H,   "BOARD",   CLICK);
     setButton(kitchenBut[2], OVEN_LEFT_X,    OVEN_LEFT_Y,    OVEN_LEFT_W,    OVEN_LEFT_H,    "OVEN",    CLICK);
@@ -138,6 +140,15 @@ void declareMenuButtons(ButtonVec &menuButtons) {
     setButton(menuBut[2], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 2 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "HISTORY", CLICK);
     setButton(menuBut[3], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 3 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "SETTINGS", CLICK);
     setButton(menuBut[4], MENU_BUTTON_LEFT_X, MENU_BUTTON_FIRST_Y + 4 * MENU_BUTTON_DELTA, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, "QUIT", CLICK);
+}
+
+void declarePauseButtons(ButtonVec &pauseButtons) {
+    static Button pauseBut[BUTTONS_PAUSE];
+    pauseButtons = { pauseBut, BUTTONS_PAUSE };
+
+    setButton(pauseBut[0], PAUSE_BUTTON_LEFT_X, PAUSE_BUTTON_FIRST_Y + 0 * PAUSE_BUTTON_DELTA, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, "RESUME MATCH",  CLICK);
+    setButton(pauseBut[1], PAUSE_BUTTON_LEFT_X, PAUSE_BUTTON_FIRST_Y + 1 * PAUSE_BUTTON_DELTA, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, "RESTART MATCH", CLICK);
+    setButton(pauseBut[2], PAUSE_BUTTON_LEFT_X, PAUSE_BUTTON_FIRST_Y + 2 * PAUSE_BUTTON_DELTA, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, "QUIT MATCH",    CLICK);
 }
 
 void declareHistoryButtons(ButtonVec &historyButtons) {

@@ -236,11 +236,28 @@ void leaveScreen(Match& match) {
 }
 
 
+void processPauseButClick(Game& game, Button& button){
+    Match& match = game.current_match;
+
+    if (strcmp(button.text, "RESUME MATCH") == 0) {
+        match.screen = match.screenBeforePause;
+    }
+    else if (strcmp(button.text, "RESTART MATCH") == 0) {
+        matchEnd(match);
+        matchStart(match); // reseta player, camera, costumers e reenche os ingredientes
+    }
+    else if (strcmp(button.text, "QUIT MATCH") == 0) {
+        game.state = MENU;
+    }
+}
+
 void ambientProcess(Game& game, Vector2 mouse){
 
     Match &match = game.current_match;
 
-    if(sceneChanged(match.screen, match.prevScreen))
+    // PAUSED nao tem mundo/camera propria; pular a correcao evita acionar o assert de
+    // correctCamera quando se pausa a partir do OVEN (unico MatchScreen com WORLD_OVEN)
+    if (match.screen != PAUSED && match.prevScreen != PAUSED && sceneChanged(match.screen, match.prevScreen))
         correctCamera(match);
     match.prevScreen = match.screen;
     // printf("%d\n", match.player.selectedSlot);
@@ -256,8 +273,24 @@ void ambientProcess(Game& game, Vector2 mouse){
     printf("%d ", match.player.inventory[match.player.selectedSlot].capacity);
     printf("%d\n", match.player.inventory[match.player.selectedSlot].type);
 
+    if (IsKeyPressed(KEY_TAB) && match.screen != PAUSED) {
+        match.screenBeforePause = match.screen;
+        match.screen = PAUSED;
+    }
+
 
     // 1. update
+    if (match.screen != PAUSED) {
+        cookAll(match.buttonsVec);
+        processCostumers(match.costumer_line, match.costumer_counter, game.avl_orders, game.hashtable_orders);
+    }
+
+    // Player/camera so existem nas telas com mundo/camera propria (ver usesCamera()).
+    // PREPARE e BOARD sao desenhados em espaco de tela (sem BeginMode2D) e compartilham
+    // WORLD_KITCHEN em worldOf, entao sceneChanged nunca dispara correctCamera ao voltar
+    // pra KITCHEN - se playerProcess/cameraProcess rodassem aqui usando os limites default
+    // (WINDOW_WIDTH, de playerLimitsOf/worldWidthOf), eles empurrariam player.object.pos e
+    // match.camera.target pra fora do mundo real da KITCHEN, e isso nunca seria corrigido.
     switch(match.screen){
         case KITCHEN:
         case FRIDGE:
@@ -278,6 +311,7 @@ void ambientProcess(Game& game, Vector2 mouse){
         case OVEN:   drawStove(match, butUnderMouseInd);    break;
         case BOARD:  drawBoard(match, butUnderMouseInd);    break;
         case PREPARE: drawPrepare(match, butUnderMouseInd); break;
+        case PAUSED: drawPause(match, butUnderMouseInd);    break;
         default: break;
     }
 
@@ -304,11 +338,14 @@ void ambientProcess(Game& game, Vector2 mouse){
                     processButClick(match, but);
             }
         break;
+
+        case PAUSED:
+            if (butUnderMouseInd != -1 && mouseKeyLeftClicked())
+                processPauseButClick(game, match.buttonsVec[PAUSED].buttons[butUnderMouseInd]);
+        break;
+
         default: break;
     }
-
-    cookAll(match.buttonsVec);
-    processCostumers(match.costumer_line, match.costumer_counter, game.avl_orders, game.hashtable_orders);
 }
 
 void gameOver(Game& game){

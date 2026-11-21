@@ -55,6 +55,8 @@ void declareMenuButtons(ButtonVec &menuButtons);
 
 void declareHistoryButtons(ButtonVec &historyButtons);
 
+void declarePauseButtons(ButtonVec &pauseButtons);
+
 int nearestButtonIndex(const float playerX, const ButtonVec screenButtons);
 
 int findButtonUnderMouse(Vector2 mouse, const ButtonVec &screenButtons, Camera2D camera, MatchScreen curScreen);

@@ -35,6 +35,7 @@ struct Items{
 struct Match{
     MatchScreen screen;
     MatchScreen prevScreen; //Used to detect screen changes during the match
+    MatchScreen screenBeforePause; //Pra onde "RESUME MATCH" volta
     ButtonVec buttonsVec[STATE_QUANTITY];
     Camera2D camera;
     Player player;
@@ -55,5 +56,6 @@ struct Match{
 /* ============================ */
 
 void matchStart(Match& match);
+void matchEnd(Match& match);
 
 void setIngredients(ButtonVec screens[], int screenCount);

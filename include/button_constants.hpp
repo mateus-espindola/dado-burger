@@ -164,6 +164,17 @@ constexpr int MENU_BUTTON_DELTA  = MENU_BUTTON_HEIGHT + MENU_BUTTON_GAP;
 constexpr int MENU_BUTTON_LEFT_X = (WINDOW_WIDTH / 2) - (MENU_BUTTON_WIDTH / 2);
 constexpr int MENU_BUTTON_FIRST_Y = 320;
 
+// Pause screen buttons
+#define BUTTONS_PAUSE 3
+
+constexpr int PAUSE_BUTTON_WIDTH  = 320;
+constexpr int PAUSE_BUTTON_HEIGHT = 70;
+constexpr int PAUSE_BUTTON_GAP    = 30;
+constexpr int PAUSE_BUTTON_DELTA  = PAUSE_BUTTON_HEIGHT + PAUSE_BUTTON_GAP;
+
+constexpr int PAUSE_BUTTON_LEFT_X = (WINDOW_WIDTH / 2) - (PAUSE_BUTTON_WIDTH / 2);
+constexpr int PAUSE_BUTTON_FIRST_Y = (WINDOW_HEIGHT / 2) - PAUSE_BUTTON_DELTA;
+
 // History screen
 #define BUTTONS_HISTORY 6
 

@@ -11,6 +11,7 @@ void setPlayer(Player& player) {
 
     player.object.pos = player.savedPos[WORLD_KITCHEN];
     player.direction = DIR_RIGHT;
+    player.money = 0;
 
     for (int i = 0; i < INVENTORY_SLOTS; i++) {
         stack_init(player.inventory[i]);

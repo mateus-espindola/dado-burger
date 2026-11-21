@@ -187,7 +187,23 @@ void cookAll(ButtonVec *butonVec) {
 }
 
 
+// Devolve a porcentagem de semelhança entre o burger e o pedido
+float compare_hamburger_with_order(Stack& hamburger, LinkedList<Ingredient>& order){
+    float desiredScore = 2*lengthLinkedList(order);
+    if (desiredScore == 0) return 0; // pedido vazio: nao ha o que comparar
 
-void compare_hamburger_with_order(Stack *hamburger, LinkedList<Ingredient> *order){
-    return;
+    float currentScore = 0;
+
+    Ingredient auxIng;
+    LinkedList_node<Ingredient>* auxPtr = order.start;
+    while (stack_pop(hamburger, auxIng)) {
+        if (auxPtr == nullptr) break;
+
+        if (auxIng.type == auxPtr->data.type) currentScore++;
+        if (practicalCookingStateOf(auxIng) == practicalCookingStateOf(auxPtr->data)) currentScore++;
+
+        auxPtr = auxPtr->prox;
+    }
+
+    return currentScore * 100 / desiredScore;
 }

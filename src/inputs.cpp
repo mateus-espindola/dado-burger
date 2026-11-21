@@ -149,8 +149,7 @@ void processButClick(Match& match, Button& button) {
         break;
 
         case DROP:
-            if(inventory.size > 0){
-                //The function stack_push already incremetns the size and assigns the type
+            while(inventory.size > 0){
                 stack_pop(inventory);
             }
         break;

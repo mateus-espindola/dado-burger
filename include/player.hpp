@@ -47,6 +47,7 @@ struct Player {
     Stack inventory[INVENTORY_SLOTS];
     int selectedSlot;
     Direction direction;
+    int money;
 };
 
 // struct Slot {

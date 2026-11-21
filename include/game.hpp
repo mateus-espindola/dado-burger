@@ -60,6 +60,7 @@ void historyProcess(Game& game, Vector2 mouse);
 // void matchProcess(Match& match, Sprite background);
 
 void ambientProcess(Game& game, Vector2 mouse);
+void processPauseButClick(Game& game, Button& button);
 
 // void matchStart(Match& match);
 
