@@ -23,6 +23,8 @@ constexpr int HISTORY_NAME_BUFFER = 50;
 constexpr int MIN_ASCII_CODE_SUPPORTED = 32;
 constexpr int MAX_ASCII_CODE_SUPPORTED = 126;
 
+constexpr int INGREDIENT_RADIUS = 3*16.0f;
+
 
 //Costumer constants
 constexpr float AVERAGE_COSTUMER_PATIENCE = 6.0f;
@@ -75,8 +77,9 @@ constexpr float COOK_SPEED = 1.0f;
 
 
 
-// Mundo do fogão: duas vezes a largura da tela
-constexpr int STOVE_WORLD_WIDTH  = WINDOW_WIDTH;   // 2560
+
+
+constexpr int STOVE_WORLD_WIDTH  = WINDOW_WIDTH;
 constexpr int STOVE_WORLD_HEIGHT = WINDOW_HEIGHT;
 
 constexpr float STOVE_MARGIN = 30;

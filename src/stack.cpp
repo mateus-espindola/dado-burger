@@ -15,9 +15,15 @@ bool stack_empty(const Stack& s) {
 
 // Empilha no topo: O(1)
 void stack_push(Stack& s, const Ingredient& value) {
+    bool wasEmpty = s.top == nullptr;
+
     s.top = new Stack_node{ s.top, value };
     s.size++;
-    s.type = value.type;
+
+    // So define o tipo da pilha a partir do ingrediente se ela estava vazia.
+    // Caso contrario, o tipo (ex: BURGER) ja foi decidido antes e nao deve
+    // ser sobrescrito pelo tipo do ingrediente que acabou de ser empilhado.
+    if (wasEmpty) s.type = value.type;
 }
 
 // Desempilha o topo. Retorna false se vazia: O(1)
@@ -29,7 +35,10 @@ bool stack_pop(Stack& s) {
     delete rem;
 
     s.size--;
-    s.type = (s.top != nullptr) ? s.top->data.type : NONE;
+
+    // So zera o tipo quando a pilha esvazia; enquanto houver itens, o tipo
+    // da pilha (ex: BURGER) deve ser preservado independente do que sobrou no topo.
+    if (s.top == nullptr) s.type = NONE;
     return true;
 }
 

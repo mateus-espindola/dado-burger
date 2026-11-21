@@ -21,8 +21,9 @@ enum IngredientType{
     CHEDDAR = 'q',
     SWISS_CHEESE = 's',
     TOMATO = 't',
-    // SLICED_TOMATO = 't',
-    UPPER_BREAD = 'z'
+    UPPER_BREAD = 'z',
+    LOWER_BREAD = 'y',
+    BURGER = 'x'
 
 };
 
