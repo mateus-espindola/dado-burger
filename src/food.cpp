@@ -30,6 +30,8 @@ IngredientType charToIngType(char c) {
         case 't': return TOMATO;
         case 'U': return UPPER_BREAD;
         case 'z': return UPPER_BREAD;
+        case 'D': return LOWER_BREAD;
+        case 'y': return LOWER_BREAD;
         default:  return NONE;   // inclui '0' e qualquer letra desconhecida
     }
 }

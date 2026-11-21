@@ -29,7 +29,7 @@ enum ButtonType {
     PICK,   //Click to pick an item
     DROP,   //Click to drop an item
     INSERT, //Click to put or pick an item
-    STACK,  //Click to put or take an item (usa shift (ou outra tecla) para diferenciar o click de tirar e colocar)
+    STACK,  //Click to put or take an item
 };
 
 struct Button {

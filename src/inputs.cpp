@@ -68,6 +68,13 @@ void transferBetweenStacks(Stack& orig, Stack& dest){
     stack_push(dest, ing);
 }
 
+// Move todos os itens, preservando a ordem (pop do topo de uma, push no topo da outra)
+void transferAllBetweenStacks(Stack& orig, Stack& dest){
+    while (orig.size > 0) {
+        transferBetweenStacks(orig, dest);
+    }
+}
+
 
 void processInputButAction(Ingredient& ing, const MatchScreen& screen){
     switch(screen){
@@ -140,34 +147,82 @@ void processButClick(Match& match, Button& button) {
             }
         break;
 
-        case STACK:
-            printf("Entrou\n");
-            // if (button.target == nullptr) return;   // botão mal configurado
-            printf("Entrou1\n");
-            // usa player.inventory[...] como origem e *button.target como destino
-            if(IsKeyDown(KEY_LEFT_SHIFT)){
-                printf("Entrou shift\n");
-                //Pega o ítem da stack e joga no inventário do player
-                if(butStack.type != NONE){
-                    if(inventory.size < inventory.capacity){
-                        //Only necessary if we implement the player inventory to have more than 1 item per slot
-                        if(inventory.type == NONE || inventory.type == butStack.type){
-                            transferBetweenStacks(butStack, inventory);
-                        }
-                    }
+        case STACK: {
+            if (inventory.type == NONE) {
+                if (butStack.type == BURGER) {
+                    inventory.capacity = butStack.size;
+                    transferAllBetweenStacks(butStack, inventory);
+                    inventory.type = BURGER;
+
+                    break;
+                }
+
+                if (butStack.type == NONE) break;
+
+                else {
+                    Ingredient aux;
+                    stack_pop(butStack, aux);
+                    stack_push(inventory, aux);
+
+                    break;
                 }
             }
-            else{
-                //Pega o ítem do player e joga no stack
-                printf("Entrou not shift\n");
-                if(butStack.size < butStack.capacity){
-                    if(inventory.type != NONE){
-                        if(butStack.type == NONE || inventory.type == butStack.type){
-                            transferBetweenStacks(inventory, butStack);
-                        }
+            if (inventory.type == BURGER) {
+                if (butStack.type == BURGER) {
+                    bool inventoryBigger = inventory.capacity >= butStack.capacity;
+                    int newCapacity = butStack.capacity;
+
+                    if (inventoryBigger) {
+                        transferAllBetweenStacks(butStack, inventory);
+                        inventory.capacity = newCapacity;
                     }
+                    if (!inventoryBigger) {
+                        inventory.capacity = newCapacity;
+                        transferAllBetweenStacks(butStack, inventory);
+                    }
+                    break;
+                }
+
+                if (butStack.type == NONE) {
+                    transferAllBetweenStacks(inventory, butStack);
+                    butStack.type = BURGER;
+                    inventory.capacity = 1;
+                    break;
+                }
+
+                else break;
+            }
+            else {
+                if (butStack.type == BURGER) {
+                    Ingredient aux;
+                    stack_pop(inventory, aux);
+                    stack_push(butStack, aux);
+
+                    break;
+                }
+
+                if (butStack.type == NONE) {
+                    Ingredient aux;
+                    stack_pop(inventory, aux);
+                    stack_push(butStack, aux);
+
+                    if (aux.type == LOWER_BREAD) butStack.type = BURGER;
+
+                    break;
+                }
+
+                else {
+                    if (butStack.type == inventory.type) {
+                        Ingredient aux;
+                        stack_pop(inventory, aux);
+                        stack_push(butStack, aux);
+
+                        break;
+                    }
+
+                    break;
                 }
             }
-        break;
+        }
     }
 }

@@ -156,6 +156,9 @@ void drawBoard(Match match, int butUnderMouseInd) {
         // 2 stacks à direita
         drawStackColumn(BOARD_X + BOARD_W + STACK_MARGIN, STACKS_RIGHT);
 
+        const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+        drawButtons(buttonsVec, butUnderMouseInd, match.screen);
+
         drawInventory(match.player);
 
     EndDrawing();
@@ -194,23 +197,23 @@ void drawStove(Match& match, int butUnderMouseInd) {
             // corpo do fogão (cobre o mundo todo)
             DrawRectangle(0, 0, STOVE_WORLD_WIDTH, STOVE_WORLD_HEIGHT, LIGHTGRAY);
 
+            // 2) espaço do meio: 2 colunas x 3 quadrados
+            Rectangle squares = { SQUARES_X, PANEL_Y, SQUARES_W, PANEL_H };
+            DrawRectangleRec(squares, GRAY);
+            DrawRectangleLinesEx(squares, 6, DARKGRAY);
+            drawSquareGrid(squares, 1, 3, 140);
+
             // 1) chapa à esquerda: 6 círculos (2 colunas x 3 linhas)
             Rectangle plate = { PLATE_X, PANEL_Y, PLATE_W, PANEL_H };
             DrawRectangleRec(plate, DARKGRAY);
             DrawRectangleLinesEx(plate, 6, GRAY);
             drawCircleGrid(plate, 2, 3, 80);
 
-            // 2) espaço do meio: 2 colunas x 3 quadrados
-            Rectangle squares = { SQUARES_X, PANEL_Y, SQUARES_W, PANEL_H };
-            DrawRectangleRec(squares, GRAY);
-            DrawRectangleLinesEx(squares, 6, DARKGRAY);
-            drawSquareGrid(squares, 2, 3, 140);
-
             // 3) seção da direita: 1 coluna x 3 círculos
-            Rectangle circles = { CIRCLES_X, PANEL_Y, CIRCLES_W, PANEL_H };
-            DrawRectangleRec(circles, GRAY);
-            DrawRectangleLinesEx(circles, 6, DARKGRAY);
-            drawCircleGrid(circles, 1, 3, 80);
+            Rectangle readies = { READIES_X, READIES_Y, READIES_W, READIES_H };
+            DrawRectangleRec(readies, GRAY);
+            DrawRectangleLinesEx(readies, 6, DARKGRAY);
+            drawSquareGrid(readies, 1, 2, 140);
 
             const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
             drawButtons(buttonsVec, butUnderMouseInd, match.screen);
@@ -239,6 +242,7 @@ static Color ingredientColor(IngredientType t) {
         case CHEDDAR:       return ORANGE;
         case SWISS_CHEESE:  return GOLD;
         case UPPER_BREAD:   return BEIGE;
+        case LOWER_BREAD:   return BROWN;
         default:            return BLANK;   // NONE ou ingrediente sem cor definida
     }
 }
@@ -262,13 +266,47 @@ void drawInventory(const Player &player) {
         // item, se houver
         if (slot.size > 0 && slot.type != NONE) {
             Vector2 center = { r.x + r.width / 2, r.y + r.height / 2 };
-            DrawCircleV(center, INV_SLOT_SIZE * 0.3f, ingredientColor(slot.type));
+
+            if (slot.type == BURGER) {
+                // desenha as camadas reais do hamburguer, de baixo para cima
+                Vector2 base = { center.x, r.y + r.height - INV_SLOT_SIZE * 0.3f };
+                drawStack(slot, base, INV_SLOT_SIZE * 0.22f, INV_SLOT_SIZE * 0.12f);
+            } else {
+                DrawCircleV(center, INV_SLOT_SIZE * 0.3f, ingredientColor(slot.type));
+            }
 
             // quantidade no canto inferior direito
-            if (slot.size > 1)
+            if (slot.size > 1 && slot.type != BURGER)
                 DrawText(TextFormat("%d", slot.size),
                          (int)(r.x + r.width - 22), (int)(r.y + r.height - 22), 20, WHITE);
         }
+    }
+}
+
+// Desenha os nós da pilha a partir do fundo (recursão desce até o fundo e desenha ao voltar)
+static int drawStackRec(Stack_node* node, Vector2 basePos, float radius, float offset) {
+    if (node == nullptr) return 0;
+
+    int depthBelow = drawStackRec(node->below, basePos, radius, offset);
+
+    Vector2 center = { basePos.x, basePos.y - depthBelow * offset };
+    DrawCircleV(center, radius, ingredientColor(node->data.type));
+    DrawCircleLinesV(center, radius, BLACK);
+
+    return depthBelow + 1;
+}
+
+void drawStack(const Stack& stack, Vector2 basePos, float radius, float offset) {
+    drawStackRec(stack.top, basePos, radius, offset);
+}
+
+void drawStackButtons(const ButtonVec& screenButtons) {
+    for (int i = 0; i < screenButtons.size; i++) {
+        const Button &b = screenButtons.buttons[i];
+        if (b.type != STACK) continue;
+
+        Vector2 basePos = { b.shape.x + b.shape.width / 2, b.shape.y + b.shape.height / 2 };
+        drawStack(b.target, basePos);
     }
 }
 
@@ -447,9 +485,13 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
         DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
         // Parte comum: círculo do ingrediente
-        if (b.type == STACK || b.type == INSERT || b.type == PICK) {
+        if (b.type == STACK) {
+            Vector2 basePos = { b.shape.x + b.shape.width / 2, b.shape.y + b.shape.height / 2 };
+            drawStack(b.target, basePos, INGREDIENT_RADIUS);
+        }
+        if (b.type == INSERT || b.type == PICK) {
             Vector2 center = {b.shape.x + (b.shape.width/2), b.shape.y + (b.shape.height/2)};
-            DrawCircleV(center, b.shape.width/2, ingredientColor(b.target.type));
+            DrawCircleV(center, INGREDIENT_RADIUS, ingredientColor(b.target.type));
         }
 
         // Parte exclusiva de cada tipo

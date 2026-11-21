@@ -75,7 +75,6 @@ void gameStart(Game& game){
     match.player.object.sprite = match.spriteMatch[SPR_PLAYER];
     match.player.object.radius = PLAYER_HITBOX_RADIUS;
 
-    // AJEITAR DESPUES
     matchStart(match);
 
     declareMenuButtons(game.menuButtons);

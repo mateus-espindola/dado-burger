@@ -81,20 +81,33 @@ void declareButtons(ButtonVec *screenButtons) {
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "SALAD", STACK, false);
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_BOTTLE_BUT_DELTA + PREPARE_BOTTLE_BUT_HEIGHT, prepare_bottle_button_rect, "BOTTLE", CLICK, true);
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_PROTEIN_BUT_DELTA + PREPARE_PROTEIN_BUT_HEIGHT, prepare_protein_button_rect, "PROTEIN", STACK, true);
-    prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 2, PREPARE_BREAD_BUT_DELTA + PREPARE_BREAD_BUT_WIDTH, prepare_bread_button_rect, "BREAD", PICK, false);
+    {
+        float breadDelta = PREPARE_BREAD_BUT_DELTA + PREPARE_BREAD_BUT_WIDTH;
+        setButton(prepareBut[prepare_start_index],     prepare_bread_button_rect.x,             prepare_bread_button_rect.y, prepare_bread_button_rect.width, prepare_bread_button_rect.height, "UPPER BREAD", PICK);
+        setButton(prepareBut[prepare_start_index + 1], prepare_bread_button_rect.x + breadDelta, prepare_bread_button_rect.y, prepare_bread_button_rect.width, prepare_bread_button_rect.height, "DOWN BREAD", PICK);
+        prepare_start_index += 2;
+    }
     setButton(prepareBut[prepare_start_index], PREPARE_BURGER_BUT_LEFT_X, PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
 
     int cook_start_index = 0;
-    Rectangle rect1 = { COOK_TOP_FRST_CLMN_LEFT_X, COOK_TOP_FRST_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    Rectangle rect2 = { COOK_TOP_SCND_CLMN_LEFT_X, COOK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    Rectangle rect3 = { OVEN_STACK_SCND_CLMN_LEFT_X, OVEN_STACK_TOP_SCND_Y, OVEN_SQR_BUTTON_SIZE, OVEN_SQR_BUTTON_SIZE };
-    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect1, "COOK", INSERT, true);
-    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect2, "COOK", INSERT, true);
-    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_SQR_BUTTON_COUNT, OVEN_SQR_BUTTON_STEP_Y, rect3, "STACK", STACK, true);
+    Rectangle rect1 = { OVEN_STACK_FIRTS_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    Rectangle rect2 = { OVEN_GRILL_FIRST_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    Rectangle rect3 = { OVEN_GRILL_SECOND_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    Rectangle rect4 = { OVEN_READIES_BUT_LEFT_X, OVEN_READIES_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect2, "COOK", INSERT, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect3, "COOK", INSERT, true);
+    cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect4, "STACK", STACK, true);
 
-    // setButton(ovenBut[0], COOK_TOP_1_LEFT_X, COOK_TOP_1_LEFT_Y, COOK_TOP_1_LEFT_W, COOK_TOP_1_LEFT_H, "COOK", INSERT);
-    // setButton(ovenBut[1], COOK_TOP_2_LEFT_X, COOK_TOP_2_LEFT_Y, COOK_TOP_2_LEFT_W, COOK_TOP_2_LEFT_H, "COOK", INSERT);
-    // setButton(ovenBut[2], COOK_TOP_3_LEFT_X, COOK_TOP_3_LEFT_Y, COOK_TOP_3_LEFT_W, COOK_TOP_3_LEFT_H, "COOK", INSERT);
+    int board_start_index = 0;
+    rect1.x -= BOARD_STACK_BUT_DELTA_X;
+    board_start_index = setSquareButtons(boardBut, board_start_index, 3, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    rect1.x += 2*BOARD_STACK_BUT_DELTA_X; // Aproveitar as constantes definidas acima neeeaaahhhhh
+    rect1.y = (WINDOW_HEIGHT/2) - (BOARD_STACK_BUT_HEIGHT + BOARD_STACK_BUT_DELTA_Y/2);
+    board_start_index = setSquareButtons(boardBut, board_start_index, 2, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    board_start_index = setSquareButtons(boardBut, board_start_index, 2, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect4, "STACK", STACK, true);
+    setButton(boardBut[board_start_index], BOARD_X, BOARD_Y, BOARD_W, BOARD_H, "CUTTING BOARD", INSERT);
+
 }
 
 void declareMenuButtons(ButtonVec &menuButtons) {
@@ -149,21 +162,6 @@ int nearestButtonIndex(const float playerX, const ButtonVec screenButtons) {
 
     return nearest;
 }
-
-// x e firstY sao o canto superior esquerdo do primeiro botao
-//Devolve o proximo indice livre do botao
-// int setCircleButtons(Button *buttons, int startInd, float x, float firstY, const char *text, ButtonType type) {
-//     for (int k = 0; k < CIRCLE_BUTTON_COUNT; k++) {
-//         setButton(buttons[startInd + k],
-//                   x,
-//                   firstY + k * CIRCLE_BUTTON_STEP_Y,
-//                   CIRCLE_BUTTON_DIAMETER,
-//                   CIRCLE_BUTTON_DIAMETER,
-//                   text,
-//                   type);
-//     }
-//     return startInd + CIRCLE_BUTTON_COUNT;
-// }
 
 int setSquareButtons(Button *buttons, int startInd, int quantity, int delta, Rectangle shape, const char *text, ButtonType type, bool vertical) {
     if (vertical) {
