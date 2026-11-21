@@ -205,5 +205,5 @@ float compare_hamburger_with_order(Stack& hamburger, LinkedList<Ingredient>& ord
         auxPtr = auxPtr->prox;
     }
 
-    return currentScore * 100 / desiredScore;
+    return currentScore / desiredScore;
 }
