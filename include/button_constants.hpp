@@ -2,6 +2,7 @@
 
 //BUTTON CONSTANTS
 #include "constants.hpp"
+#include "graphic_constants.hpp"
 #include <iostream>
 #define MAX_ACESS_DIST 300 //Distancia maxima que o player pode abrir uma parte do cenario
 

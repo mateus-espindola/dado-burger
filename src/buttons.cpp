@@ -5,6 +5,7 @@
 // #include "match_enums.hpp"
 // #include "../include/match.hpp"    // para STATE_QUANTITY, PREPARE, BOARD, OVEN
 #include "../include/button_constants.hpp"
+#include "../include/graphic_constants.hpp"
 #include "raylib.h"
 
 int buttonTargetCapacityOf(ButtonType type){

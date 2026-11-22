@@ -1,21 +1,29 @@
 #include "../include/sprites.hpp"
 
-void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint) {
+float spriteDrawnWidth(const Sprite& sprite, float targetHeight) {
+    return sprite.width * (targetHeight / (float)sprite.height);
+}
+
+void spriteDraw(Sprite& sprite, Vector2 pos, float targetHeight, Color tint) {
+    float drawnWidth = spriteDrawnWidth(sprite, targetHeight);
+
     DrawTexturePro(
         sprite.texture,
         (Rectangle){0, 0, (float)sprite.width, (float)sprite.height},
-        (Rectangle){pos.x, pos.y, (float)sprite.width * scale, (float)sprite.height * scale},
+        (Rectangle){pos.x, pos.y, drawnWidth, targetHeight},
         (Vector2){0, 0},
         0.0f,
         tint
     );
 }
 
-void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint) {
+void warDetirps(Sprite& sprite, Vector2 pos, float targetHeight, Color tint) {
+    float drawnWidth = spriteDrawnWidth(sprite, targetHeight);
+
     DrawTexturePro(
         sprite.texture,
         (Rectangle){(float)sprite.width, 0, (float)sprite.width * -1, (float)sprite.height},
-        (Rectangle){pos.x, pos.y, (float)sprite.width * scale, (float)sprite.height * scale},
+        (Rectangle){pos.x, pos.y, drawnWidth, targetHeight},
         (Vector2){0, 0},
         0.0f,
         tint

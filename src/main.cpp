@@ -6,6 +6,7 @@
 #include "../include/game.hpp"
 // #include "../include/data_structures.hpp"
 #include "../include/graphics.hpp"
+#include "../include/graphic_constants.hpp"
 // #include "raylib.h"
 
 int main(int argc, char* argv[]) {

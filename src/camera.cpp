@@ -4,6 +4,7 @@
 #include "../include/match_enums.hpp"
 #include "../include/camera.hpp"
 #include "../include/world.hpp"
+#include "../include/graphic_constants.hpp"
 
 void setKitchenCamera(Match& match){
 

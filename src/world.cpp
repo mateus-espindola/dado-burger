@@ -1,12 +1,13 @@
 #include "../include/world.hpp"
 #include "../include/match.hpp"
+#include "../include/graphic_constants.hpp"
 
 //Returns the width of the scene. It is used to call the camera function with the proper scene size to find target and things like that
 float worldWidthOf(const Match &match) {
     switch (match.screen) {
         case KITCHEN:
         case FRIDGE:
-            return match.spriteMatch[SPR_BACKGROUND].width * GAME_SCALE;
+            return spriteDrawnWidth(match.spriteMatch[SPR_BACKGROUND], WINDOW_HEIGHT);
         case OVEN:
             return STOVE_WORLD_WIDTH;
         default:
@@ -23,7 +24,7 @@ World worldOf(MatchScreen s) {
 
 //Returns the limit of the scene. It is used to call the camera function with the proper scene size to find target and things like that
 Limits playerLimitsOf(const Match &match) {
-    float halfW = (match.player.object.sprite.width * GAME_SCALE) / 2;
+    float halfW = spriteDrawnWidth(match.player.object.sprite, PLAYER_HEIGHT) / 2;
 
     switch (match.screen) {
         case OVEN: { //Those are necessary because the compiler has troubles with the variables initialized in the case

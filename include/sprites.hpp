@@ -18,9 +18,13 @@ struct Sprite {
 };
 
 
-void spriteDraw(Sprite& sprite, Vector2 pos, float scale, Color tint);
+// Largura na tela quando o sprite e desenhado com essa altura, preservando a proporcao
+// original da textura. Assim o tamanho final nao depende da resolucao do PNG carregado.
+float spriteDrawnWidth(const Sprite& sprite, float targetHeight);
 
-void warDetirps(Sprite& sprite, Vector2 pos, float scale, Color tint);
+void spriteDraw(Sprite& sprite, Vector2 pos, float targetHeight, Color tint);
+
+void warDetirps(Sprite& sprite, Vector2 pos, float targetHeight, Color tint);
 
 void loadSpritesheet(Sprite sprites[]);
 

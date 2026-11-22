@@ -5,6 +5,7 @@
 #include "../include/graphics.hpp"
 #include "../include/camera.hpp"
 #include "../include/button_constants.hpp"
+#include "../include/graphic_constants.hpp"
 #include "../include/inputs.hpp"
 #include "raylib.h"
 
@@ -174,7 +175,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
             Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), match.camera);
             drawCostumers(match.costumer_line, match.costumer_counter, mouseWorld);
 
-            spriteDraw(match.spriteMatch[SPR_BACKGROUND], (Vector2){0, 0}, GAME_SCALE, WHITE);
+            spriteDraw(match.spriteMatch[SPR_BACKGROUND], (Vector2){0, 0}, WINDOW_HEIGHT, WHITE);
 
             int visible = -1;   //Index of the visible button in drawNearesBut
 
@@ -549,7 +550,8 @@ void drawStackButtons(const ButtonVec& screenButtons) {
 }
 
 Vector2 getSpritePos(Object& object) {
-    return (Vector2){object.pos.x - (object.sprite.width * GAME_SCALE) / 2, object.pos.y - (object.sprite.height * GAME_SCALE) / 2};
+    float drawnWidth = spriteDrawnWidth(object.sprite, PLAYER_HEIGHT);
+    return (Vector2){object.pos.x - drawnWidth / 2, object.pos.y - PLAYER_HEIGHT / 2};
 }
 
 void hitboxDraw(const Object& object) {
@@ -561,10 +563,10 @@ void playerDraw(Player& player) {
     Vector2 spritePos = getSpritePos(player.object);
 
     if (player.direction == DIR_RIGHT) {
-        spriteDraw(player.object.sprite, spritePos, GAME_SCALE, WHITE);
+        spriteDraw(player.object.sprite, spritePos, PLAYER_HEIGHT, WHITE);
     }
     if (player.direction == DIR_LEFT) {
-        warDetirps(player.object.sprite, spritePos, GAME_SCALE, WHITE);
+        warDetirps(player.object.sprite, spritePos, PLAYER_HEIGHT, WHITE);
     }
 }
 
