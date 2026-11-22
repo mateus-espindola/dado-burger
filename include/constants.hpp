@@ -29,14 +29,14 @@ constexpr int INGREDIENT_RADIUS = 3*16.0f;
 
 
 //Costumer constants
-constexpr float AVERAGE_COSTUMER_PATIENCE = FPS* 10.0f;
+constexpr float AVERAGE_COSTUMER_PATIENCE = FPS* 60.0f;
 constexpr float COSTUMER_PATIENCE_DECAY = 1.0f; // por frame, cliente no balcao cai nisso; na fila cai na metade
 
 constexpr float COSTUMER_TIMER_MAX = FPS * 3.0f;
 constexpr float COSTUMER_TIMER_SPEED = 1.0f;
 
 constexpr int MAX_COSTUMER_QUEUE_SIZE = 5;
-constexpr int COSTUMERS_PER_MATCH = 15;
+constexpr int COSTUMERS_PER_MATCH = 10;
 constexpr int COSTUMER_LEAVE_TOLERANCE = COSTUMERS_PER_MATCH * 0.7;
 
 constexpr float FIRST_COSTUMER_IN_QUEUE_POS_X = 900.0f;

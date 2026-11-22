@@ -269,28 +269,30 @@ void ambientProcess(Game& game, Vector2 mouse){
     printf("%d ", match.player.inventory[match.player.selectedSlot].capacity);
     printf("%d\n", match.player.inventory[match.player.selectedSlot].type);
 
-    if (IsKeyPressed(KEY_TAB) && match.screen != PAUSED) {
-        match.screenBeforePause = match.screen;
-        match.screen = PAUSED;
-    }
-
-    if (match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH) {
-        if (IsKeyPressed(KEY_F)) {
-            finishCurrentMatch(game);
-        }
-    }
-
-    if (IsKeyDown(KEY_M)) match.player.money += 5;
-
-    if (match.costumer_line.costumers_that_left > COSTUMERS_PER_MATCH - COSTUMER_LEAVE_TOLERANCE) {
-        loseMatch(match);
-    }
 
     // 1. update
-    if (match.screen != PAUSED) {
+    if (match.screen != PAUSED && match.screen != VICTORY && match.screen != DEFEAT) {
         cookAll(match.buttonsVec);
         processRottingIngredients(match.buttonsVec);
         processCostumers(match.costumer_line, match.costumer_counter, game.avl_orders, game.hashtable_orders);
+
+        if (IsKeyPressed(KEY_TAB)) {
+            match.screenBeforePause = match.screen;
+            match.screen = PAUSED;
+        }
+
+        if (match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH) {
+            if (IsKeyPressed(KEY_F)) {
+                finishCurrentMatch(game);
+            }
+        }
+
+        if (IsKeyDown(KEY_M)) match.player.money += 5;
+
+        if (match.costumer_line.costumers_that_left > COSTUMERS_PER_MATCH - COSTUMER_LEAVE_TOLERANCE) {
+            loseMatch(match);
+            matchEnd(match); // mesma limpeza que finishCurrentMatch faz no caminho de vitoria
+        }
     }
 
     // Player/camera so existem nas telas com mundo/camera propria (ver usesCamera()).
