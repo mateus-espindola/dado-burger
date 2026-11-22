@@ -152,6 +152,7 @@ void processButClick(Match& match, Button& button) {
             while(inventory.size > 0){
                 stack_pop(inventory);
             }
+            inventory.capacity = 1;
         break;
 
         case INSERT:
@@ -236,6 +237,15 @@ void processButClick(Match& match, Button& button) {
         case STACK: {
             if (inventory.type == NONE) {
                 if (butStack.type == BURGER) {
+                    if (IsKeyDown(KEY_LEFT_CONTROL)) {
+                        // Ctrl: tira so o ingrediente do topo, nao o hamburguer inteiro
+                        Ingredient aux;
+                        stack_pop(butStack, aux);
+                        stack_push(inventory, aux);
+
+                        break;
+                    }
+
                     inventory.capacity = butStack.size;
                     transferAllBetweenStacks(butStack, inventory);
                     inventory.type = BURGER;
