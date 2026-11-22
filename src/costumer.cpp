@@ -88,8 +88,12 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
             if (aux->data.leaving) aux->data.type = EMPTY; // chegou fora da tela, libera o balcao
         }
         // na fila a paciencia cai na metade do ritmo normal
-        aux->data.patience_time -= COSTUMER_PATIENCE_DECAY / 2.0f;
-        if (aux->data.patience_time <= 0.0f) {
+        // so decai enquanto nao esta saindo: senao fica eternamente <= 0 e o "if" abaixo
+        // (sem esse guard) incrementaria costumers_that_left em todo frame da animacao de saida
+        if (!aux->data.leaving) aux->data.patience_time -= COSTUMER_PATIENCE_DECAY / 2.0f;
+
+        if (!aux->data.leaving && aux->data.patience_time <= 0.0f) {
+            queue.costumers_that_left++;
             aux->data.leaving = true;
             aux->data.ideal_pos_x = -200.0f;
         }
@@ -132,11 +136,40 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
 
         // no balcao a paciencia cai no ritmo normal, mas para de cair depois de atendido
         if (!counter[i].leaving) counter[i].patience_time -= COSTUMER_PATIENCE_DECAY;
-        if (counter[i].patience_time <= 0.0f ){
+        if (!counter[i].leaving && counter[i].patience_time <= 0.0f) {
+            queue.costumers_that_left++;
             counter[i].leaving = true;
             counter[i].ideal_pos_x = -200.0f;
         }
     }
+}
+
+// Empilha o pedido na mesma ordem fisica que a montagem normal produziria: desce a lista
+// recursivamente primeiro e so empilha ao desenrolar, entao order.start (topo do pedido)
+// acaba virando o topo da pilha tambem - igual ao que compare_hamburger_with_order espera.
+static void pushOrderOntoStack(Stack& burger, LinkedList_node<Ingredient>* node) {
+    if (node == nullptr) return;
+    pushOrderOntoStack(burger, node->prox);
+    stack_push(burger, node->data);
+}
+
+// Cheat/debug: monta um hamburguer identico ao pedido do cliente embaixo do mouse e entrega
+bool cheatGivePerfectBurger(Costumer counter[], Player& player, Vector2 mouseWorld) {
+    for (int i = 0; i < COUNTER_SIZE; i++) {
+        if (counter[i].type == EMPTY || counter[i].leaving) continue;
+        if (!CheckCollisionPointCircle(mouseWorld, counter[i].obj.pos, counter[i].obj.radius)) continue;
+
+        Stack& inventory = player.inventory[player.selectedSlot];
+        stack_destroy(inventory); // limpa o que tiver na mao antes de montar o perfeito
+
+        pushOrderOntoStack(inventory, counter[i].order.start);
+        inventory.type = BURGER; // stack_push so marca isso sozinho se a pilha estava vazia
+        inventory.capacity = lengthLinkedList(counter[i].order);
+
+        return giveBurgerToCostumer(counter, player, mouseWorld);
+    }
+
+    return false;
 }
 
 bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld) {

@@ -90,7 +90,6 @@ void processMenuButClick(Game& game, Button& button){
     if      (strcmp(button.text, "PLAY") == 0)        {game.state = PLAYING; matchStart(game.current_match); }
     else if (strcmp(button.text, "HOW TO PLAY") == 0) game.state = HOW_TO_PLAY;
     else if (strcmp(button.text, "HISTORY") == 0)     { game.state = HISTORY; game.historyPage = 0; }
-    else if (strcmp(button.text, "SETTINGS") == 0)    game.state = SETTINGS;
     else if (strcmp(button.text, "QUIT") == 0)        game.quit = true;
 }
 
@@ -156,11 +155,6 @@ void gameProcess(Game& game){
 
         case HISTORY:
             historyProcess(game, mouse);
-        break;
-
-        case SETTINGS:
-            // settingsProcess();
-            // drawSettings();
         break;
 
         case PLAYING:
@@ -286,7 +280,11 @@ void ambientProcess(Game& game, Vector2 mouse){
         }
     }
 
-    if (IsKeyPressed(KEY_M)) match.player.money += 500;
+    if (IsKeyDown(KEY_M)) match.player.money += 5;
+
+    if (match.costumer_line.costumers_that_left > COSTUMERS_PER_MATCH - COSTUMER_LEAVE_TOLERANCE) {
+        loseMatch(match);
+    }
 
     // 1. update
     if (match.screen != PAUSED) {
@@ -337,6 +335,11 @@ void ambientProcess(Game& game, Vector2 mouse){
             if (mouseKeyLeftClicked()) {
                 Vector2 mouseWorld = GetScreenToWorld2D(mouse, match.camera);
                 giveBurgerToCostumer(match.costumer_counter, match.player, mouseWorld);
+            }
+
+            if (IsKeyPressed(KEY_P)) {
+                Vector2 mouseWorld = GetScreenToWorld2D(mouse, match.camera);
+                cheatGivePerfectBurger(match.costumer_counter, match.player, mouseWorld);
             }
         } break;
         case PREPARE:
@@ -391,12 +394,7 @@ void ambientProcess(Game& game, Vector2 mouse){
 void finishCurrentMatch(Game& game) {
     Match& match  = game.current_match;
 
-    if (match.player.money < match.profitGoal) {
-        loseMatch(match);
-    }
-    else {
-        winMatch(match);
-    }
+    winMatch(match);
 
     matchEnd(match);
 

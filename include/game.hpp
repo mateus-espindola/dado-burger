@@ -17,7 +17,6 @@ enum GameState{
     MENU,
     HOW_TO_PLAY,
     HISTORY,
-    SETTINGS,
     PLAYING
 
 };
@@ -55,7 +54,6 @@ void unloadSpritesheet(Sprite sprites[]);
 void menuProcess(Game& game, Vector2 mouse);
 // void tutorialProcess();
 void historyProcess(Game& game, Vector2 mouse);
-// void settingsProcess();
 
 //Movida para match.hpp
 // void matchProcess(Match& match, Sprite background);

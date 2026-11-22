@@ -16,6 +16,7 @@ struct Queue {
     int size;
 
     int costumers_generated;
+    int costumers_that_left;
     float costumer_timer; // We did the queue generic but realistically it's worth it to store costumer-related information
 };
 
@@ -25,6 +26,7 @@ void initializeQueue(Queue<T>& queue) {
     queue.last = nullptr;
     queue.size = 0;
     queue.costumers_generated = 0;
+    queue.costumers_that_left = 0;
     queue.costumer_timer = COSTUMER_TIMER_MAX;
     return;
 }

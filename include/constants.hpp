@@ -20,7 +20,6 @@ constexpr int COUNTER_SIZE = 3;
 constexpr int INVENTORY_SLOTS = 3;
 
 constexpr int MONEY_PER_PERFECT_BURGER = 100;
-constexpr int PROFIT_GOAL = MONEY_PER_PERFECT_BURGER * 6;
 
 constexpr int HISTORY_NAME_BUFFER = 50;
 constexpr int MIN_ASCII_CODE_SUPPORTED = 32;
@@ -37,11 +36,12 @@ constexpr float COSTUMER_TIMER_MAX = FPS * 3.0f;
 constexpr float COSTUMER_TIMER_SPEED = 1.0f;
 
 constexpr int MAX_COSTUMER_QUEUE_SIZE = 5;
-constexpr int COSTUMERS_PER_MATCH = 10;
+constexpr int COSTUMERS_PER_MATCH = 15;
+constexpr int COSTUMER_LEAVE_TOLERANCE = COSTUMERS_PER_MATCH * 0.7;
 
 constexpr float FIRST_COSTUMER_IN_QUEUE_POS_X = 900.0f;
 constexpr float COSTUMER_POS_Y = WINDOW_HEIGHT / 2;
-constexpr float COSTUMER_COUNTER_POS_X[COUNTER_SIZE] = {1700, 1600, 1500};
+constexpr float COSTUMER_COUNTER_POS_X[COUNTER_SIZE] = {1600, 1400, 1200};
 
 constexpr float COSTUMER_DELTA = 130.0f;
 constexpr float COSTUMER_SPEED = 5.0f;

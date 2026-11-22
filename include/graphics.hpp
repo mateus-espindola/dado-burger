@@ -48,7 +48,9 @@ void drawMoney(const Player &player);
 
 void drawFinishMatchHint();
 
-void drawHUD(const Player &player, bool showFinishHint = false);
+void drawCostumersLeftX(int costumersThatLeft);
+
+void drawHUD(const Player &player, bool showFinishHint = false, int costumersThatLeft = 0);
 
 void drawIngredient(Vector2 center, float radius, const Ingredient& ing);
 

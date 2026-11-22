@@ -8,7 +8,6 @@ void matchStart(Match& match) {
     }
 
     match.screen = KITCHEN;
-    match.profitGoal = PROFIT_GOAL;
 
     setIngredients(match.buttonsVec, STATE_QUANTITY);
 

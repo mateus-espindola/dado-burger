@@ -154,7 +154,7 @@ constexpr Rectangle fridge_item_scnd_row_but_rect = {FRIDGE_SCND_ROW, FRIDGE_SCN
 #define PREPARE_BUT_HEIGHT 100
 
 // Main menu buttons
-#define BUTTONS_MENU 5
+#define BUTTONS_MENU 4
 
 constexpr int MENU_BUTTON_WIDTH  = 300;
 constexpr int MENU_BUTTON_HEIGHT = 70;

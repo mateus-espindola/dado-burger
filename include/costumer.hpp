@@ -32,4 +32,5 @@ void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl
 bool callCostumer(Queue<Costumer>& queue, Costumer counter[]);
 std::string costumerOrderString(const Costumer& cost);
 bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld);
+bool cheatGivePerfectBurger(Costumer counter[], Player& player, Vector2 mouseWorld);
 float compare_hamburger_with_order(Stack& hamburger, LinkedList<Ingredient>& order);

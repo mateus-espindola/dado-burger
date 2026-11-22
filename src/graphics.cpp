@@ -193,7 +193,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
         EndMode2D();
 
-        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
+        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH, match.costumer_line.costumers_that_left);
 
     EndDrawing();
 }
@@ -206,7 +206,7 @@ void drawPrepare(Match &match, int butUnderMouseInd) {
 
     drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
-    drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
+    drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH, match.costumer_line.costumers_that_left);
 
     EndDrawing();
 }
@@ -244,7 +244,7 @@ void drawBoard(Match match, int butUnderMouseInd) {
         const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
         drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
-        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
+        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH, match.costumer_line.costumers_that_left);
 
     EndDrawing();
 }
@@ -305,7 +305,7 @@ void drawStove(Match& match, int butUnderMouseInd) {
 
         EndMode2D();
 
-        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH);
+        drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH, match.costumer_line.costumers_that_left);
 
     EndDrawing();
 }
@@ -415,10 +415,36 @@ void drawFinishMatchHint() {
     DrawText(text, (int)INV_X, (int)(INV_Y + INV_SLOT_SIZE + 10), fs, YELLOW);
 }
 
+#define LEFT_X_SIZE 20
+#define LEFT_X_GAP  10
+#define LEFT_X_Y    20
+#define LEFT_X_THICK 4
+
+// Um X vermelho no topo-meio da tela pra cada cliente que desistiu (costumers_that_left),
+// limitado a COSTUMERS_PER_MATCH - COSTUMER_LEAVE_TOLERANCE (a margem antes de perder a partida)
+void drawCostumersLeftX(int costumersThatLeft) {
+    int maxX = COSTUMERS_PER_MATCH - COSTUMER_LEAVE_TOLERANCE;
+    if (maxX <= 0) return;
+
+    int count = (costumersThatLeft < maxX) ? costumersThatLeft : maxX;
+
+    int totalWidth = maxX * LEFT_X_SIZE + (maxX - 1) * LEFT_X_GAP;
+    int startX = WINDOW_WIDTH / 2 - totalWidth / 2;
+
+    for (int i = 0; i < count; i++) {
+        float x = (float)(startX + i * (LEFT_X_SIZE + LEFT_X_GAP));
+        float y = (float)LEFT_X_Y;
+
+        DrawLineEx({ x, y }, { x + LEFT_X_SIZE, y + LEFT_X_SIZE }, LEFT_X_THICK, RED);
+        DrawLineEx({ x + LEFT_X_SIZE, y }, { x, y + LEFT_X_SIZE }, LEFT_X_THICK, RED);
+    }
+}
+
 // Tudo que fica sempre na tela durante a partida
-void drawHUD(const Player &player, bool showFinishHint) {
+void drawHUD(const Player &player, bool showFinishHint, int costumersThatLeft) {
     drawInventory(player);
     drawMoney(player);
+    drawCostumersLeftX(costumersThatLeft);
 
     if (showFinishHint) drawFinishMatchHint();
 }

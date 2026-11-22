@@ -40,8 +40,6 @@ struct Match{
     Camera2D camera;
     Player player;
 
-    int profitGoal;
-
     char nameInput[HISTORY_NAME_BUFFER]; // nome sendo digitado na tela de VICTORY
     int nameInputLen;
 
