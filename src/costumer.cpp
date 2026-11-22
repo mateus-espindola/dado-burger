@@ -182,7 +182,7 @@ bool giveBurgerToCostumer(Costumer counter[], Player& player, Vector2 mouseWorld
 
         float hambAccuracy = compare_hamburger_with_order(inventory, counter[i].order);
 
-        player.money += (int) hambAccuracy * MONEY_PER_PERFECT_BURGER;
+        player.money += (int) (hambAccuracy * MONEY_PER_PERFECT_BURGER);
 
         stack_destroy(inventory); // consome o hamburguer da mao (ja deixa type/size zerados)
         inventory.capacity = 1;  // devolve a capacidade padrao da mao (foi ampliada pra caber o hamburguer)
