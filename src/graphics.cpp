@@ -175,7 +175,7 @@ void drawKitchen(Match& match, int butUnderMouseInd){
             Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), match.camera);
             drawCostumers(match.costumer_line, match.costumer_counter, mouseWorld);
 
-            spriteDraw(match.spriteMatch[SPR_BACKGROUND], (Vector2){0, 0}, WINDOW_HEIGHT, WHITE);
+            spriteDraw(match.spriteMatch[SPR_KITCHEN], (Vector2){0, 0}, WINDOW_HEIGHT, WHITE);
 
             int visible = -1;   //Index of the visible button in drawNearesBut
 

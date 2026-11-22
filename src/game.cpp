@@ -158,7 +158,6 @@ void gameProcess(Game& game){
         break;
 
         case PLAYING:
-            // matchProcess(game.current_match, game.current_match.spriteMatch[SPR_BACKGROUND], mouse);
             ambientProcess(game, mouse); //Mostra os botoes e desenha o fundo de acordo com o ambiente
         break;
 

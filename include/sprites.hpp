@@ -7,7 +7,7 @@
 /* ============================ */
 
 enum SpriteType {
-    SPR_BACKGROUND,
+    SPR_KITCHEN,
     SPR_PLAYER,
     QUANTITY_OF_SPRITES
 };

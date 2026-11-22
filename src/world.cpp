@@ -7,7 +7,7 @@ float worldWidthOf(const Match &match) {
     switch (match.screen) {
         case KITCHEN:
         case FRIDGE:
-            return spriteDrawnWidth(match.spriteMatch[SPR_BACKGROUND], WINDOW_HEIGHT);
+            return spriteDrawnWidth(match.spriteMatch[SPR_KITCHEN], WINDOW_HEIGHT);
         case OVEN:
             return STOVE_WORLD_WIDTH;
         default:

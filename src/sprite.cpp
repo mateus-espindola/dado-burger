@@ -33,7 +33,7 @@ void warDetirps(Sprite& sprite, Vector2 pos, float targetHeight, Color tint) {
 void loadSpritesheet(Sprite sprites[]) {
     // Array apenas com os caminhos, na mesma ordem dos enums (0, 1, ...)
     const char *paths[QUANTITY_OF_SPRITES] = {
-        [SPR_BACKGROUND] = "assets/sprites/background.png",
+        [SPR_KITCHEN] = "assets/sprites/kitchen.png",
         [SPR_PLAYER]     = "assets/sprites/player.png"
     };
 
