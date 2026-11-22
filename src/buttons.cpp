@@ -44,10 +44,9 @@ void correctButName(Button *b){
     snprintf(b[2].text, sizeof(b[2].text), "%s", "TOMATO");
     snprintf(b[3].text, sizeof(b[3].text), "%s", "ONION");
     snprintf(b[4].text, sizeof(b[4].text), "%s", "MEAT");
-    snprintf(b[5].text, sizeof(b[5].text), "%s", "VEGAN PROTEIN");
-    snprintf(b[6].text, sizeof(b[6].text), "%s", "BACON");
-    snprintf(b[7].text, sizeof(b[7].text), "%s", "SWISS CHEESE");
-    snprintf(b[8].text, sizeof(b[8].text), "%s", "CHEDDAR");
+    snprintf(b[5].text, sizeof(b[5].text), "%s", "BACON");
+    snprintf(b[6].text, sizeof(b[6].text), "%s", "SWISS CHEESE");
+    snprintf(b[7].text, sizeof(b[7].text), "%s", "CHEDDAR");
 
 }
 
@@ -73,16 +72,15 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(kitchenBut[3], TRASH_KITCHEN_LEFT_X, TRASH_KITCHEN_LEFT_Y, TRASH_KITCHEN_LEFT_W, TRASH_KITCHEN_LEFT_H, "TRASH", DROP);
     setButton(kitchenBut[4], COSTUMER_BELL_LEFT_X, COSTUMER_BELL_LEFT_Y, COSTUMER_BELL_WIDTH, COSTUMER_BELL_HEIGHT, COSTUMER_BELL_TEXT, CLICK);
 
-    int fridgeIndex = 0;
-    fridgeIndex = setSquareButtons(fridgeBut, fridgeIndex, 4, KITCHEN_BUTTON_DELTA, fridge_item_frst_row_but_rect, "NONE", PICK, false);
-    fridgeIndex = setSquareButtons(fridgeBut, fridgeIndex, 5, KITCHEN_BUTTON_DELTA, fridge_item_scnd_row_but_rect, "NONE", PICK, false);
-    setButton(fridgeBut[fridgeIndex], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
-
-    correctButName(fridgeBut);
-
-    // setButton(fridgeBut[0], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "tTOMATO", PICK);
-    // setButton(fridgeBut[1], LETUCE_LEFT_X, LETUCE_LEFT_Y, LETUCE_LEFT_W, LETUCE_LEFT_H, "aLETUCE", PICK);
-    // setButton(fridgeBut[2], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
+    setButton(fridgeBut[0], MEAT_LEFT_X, MEAT_LEFT_Y, MEAT_LEFT_W, MEAT_LEFT_H, "MEAT", PICK);
+    setButton(fridgeBut[1], BACON_LEFT_X, BACON_LEFT_Y, BACON_LEFT_W, BACON_LEFT_H, "BACON", PICK);
+    setButton(fridgeBut[2], TOMATO_LEFT_X, TOMATO_LEFT_Y, TOMATO_LEFT_W, TOMATO_LEFT_H, "TOMATO", PICK);
+    setButton(fridgeBut[3], SWISS_CHEESE_LEFT_X, SWISS_CHEESE_LEFT_Y, SWISS_CHEESE_LEFT_W, SWISS_CHEESE_LEFT_H, "SWISS CHEESE", PICK);
+    setButton(fridgeBut[4], EGGS_LEFT_X, EGGS_LEFT_Y, EGGS_LEFT_W, EGGS_LEFT_H, "EGGS", PICK);
+    setButton(fridgeBut[5], ONION_LEFT_X, ONION_LEFT_Y, ONION_LEFT_W, ONION_LEFT_H, "ONION", PICK);
+    setButton(fridgeBut[6], LETTUCE_LEFT_X, LETTUCE_LEFT_Y, LETTUCE_LEFT_W, LETTUCE_LEFT_H, "LETTUCE", PICK);
+    setButton(fridgeBut[7], CHEDDAR_LEFT_X, CHEDDAR_LEFT_Y, CHEDDAR_LEFT_W, CHEDDAR_LEFT_H, "CHEDDAR", PICK);
+    setButton(fridgeBut[8], TRASH_FRIDGE_LEFT_X, TRASH_FRIDGE_LEFT_Y, TRASH_FRIDGE_LEFT_W, TRASH_FRIDGE_LEFT_H, "TRASH", DROP);
 
     int prepare_start_index = 0;
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "SALAD", STACK, false);

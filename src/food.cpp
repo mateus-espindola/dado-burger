@@ -18,8 +18,6 @@ IngredientType charToIngType(char c) {
         case 'm': return MUSTARD;
         case 'M': return MEAT;
         case 'n': return MEAT;
-        case 'V': return VEGAN_PROTEIN;
-        case 'v': return VEGAN_PROTEIN;
         case 'E': return EGG;
         case 'o': return EGG;
         case 'P': return PICKLES;
@@ -42,7 +40,6 @@ IngredientType charToIngType(char c) {
 int perishTimeOf(IngredientType type) {
     switch (type) {
         case MEAT:
-        case VEGAN_PROTEIN:
         case BACON:
         case EGG:
             return COOKABLE_PERISH_TIME;
@@ -59,7 +56,6 @@ CookPoint cookingStateOf(IngredientType type) {
         case LETTUCE:
         case ONION: return NEEDS_TO_CUT;
         case MEAT:
-        case VEGAN_PROTEIN:
         case BACON:
         case EGG:     return RAW;
         default:      return READY;
@@ -179,7 +175,6 @@ void cookAll(ButtonVec *butonVec) {
 
             switch(b.target.type){
                 case MEAT:
-                case VEGAN_PROTEIN:
                     cookMeat(ing);
                 break;
                 case EGG:

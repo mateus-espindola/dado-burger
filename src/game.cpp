@@ -250,15 +250,20 @@ void ambientProcess(Game& game, Vector2 mouse){
 
     Match &match = game.current_match;
 
-    // PAUSED nao tem mundo/camera propria; pular a correcao evita acionar o assert de
-    // correctCamera quando se pausa a partir do OVEN (unico MatchScreen com WORLD_OVEN)
-    if (match.screen != PAUSED && match.prevScreen != PAUSED && sceneChanged(match.screen, match.prevScreen))
+    // PAUSED/VICTORY/DEFEAT nao tem mundo/camera propria e podem ser alcancados direto
+    // do OVEN (unico MatchScreen com WORLD_OVEN) via TAB ou finishCurrentMatch. Pular a
+    // correcao nesses casos evita acionar o assert de correctCamera (que so aceita
+    // transicoes de/pra OVEN passando por KITCHEN/FRIDGE).
+    bool noWorldScreen        = match.screen     == PAUSED || match.screen     == VICTORY || match.screen     == DEFEAT;
+    bool noWorldPrevScreen    = match.prevScreen == PAUSED || match.prevScreen == VICTORY || match.prevScreen == DEFEAT;
+
+    if (!noWorldScreen && !noWorldPrevScreen && sceneChanged(match.screen, match.prevScreen))
         correctCamera(match);
     match.prevScreen = match.screen;
     // printf("%d\n", match.player.selectedSlot);
 
     if (match.screen == KITCHEN || match.screen == FRIDGE)
-        match.screen = (match.player.object.pos.x > 4800) ? FRIDGE : KITCHEN;
+        match.screen = (match.player.object.pos.x > KITCHEN_FRIDGE_BOUNDARY_X) ? FRIDGE : KITCHEN;
 
     int selectedInvSlot = changeInvSlot();
     if(selectedInvSlot != -1 && selectedInvSlot < INVENTORY_SLOTS)

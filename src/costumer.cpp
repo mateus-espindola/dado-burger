@@ -22,7 +22,7 @@ void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const A
         Ingredient ing;
         initIngredient(ing, ingredient_string[i]);
 
-        if (ing.type == MEAT || ing.type == VEGAN_PROTEIN) {
+        if (ing.type == MEAT) {
             CookPoint meat_point = (CookPoint) GetRandomValue(RARE, WELL_DONE);
             ing.cook_state.cookInfo[0].cookPoint = meat_point;
             ing.cook_state.cookInfo[1].cookPoint = meat_point;

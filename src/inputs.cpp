@@ -43,14 +43,14 @@ MatchScreen screenFromName(const char *name)
 
 
 static bool isCookable(IngredientType t) {
-    return t == MEAT || t == VEGAN_PROTEIN || t == BACON || t == EGG;
+    return t == MEAT || t == BACON || t == EGG;
 }
 
 bool isCuttable(IngredientType t) {
     return t == TOMATO || t == ONION || t == SWISS_CHEESE || t == CHEDDAR || t == LETTUCE;
 }
 bool canFlip(IngredientType t){
-    return t == MEAT || t == VEGAN_PROTEIN;
+    return t == MEAT;
 }
 
 // Gate da acao de Ctrl+click dentro do INSERT: cada tela tem sua propria acao manual

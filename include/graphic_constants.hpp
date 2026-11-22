@@ -7,9 +7,19 @@ constexpr int WINDOW_WIDTH = 1280;
 constexpr int WINDOW_HEIGHT = 720;
 constexpr float GAME_SCALE = ((float) WINDOW_HEIGHT) / 96.0f;
 
+// Altura nativa (em pixels) do canvas do kitchen.png no Aseprite. O fundo e desenhado
+// com altura travada em WINDOW_HEIGHT preservando a proporcao (spriteDrawnWidth), entao
+// qualquer posicao/tamanho medido direto no Aseprite (em pixels do canvas) corresponde
+// a essa mesma fracao da tela: so multiplicar por KITCHEN_PNG_SCALE.
+// Ex.: sino em (237, 74), 11x7 no Aseprite -> na tela fica em
+// (237*KITCHEN_PNG_SCALE, 74*KITCHEN_PNG_SCALE), tamanho (11*KITCHEN_PNG_SCALE, 7*KITCHEN_PNG_SCALE).
+// Atualiza KITCHEN_PNG_HEIGHT se o canvas for redimensionado de novo no Aseprite.
+constexpr float KITCHEN_PNG_HEIGHT = 120.0f;
+constexpr float KITCHEN_PNG_SCALE  = WINDOW_HEIGHT / KITCHEN_PNG_HEIGHT;
+
 constexpr int INGREDIENT_RADIUS = 3*16.0f;
 
-constexpr float PLAYER_HEIGHT = 0.6 * WINDOW_HEIGHT;
+constexpr float PLAYER_HEIGHT = 0.5 * WINDOW_HEIGHT;
 
 // Barra de decaimento desenhada do lado do heap quando o mouse esta por cima
 constexpr float ROT_BAR_W   = 10.0f;

@@ -322,7 +322,6 @@ static Color ingredientColor(IngredientType t) {
         case KETCHUP:       return MAROON;
         case MUSTARD:       return YELLOW;
         case MEAT:          return BROWN;
-        case VEGAN_PROTEIN: return DARKGREEN;
         case EGG:           return RAYWHITE;
         case PICKLES:       return LIME;
         case CHEDDAR:       return ORANGE;
@@ -343,7 +342,6 @@ static const char* ingredientName(IngredientType t) {
         case KETCHUP:       return "Ketchup";
         case MUSTARD:       return "Mustard";
         case MEAT:          return "Meat";
-        case VEGAN_PROTEIN: return "Vegan Protein";
         case EGG:           return "Egg";
         case PICKLES:       return "Pickles";
         case CHEDDAR:       return "Cheddar";
@@ -454,7 +452,7 @@ void drawHUD(const Player &player, bool showFinishHint, int costumersThatLeft) {
 static const char* shortCookLabel(const Ingredient& ing) {
     CookPoint point = practicalCookingStateOf(ing);
 
-    if (ing.type == MEAT || ing.type == VEGAN_PROTEIN) {
+    if (ing.type == MEAT) {
         switch (point) {
             case RARE:        return "Rare";
             case MEDIUM_RARE: return "Medium";
@@ -641,7 +639,7 @@ void drawCookInfo(Rectangle button, const CookState& cs, IngredientType type) {
     float rightEdge = button.x - margin;
     float y = button.y;
 
-    const bool twoSided = (type == MEAT || type == VEGAN_PROTEIN);
+    const bool twoSided = (type == MEAT);
 
     if (twoSided) {
         // índice 0 = Baixo, índice 1 = Cima
@@ -821,7 +819,7 @@ static void drawOrderBurger(const Costumer& cost) {
 
         const char* name = ingredientName(p->data.type);
         const char* cookLabel = nullptr;
-        if (p->data.type == MEAT || p->data.type == VEGAN_PROTEIN) {
+        if (p->data.type == MEAT) {
             switch (practicalCookingStateOf(p->data)) {
                 case RARE:        cookLabel = "Rare";       break;
                 case MEDIUM_RARE: cookLabel = "Medium";     break;

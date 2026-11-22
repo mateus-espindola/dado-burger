@@ -15,7 +15,6 @@ enum IngredientType{
     KETCHUP = 'k',
     MUSTARD = 'm',
     MEAT = 'n',
-    VEGAN_PROTEIN = 'v',
     EGG = 'o',
     PICKLES = 'p',
     CHEDDAR = 'q',
