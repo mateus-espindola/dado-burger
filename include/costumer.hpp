@@ -31,6 +31,7 @@ struct Costumer{
 };
 
 void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, HashTable& ht);
+void spiceCostumer(Costumer& cost);
 void initializeCostumer(Costumer& cost, const AVL& avl, HashTable& ht);
 void processCostumers(Queue<Costumer>& queue, Costumer counter[], const AVL& avl, HashTable& ht);
 bool callCostumer(Queue<Costumer>& queue, Costumer counter[]);

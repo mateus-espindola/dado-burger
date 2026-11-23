@@ -36,6 +36,62 @@ void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const A
     }
 }
 
+void spiceCostumer(Costumer& cost) {
+    Ingredient auxIng;
+
+    switch (cost.type) {
+        case CHILL_GUY:
+            cost.patience_time *= 1.5f; // chill guy tem mais paciencia
+        break;
+
+        case VEGAN: {
+            int idx = 0;
+            LinkedList_node<Ingredient>* aux = cost.order.start;
+            while (aux != nullptr) {
+                LinkedList_node<Ingredient>* next = aux->prox;
+
+                if (aux->data.type == MEAT) remove_at(cost.order, idx);
+                else                        idx++;
+
+                aux = next;
+            }
+        break;
+        }
+
+        case TONY: {
+            cost.patience_time *= 0.67; // tony tem menos paciencia
+
+            exterminateLinkedList(cost.order);
+
+            initIngredient(auxIng, 'y');
+            push_front(cost.order, auxIng);
+            for (int i=0; i<GetRandomValue(TONYS_MIN_CHEESE, TONYS_MAX_CHEESE); i++) {
+                char tonys_cheese_type;
+                (GetRandomValue(0, 1) == 0) ? tonys_cheese_type = 'q' : tonys_cheese_type = 's';
+
+                initIngredient(auxIng, tonys_cheese_type);
+                CookPoint tonys_cheese_point = (CookPoint) GetRandomValue(NEEDS_TO_CUT, READY);
+                auxIng.cook_state.cookInfo[0].cookPoint = tonys_cheese_point;
+                auxIng.cook_state.cookInfo[1].cookPoint = tonys_cheese_point;
+
+                push_front(cost.order, auxIng);
+            }
+            initIngredient(auxIng, 'z');
+            push_front(cost.order, auxIng);
+
+            break;
+        }
+
+        case SKELETON:
+            initIngredient(auxIng, 'k');
+            push_front(cost.order, auxIng); // ketchup em cima do hamburguer
+        break;
+
+
+        default: break;
+    }
+}
+
 void initializeCostumer(Costumer& cost, const AVL& avl, HashTable& ht) {
     cost.patience_time = AVERAGE_COSTUMER_PATIENCE;
 
@@ -45,6 +101,7 @@ void initializeCostumer(Costumer& cost, const AVL& avl, HashTable& ht) {
     initializeLinkedList(cost.order);
     int order_cod = GetRandomValue(1, avl.last_cod);
     getCostumerOrder(cost.order, order_cod, avl, ht);
+    spiceCostumer(cost);
 
     cost.obj.pos.y = COSTUMER_POS_Y;
     cost.obj.pos.x = -100; // Starts off the screen

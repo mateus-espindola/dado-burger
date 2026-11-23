@@ -39,7 +39,6 @@ void push_front(LinkedList<T>& l, const T& value) {
     l.start = new LinkedList_node<T>{ l.start, value };
 }
 
-// Insere no fim: O(n), pois não há ponteiro para o último
 template<typename T>
 void push_back(LinkedList<T>& l, const T& value) {
     LinkedList_node<T> *novo = new LinkedList_node<T>{ nullptr, value };
@@ -53,7 +52,6 @@ void push_back(LinkedList<T>& l, const T& value) {
     p->prox = novo;
 }
 
-// Insere na posição idx (0 = início). Retorna false se idx > tamanho
 template<typename T>
 bool insert_at(LinkedList<T>& l, size_t idx, const T& value) {
     if (idx == 0) {
@@ -68,7 +66,6 @@ bool insert_at(LinkedList<T>& l, size_t idx, const T& value) {
     return true;
 }
 
-// Remove o primeiro elemento. Retorna false se vazia
 template<typename T>
 bool pop_front(LinkedList<T>& l) {
     if (l.start == nullptr) return false;
@@ -78,7 +75,6 @@ bool pop_front(LinkedList<T>& l) {
     return true;
 }
 
-// Remove o último elemento. Retorna false se vazia
 template<typename T>
 bool pop_back(LinkedList<T>& l) {
     if (l.start == nullptr) return false;
@@ -91,7 +87,6 @@ bool pop_back(LinkedList<T>& l) {
     return true;
 }
 
-// Remove o elemento da posição idx. Retorna false se idx inválido
 template<typename T>
 bool remove_at(LinkedList<T>& l, size_t idx) {
     if (l.start == nullptr) return false;
@@ -107,7 +102,6 @@ bool remove_at(LinkedList<T>& l, size_t idx) {
     return true;
 }
 
-// Retorna ponteiro para o dado na posição idx, ou nullptr se não existir
 template<typename T>
 T* list_get(LinkedList<T>& l, size_t idx) {
     LinkedList_node<T> *p = l.start;
@@ -115,22 +109,23 @@ T* list_get(LinkedList<T>& l, size_t idx) {
     return p ? &p->data : nullptr;
 }
 
-// Busca o primeiro elemento que satisfaz o predicado. Retorna ponteiro ou nullptr
-template<typename T, typename Pred>
-T* list_find(LinkedList<T>& l, Pred pred) {
-    for (LinkedList_node<T> *p = l.start; p != nullptr; p = p->prox)
-        if (pred(p->data)) return &p->data;
-    return nullptr;
+template<typename T>
+bool searchLinkedList(LinkedList<T>& l, const T& target, T& dst) {
+    for (LinkedList_node<T> *p = l.start; p != nullptr; p = p->prox) {
+        if (p->data == target) {
+            dst = p->data;
+            return true;
+        }
+    }
+    return false;
 }
 
-// Aplica uma função a cada elemento
 template<typename T, typename Fn>
 void list_for_each(LinkedList<T>& l, Fn fn) {
     for (LinkedList_node<T> *p = l.start; p != nullptr; p = p->prox) fn(p->data);
 }
 
-// Libera todos os nós e deixa a lista vazia
 template<typename T>
-void list_clear(LinkedList<T>& l) {
+void exterminateLinkedList(LinkedList<T>& l) {
     while (l.start != nullptr) pop_front(l);
 }

@@ -21,7 +21,6 @@ constexpr int MAX_ASCII_CODE_SUPPORTED = 126;
 
 
 //Costumer constants
-
 constexpr int MAX_COSTUMER_QUEUE_SIZE = 5;
 
 constexpr float FIRST_COSTUMER_IN_QUEUE_POS_X = 100 * KITCHEN_PNG_SCALE;
@@ -31,8 +30,6 @@ constexpr float COSTUMER_COUNTER_POS_X[COUNTER_SIZE] = {215 * KITCHEN_PNG_SCALE,
 constexpr float COSTUMER_DELTA = 130.0f;
 constexpr float COSTUMER_SPEED = 5.0f;
 
-
-// Decaimento de ingredientes nos heaps (perish_time)
 
 #define PLATE_SIZE 6
 #define PAN_NUMBER 3

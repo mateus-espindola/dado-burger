@@ -913,7 +913,7 @@ static float stageProgressOf(const CookInfo& ci, float stageTime) {
     return p;
 }
 
-void drawCookInfo(Rectangle button, const CookState& cs, IngredientType type) {
+void drawCookInfo(Rectangle button, const CookState& cs, IngredientType type, MatchScreen screenId) {
     const int   fs     = 18;
     const float barH   = 6.0f;
     const float barW   = 130.0f;
@@ -962,7 +962,7 @@ void drawCookInfo(Rectangle button, const CookState& cs, IngredientType type) {
     }
 
     if (cs.cooking) {
-        const char* c = "Cooking";
+        const char* c = (screenId == BOARD) ? "Cutting" : "Cooking";
         DrawText(c, (int)(rightEdge - MeasureText(c, fs)), (int)y, fs, RED);
     }
 }
@@ -1038,7 +1038,7 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
             case INSERT: {
                 if (b.target.size > 0) {
                     const Ingredient& ing = b.target.top->data;
-                    drawCookInfo(b.shape, ing.cook_state, ing.type);
+                    drawCookInfo(b.shape, ing.cook_state, ing.type, screenId);
 
                 if (i == butUnderMouseInd && (canFlip(ing.type) || isCuttable(ing.type)))
                     drawCtrlHintFor(b.shape, screenId);

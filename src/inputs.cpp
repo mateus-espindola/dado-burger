@@ -116,14 +116,24 @@ void processButClick(Match& match, Button& button) {
             bool isMustard = std::strcmp(button.text, "MUSTARD") == 0;
             bool bottle = std::strcmp(button.text, "KETCHUP") == 0 || isMustard || std::strcmp(button.text, "PICKLES") == 0;
             if (bottle) {
-                Stack& burger = match.buttonsVec[PREPARE].buttons[16].target;
+                // Acha, entre os botoes "BURGER" que realmente tem um burger montado
+                // (target.type == BURGER), o que esta mais a esquerda na tela - em vez de
+                // depender de indice fixo ou jogar no slot vazio so por ser o mais a esquerda.
+                ButtonVec& prepareVec = match.buttonsVec[PREPARE];
+                int leftmost = -1;
+                for (int i = 0; i < prepareVec.size; i++) {
+                    Button& b = prepareVec.buttons[i];
+                    if (std::strcmp(b.text, "BURGER") != 0) continue;
+                    if (b.target.type != BURGER) continue;
+                    if (leftmost == -1 || b.shape.x < prepareVec.buttons[leftmost].shape.x) leftmost = i;
+                }
 
-                if (burger.type == BURGER) {
+                if (leftmost != -1) {
                     Ingredient ing;
                     // 'M' mapeia pra MEAT em charToIngType; so o MUSTARD usa o 'm' minusculo pra nao colidir
                     initIngredient(ing, isMustard ? 'm' : button.text[0]);
 
-                    stack_push(burger, ing);
+                    stack_push(prepareVec.buttons[leftmost].target, ing);
                 }
 
                 break;
