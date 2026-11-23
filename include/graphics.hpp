@@ -34,6 +34,8 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
 
 void drawKitchen(Match& match, int butUnderMouseInd);
 
+void drawFridgeWall();
+
 void drawButGlow(Rectangle r, Color cor, int camadas, float alpha);
 
 void drawBoard(Match match, int butUnderMouseInd);

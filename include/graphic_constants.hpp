@@ -43,6 +43,12 @@ constexpr int PLAYER_ATLAS_CELL_H = 54;
 constexpr int PLAYER_ANIM_FRAME_COUNT = 4;
 constexpr float PLAYER_ANIM_FRAME_TIME = 0.12f; // segundos por frame andando
 
+// Parede divisoria entre kitchen e fridge (simula a quina da geladeira por cima de tudo)
+constexpr float FRIDGE_WALL_X = 587 * KITCHEN_PNG_SCALE;
+constexpr float FRIDGE_WALL_Y = 0;
+constexpr float FRIDGE_WALL_W = 5 * KITCHEN_PNG_SCALE;
+constexpr float FRIDGE_WALL_H = 120 * KITCHEN_PNG_SCALE;
+
 constexpr float BUTTON_OPACITY = 0.1f;
 
 constexpr float ORDER_BOX_OPACITY = 0.5f;

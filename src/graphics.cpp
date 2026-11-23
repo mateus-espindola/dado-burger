@@ -165,6 +165,11 @@ void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const Bu
     EndDrawing();
 }
 
+// Simula a quina da geladeira: linha solida por cima de tudo, na divisa kitchen/fridge
+void drawFridgeWall() {
+    DrawRectangle((int)FRIDGE_WALL_X, (int)FRIDGE_WALL_Y, (int)FRIDGE_WALL_W, (int)FRIDGE_WALL_H, DARKGRAY);
+}
+
 void drawKitchen(Match& match, int butUnderMouseInd){
     BeginDrawing();
     ClearBackground(RAYWHITE);
@@ -194,6 +199,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
             if(DRAW_HITBOX == 1) hitboxDraw(match.player.object);
 
             drawCostumerOrders(match.costumer_counter, mouseWorld);
+
+            drawFridgeWall();
 
         EndMode2D();
 
