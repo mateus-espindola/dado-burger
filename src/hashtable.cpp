@@ -1,5 +1,7 @@
 #include "../include/hashtable.hpp"
 
+#include "logs.hpp"
+
 // AUX FUNCTIONS
 
 int knuth_hash(const int& key, const int& capacity) {
@@ -93,4 +95,13 @@ void exterminateHashTable(HashTable& ht) {
 
 	ht.size = 0;
 	ht.load_factor = 0.0f;
+}
+
+
+void syncHashMetrics(const HashTable& ht) {
+    g_metrics.hashHits = ht.hits;
+    g_metrics.hashMisses = ht.misses;
+    g_metrics.hashCollisions = ht.collisions;
+    g_metrics.hashN = ht.size;
+    g_metrics.hashM = ht.capacity;
 }

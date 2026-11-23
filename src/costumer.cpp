@@ -2,13 +2,25 @@
 
 #include "../include/costumer.hpp"
 #include "raylib.h"
+#include "logs.hpp"
 
 void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, HashTable& ht) {
     Order order;
 
     if (!searchHashTable(ht, order_cod, order)) {
+        Timer searchTimer;
+        timer_iniciar(&searchTimer);
+
         AVL_node* node = searchAVL(avl.root, order_cod);
         order = node->data;
+
+        double searchDuration = timer_parar(&searchTimer);
+
+        // Acumula as métricas de busca da partida (conforme item 5.1)
+        g_metrics.searchCount++;
+        g_metrics.searchTime += searchDuration;
+        // Nota: g_metrics.searchComparisons já foi incrementado dentro de searchAVL!
+
         insertHashTable(ht, order);
     }
 

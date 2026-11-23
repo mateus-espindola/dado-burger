@@ -50,6 +50,14 @@ void correctButName(Button *b){
 
 }
 
+void setPrepSaladButType(Button *buttons, int startInd){
+    buttons[startInd + 0].target.type = SWISS_CHEESE;
+    buttons[startInd + 1].target.type = CHEDDAR;
+    buttons[startInd + 2].target.type = LETTUCE;
+    buttons[startInd + 3].target.type = TOMATO;
+    buttons[startInd + 4].target.type = ONION;
+}
+
 void declareButtons(ButtonVec *screenButtons) {
     // static: os arrays vivem até o fim do programa
     static Button kitchenBut[BUTTONS_KITCHEN];
@@ -84,6 +92,7 @@ void declareButtons(ButtonVec *screenButtons) {
 
     int prepare_start_index = 0;
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 5, PREPARE_SALAD_BUT_DELTA + PREPARE_SALAD_BUT_WIDTH, prepare_salad_button_rect, "SALAD", STACK, false);
+    setPrepSaladButType(prepareBut, 0);
     {
         float bottleDelta = PREPARE_BOTTLE_BUT_DELTA + PREPARE_BOTTLE_BUT_HEIGHT;
         setButton(prepareBut[prepare_start_index],     prepare_bottle_button_rect.x, prepare_bottle_button_rect.y,                 prepare_bottle_button_rect.width, prepare_bottle_button_rect.height, "KETCHUP", CLICK);
@@ -92,6 +101,9 @@ void declareButtons(ButtonVec *screenButtons) {
         prepare_start_index += 3;
     }
     prepare_start_index = setSquareButtons(prepareBut, prepare_start_index, 3, PREPARE_PROTEIN_BUT_DELTA + PREPARE_PROTEIN_BUT_HEIGHT, prepare_protein_button_rect, "PROTEIN", HEAP, true);
+    for(int i = 0; i < 3; i++){
+        
+    }
     {
         Rectangle protein_col2_rect = prepare_protein_button_rect;
         protein_col2_rect.x -= PREPARE_PROTEIN_BUT_WIDTH + PREPARE_PROTEIN_BUT_DELTA_X; // pra dentro da tela, nao pra fora
@@ -107,6 +119,9 @@ void declareButtons(ButtonVec *screenButtons) {
     setButton(prepareBut[prepare_start_index],     PREPARE_BURGER_LEFT_BUT_LEFT_X,  PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
     setButton(prepareBut[prepare_start_index + 1], PREPARE_BURGER_BUT_LEFT_X,       PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
     setButton(prepareBut[prepare_start_index + 2], PREPARE_BURGER_RIGHT_BUT_LEFT_X, PREPARE_BURGER_BUT_LEFT_Y, PREPARE_BURGER_BUT_WIDTH, PREPARE_BURGER_BUT_HEIGHT, "BURGER", STACK);
+    for(int i = 0; i < 3; i++){
+        prepareBut[prepare_start_index + i].target.type = BURGER;
+    }
     prepare_start_index += 3;
 
     int cook_start_index = 0;
@@ -115,6 +130,10 @@ void declareButtons(ButtonVec *screenButtons) {
     Rectangle rect3 = { OVEN_GRILL_SECOND_BUT_LEFT_X, OVEN_STACK_FIRTS_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
     Rectangle rect4 = { OVEN_READIES_BUT_LEFT_X, OVEN_READIES_BUT_LEFT_Y, OVEN_STACK_BUT_WIDTH, OVEN_STACK_BUT_HEIGHT };
     cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    ovenBut[0].target.type = MEAT;
+    ovenBut[1].target.type = EGG;
+    ovenBut[2].target.type = BACON;
+
     cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect2, "COOK", INSERT, true);
     cook_start_index = setSquareButtons(ovenBut, cook_start_index, OVEN_BUTTON_COUNT, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect3, "COOK", INSERT, true);
     cook_start_index = setSquareButtons(ovenBut, cook_start_index, 1, OVEN_STACK_BUT_DELTA + OVEN_STACK_BUT_HEIGHT, rect4, "READY", READIES_HEAP, true);
@@ -122,9 +141,17 @@ void declareButtons(ButtonVec *screenButtons) {
     int board_start_index = 0;
     rect1.x -= BOARD_STACK_BUT_DELTA_X;
     board_start_index = setSquareButtons(boardBut, board_start_index, 3, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    boardBut[0].target.type = LETTUCE;
+    boardBut[1].target.type = TOMATO;
+    boardBut[2].target.type = ONION;
+
+
     rect1.x += 2*BOARD_STACK_BUT_DELTA_X; // Aproveitar as constantes definidas acima neeeaaahhhhh
     rect1.y = (WINDOW_HEIGHT/2) - (BOARD_STACK_BUT_HEIGHT + BOARD_STACK_BUT_DELTA_Y/2);
     board_start_index = setSquareButtons(boardBut, board_start_index, 2, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect1, "STACK", STACK, true);
+    boardBut[3].target.type = SWISS_CHEESE;
+    boardBut[4].target.type = CHEDDAR;
+
     board_start_index = setSquareButtons(boardBut, board_start_index, 1, BOARD_STACK_BUT_DELTA_Y + BOARD_STACK_BUT_HEIGHT, rect4, "READY", READIES_STACK, true);
     setButton(boardBut[board_start_index], BOARD_X, BOARD_Y, BOARD_W, BOARD_H, "CUTTING BOARD", INSERT);
 

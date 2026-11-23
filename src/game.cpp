@@ -10,6 +10,8 @@
 
 #include "raylib.h"
 
+#include "logs.hpp"
+
 bool readFiles(Game& game, FILE* fp, FILE* fh) {
     if (fp == nullptr) {
         std::cout << "There was an error while trying to read the orders archive." << std::endl;
@@ -19,6 +21,13 @@ bool readFiles(Game& game, FILE* fp, FILE* fh) {
         std::cout << "There was an error while trying to read the history archive." << std::endl;
         return false;
     }
+
+    // Inicia a medição do tempo de carregamento
+    Timer timerLoad;
+    timer_iniciar(&timerLoad);
+
+    long insertedNodesCount = 0;
+    long totalRotations = 0; // Ajuste caso sua insertAVL retorne ou conte rotações
 
     initializeHashTable(game.hashtable_orders); // capacity=0 sem isso: update_load_factor faria size/0
 
@@ -38,6 +47,7 @@ bool readFiles(Game& game, FILE* fp, FILE* fh) {
             Order newOrder = {cod, strIngredient};
 
             game.avl_orders.root = insertAVL(game.avl_orders.root, newOrder);
+            insertedNodesCount++;
         }
     }
     game.avl_orders.last_cod = cod;
@@ -47,7 +57,8 @@ bool readFiles(Game& game, FILE* fp, FILE* fh) {
     char countBuffer[HISTORY_NAME_BUFFER];
     while (fgets(countBuffer, sizeof(countBuffer), fh)) historyLines++;
     rewind(fh);
-    initializeContiguousList(game.historico, historyLines / 2 + 1);
+    int totalEntries = historyLines / 2;
+    initializeContiguousList(game.historico, totalEntries + 1);
 
     char buffer[HISTORY_NAME_BUFFER];
     int pos = 0;
@@ -65,6 +76,17 @@ bool readFiles(Game& game, FILE* fp, FILE* fh) {
             pos++;
         }
     }
+
+    // Para o cronômetro do carregamento
+    double loadDuration = timer_parar(&timerLoad);
+
+    // Registra todas as métricas coletadas na struct global
+    g_metrics.avlNodes = insertedNodesCount;
+    // Se o seu nó da AVL armazena a altura (ex: ->height), ajuste abaixo:
+    g_metrics.avlHeight = (game.avl_orders.root != nullptr) ? game.avl_orders.root->level : 0;
+    // g_metrics.avlRotations = totalRotations;
+    g_metrics.loadTime = loadDuration;
+    g_metrics.historyEntries = pos; // Total de entradas reais inseridas no histórico
 
     return true;
 }
@@ -112,8 +134,32 @@ int historyTotalPages(const Game& game){
 }
 
 void sortHistory(Game& game){
-    if (game.historySortByName) stringRadixSort(game.historico);
-    else                         partitionSort(game.historico);
+    // 1. Cria uma cópia independente do conjunto de dados (fora do intervalo cronometrado)
+    ContiguousList<PlayerInfo> historyCopy;
+    initializeContiguousList(historyCopy, game.historico.size);
+    historyCopy.size = game.historico.size;
+    for (int i = 0; i < game.historico.size; i++) {
+        historyCopy.data[i] = game.historico.data[i];
+    }
+
+    // 2. Inicia o timer estritamente para o algoritmo de ordenação
+    Timer sortTimer;
+    timer_iniciar(&sortTimer);
+
+    if (game.historySortByName) stringRadixSort(historyCopy);
+    else                         partitionSort(historyCopy);
+
+    double elapsed = timer_parar(&sortTimer);
+
+    // 3. Devolve os dados ordenados para a lista principal (para aparecer correto na tela)
+    for (int i = 0; i < game.historico.size; i++) {
+        game.historico.data[i] = historyCopy.data[i];
+    }
+
+    // 4. Atualiza as métricas globais e regrava o log (para acessos subsequentes)
+    g_metrics.sortTime = elapsed;
+    g_metrics.sortRuns++;
+    writeLog();
 }
 
 void processHistoryButClick(Game& game, Button& button){
@@ -300,6 +346,10 @@ void ambientProcess(Game& game, Vector2 mouse){
         if (match.costumer_line.costumers_that_left > COSTUMERS_PER_MATCH - COSTUMER_LEAVE_TOLERANCE) {
             loseMatch(match);
             matchEnd(match); // mesma limpeza que finishCurrentMatch faz no caminho de vitoria
+            
+            syncHashMetrics(game.hashtable_orders);
+            printReport();
+            writeLog();
         }
     }
 
@@ -410,6 +460,10 @@ void finishCurrentMatch(Game& game) {
 
     // game.state fica em PLAYING: a tela de VICTORY/DEFEAT (match.screen) ainda precisa
     // ser mostrada e, no caso de vitoria, o nome precisa ser digitado antes de voltar ao menu
+
+    syncHashMetrics(game.hashtable_orders);
+    printReport(); // Exibe na consola/terminal
+    writeLog();    // Grava no medicoes.log
 }
 
 // Salva nome+pontuacao no fim do arquivo de historico (mesmo formato que readFiles le: nome\npontos\n)

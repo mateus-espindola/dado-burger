@@ -167,13 +167,14 @@ void cookAll(ButtonVec *butonVec) {
 
             if (b.type != INSERT) continue;
             if (b.target.size <= 0) continue;   // top é inválido com a pilha vazia
+            if(b.target.top == nullptr) continue;
 
             Ingredient& ing = b.target.top->data;
 
             if(ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED ||
                 ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) continue;
 
-            switch(b.target.type){
+            switch(ing.type){
                 case MEAT:
                     cookMeat(ing);
                 break;

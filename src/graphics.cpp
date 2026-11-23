@@ -1008,12 +1008,11 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
 
         const Button &b = screenButtons.buttons[i];
 
-        // A tabua de corte (BOARD) ja tem decoracao propria desenhada antes (drawBoard);
+        // A tabua de corte (BOARD) ja tiene decoracao propria desenhada antes (drawBoard);
         // o retangulo verde generico so poluiria por cima dela.
         if (strcmp(b.text, "CUTTING BOARD") != 0) {
             DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, Fade(GREEN, BUTTON_OPACITY));
         }
-        // DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
         // Parte comum: círculo do ingrediente
         if (b.type == STACK || b.type == READIES_STACK) {
@@ -1033,6 +1032,16 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
         switch (b.type) {
             case STACK: {
                 drawStackDetails(b);
+
+                // Converte b.target.type para texto legível utilizando o nome do ingrediente
+                const char* stackLabel = (b.target.type == BURGER) ? "Burger" : 
+                                         ((b.target.type == NONE) ? b.text : ingredientName((IngredientType)b.target.type));
+
+                int fs = 18;
+                int textWidth = MeasureText(stackLabel, fs);
+                float textX = b.shape.x + (b.shape.width / 2.0f) - (textWidth / 2.0f);
+                float textY = b.shape.y + b.shape.height + 6.0f; // 6 pixels ABAIXO do botão
+                DrawText(stackLabel, (int)textX, (int)textY, fs, WHITE);
             } break;
 
             case INSERT: {
@@ -1045,7 +1054,14 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
                 }
             } break;
 
-            case PICK:
+            case PICK: {
+                int fs = 20;
+                int textWidth = MeasureText(b.text, fs);
+                float textX = b.shape.x + (b.shape.width / 2.0f) - (textWidth / 2.0f);
+                float textY = b.shape.y - fs - 6.0f; 
+                DrawText(b.text, (int)textX, (int)textY, fs, WHITE);
+            } break;
+
             case READIES_STACK:
             case HEAP:
             default: break;

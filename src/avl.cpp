@@ -1,5 +1,6 @@
 #include "../include/avl.hpp"
 #include <string>
+#include "logs.hpp"
 
 // AUX FUNCTIONS
 int getAVLNodeLevel(AVL_node* node) {
@@ -26,6 +27,7 @@ AVL_node* rotationLL(AVL_node* y) {
     y->level = max(getAVLNodeLevel(y->left), getAVLNodeLevel(y->right)) + 1;
     x->level = max(getAVLNodeLevel(x->left), getAVLNodeLevel(x->right)) + 1;
 
+    g_metrics.avlRotations++;
     return x;
 }
 
@@ -39,6 +41,7 @@ AVL_node* rotationRR(AVL_node* x) {
     x->level = max(getAVLNodeLevel(x->left), getAVLNodeLevel(x->right)) + 1;
     y->level = max(getAVLNodeLevel(y->left), getAVLNodeLevel(y->right)) + 1;
 
+    g_metrics.avlRotations++;
     return y;
 }
 
@@ -115,10 +118,29 @@ void exterminateAVL(AVL_node* root) {
     delete root;
 }
 
+// AVL_node* searchAVL(AVL_node* root, int cod) {
+//     if (root == nullptr) {
+//         return nullptr;
+//     }
+
+//     if (root->data.cod == cod) {
+//         return root;
+//     }
+//     else if (root->data.cod > cod) {
+//         return searchAVL(root->left, cod);
+//     }
+//     else {
+//         return searchAVL(root->right, cod);
+//     }
+// }
+
 AVL_node* searchAVL(AVL_node* root, int cod) {
     if (root == nullptr) {
         return nullptr;
     }
+
+    // Cada nó visitado conta como uma comparação
+    g_metrics.searchComparisons++;
 
     if (root->data.cod == cod) {
         return root;

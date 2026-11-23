@@ -6,7 +6,7 @@
 #include "avl.hpp"
 
 
-constexpr int HASHTABLE_CAPACITY = 11;
+constexpr int HASHTABLE_CAPACITY = 100003;
 
 struct Hash_node{
 	int key;
@@ -40,6 +40,8 @@ void initializeHashTable(HashTable& ht);
 void insertHashTable(HashTable& ht, const Order& obj);
 bool searchHashTable(HashTable &ht, const int& key, Order &dst);
 void exterminateHashTable(HashTable& ht);
+
+void syncHashMetrics(const HashTable& ht);
 
 
 

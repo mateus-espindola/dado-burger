@@ -64,4 +64,6 @@ void setPlayer(Player&);
 
 void playerProcess(Player& player, float minX, float maxX);
 
+void updatePlayerInvType(Stack& inv);
+
 // void playerProcessNoSprite(Player& player);

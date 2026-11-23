@@ -57,3 +57,14 @@ void playerProcess(Player& player, float minX, float maxX) {
         player.animTimer = 0.0f;
     }
 }
+
+void updatePlayerInvType(Stack& inv) {
+    if (inv.size == 0) {
+        inv.type = NONE;      // inclui sair de BURGER
+        inv.capacity = 1;
+    }
+    else if (inv.type != BURGER) {
+        inv.type = inv.top->data.type;
+    }
+    // BURGER com itens: preserva
+}
