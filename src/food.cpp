@@ -148,7 +148,7 @@ CookPoint& operator++(CookPoint& c) {
 void cookMeat(Ingredient& ing){
 
     if(ing.cook_state.cookInfo[0].cook_time > 0)
-        ing.cook_state.cookInfo[0].cook_time -= COOK_SPEED;
+        ing.cook_state.cookInfo[0].cook_time -= (COOK_SPEED + MEAT_EXTRA_COOK_SPEED);
     else{
         ++ing.cook_state.cookInfo[0].cookPoint;
         ing.cook_state.cookInfo[0].cook_time = cookTimeOf(ing.type);
