@@ -19,7 +19,14 @@ constexpr float KITCHEN_PNG_SCALE  = WINDOW_HEIGHT / KITCHEN_PNG_HEIGHT;
 
 constexpr int INGREDIENT_RADIUS = 3*16.0f;
 
-constexpr float PLAYER_HEIGHT = 0.5 * WINDOW_HEIGHT;
+// Atlas de ingredientes: grid 24x24, linha = ingrediente, coluna = CookPoint
+// (NEEDS_TO_CUT, READY, RAW, RARE, MEDIUM_RARE, WELL_DONE, OVER_COOKED, nessa ordem).
+constexpr int INGREDIENT_ATLAS_CELL = 24;
+constexpr int INGREDIENT_ATLAS_COLS = 7;
+
+constexpr float PLAYER_HEIGHT = 0.45 * WINDOW_HEIGHT;
+
+constexpr float BUTTON_OPACITY = 0.1f;
 
 // Barra de decaimento desenhada do lado do heap quando o mouse esta por cima
 constexpr float ROT_BAR_W   = 10.0f;

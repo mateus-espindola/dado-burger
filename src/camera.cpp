@@ -10,7 +10,7 @@ void setKitchenCamera(Match& match){
 
     match.camera = { 0 };
 
-    match.camera.target = { match.player.object.pos.x, match.player.object.pos.y};
+    match.camera.target = { match.player.object.pos.x, WINDOW_HEIGHT* 43/66};
     match.camera.offset = { WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT - PLAYER_KITCHEN_POS.y / 2.0f };
     match.camera.zoom = 1.0f;
 

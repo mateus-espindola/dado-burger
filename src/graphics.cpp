@@ -332,6 +332,51 @@ static Color ingredientColor(IngredientType t) {
     }
 }
 
+// Linha do ingrediente no atlas (assets/sprites/ingredients.png, grid 24x24).
+// -1 = tipo sem sprite no atlas (NONE, BURGER).
+static int ingredientAtlasRow(IngredientType t) {
+    switch (t) {
+        case LETTUCE:       return 0;
+        case BACON:         return 1;
+        case ONION:         return 2;
+        case KETCHUP:       return 3;
+        case MUSTARD:       return 4;
+        case MEAT:          return 5;
+        case EGG:           return 6;
+        case PICKLES:       return 7;
+        case CHEDDAR:       return 8;
+        case SWISS_CHEESE:  return 9;
+        case TOMATO:        return 10;
+        case UPPER_BREAD:   return 11;
+        case LOWER_BREAD:   return 12;
+        default:            return -1;
+    }
+}
+
+// Coluna do CookPoint no atlas: NEEDS_TO_CUT=-2 ... OVER_COOKED=4, desloca pra 0..6
+static int ingredientAtlasCol(CookPoint p) {
+    return p - NEEDS_TO_CUT;
+}
+
+// Desenha a celula do atlas correspondente ao tipo/estado do ingrediente, centrada em `center`.
+// practicalCookingStateOf decide o estado quando os dois lados divergem (ex. ingrediente flipavel).
+void drawIngredientSprite(Sprite& atlas, Vector2 center, float size, const Ingredient& ing) {
+    int row = ingredientAtlasRow(ing.type);
+    if (row < 0) return;
+
+    int col = ingredientAtlasCol(practicalCookingStateOf(ing));
+
+    Rectangle src = {
+        (float)(col * INGREDIENT_ATLAS_CELL),
+        (float)(row * INGREDIENT_ATLAS_CELL),
+        (float)INGREDIENT_ATLAS_CELL,
+        (float)INGREDIENT_ATLAS_CELL
+    };
+    Rectangle dest = { center.x - size / 2, center.y - size / 2, size, size };
+
+    DrawTexturePro(atlas.texture, src, dest, (Vector2){0, 0}, 0.0f, WHITE);
+}
+
 // Nome legivel do ingrediente
 static const char* ingredientName(IngredientType t) {
     switch (t) {
@@ -574,9 +619,8 @@ int drawNearestBut(const Player& player, const ButtonVec& screenButtons) {
 
     if(index != -1){
         const Button &b = screenButtons.buttons[index];
-        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, GRAY);
+        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, Fade(GREEN, BUTTON_OPACITY));
         // drawButGlow(b.shape, WHITE, CAMADAS_DE_BRILHO, BRILHO);
-        DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
     }
 
     return index;
@@ -717,10 +761,12 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
 
     for (int i = 0; i < screenButtons.size; i++) {
 
+        if (screenId == FRIDGE && i != butUnderMouseInd) continue; // so desenha na geladeira se estiver abaixo do mouse
+
         const Button &b = screenButtons.buttons[i];
 
-        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, GRAY);
-        DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
+        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, Fade(GREEN, BUTTON_OPACITY));
+        // DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
         // Parte comum: círculo do ingrediente
         if (b.type == STACK || b.type == READIES_STACK) {

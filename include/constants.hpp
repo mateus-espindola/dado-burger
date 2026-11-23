@@ -7,7 +7,7 @@
 
 constexpr int FPS = 60;
 
-constexpr Vector2 PLAYER_KITCHEN_POS = {/*WINDOW_WIDTH/2*/ 4200, WINDOW_HEIGHT*2/3};
+constexpr Vector2 PLAYER_KITCHEN_POS = {WINDOW_WIDTH/2, WINDOW_HEIGHT*5/7};
 constexpr Vector2 PLAYER_OVEN_POS = { WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f };
 constexpr int PLAYER_HITBOX_RADIUS = 100;
 constexpr float PLAYER_SPEED = 10.0f;

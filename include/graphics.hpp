@@ -54,6 +54,8 @@ void drawHUD(const Player &player, bool showFinishHint = false, int costumersTha
 
 void drawIngredient(Vector2 center, float radius, const Ingredient& ing);
 
+void drawIngredientSprite(Sprite& atlas, Vector2 center, float size, const Ingredient& ing);
+
 void drawStack(const Stack& stack, Vector2 basePos, float radius = 20.0f, float offset = 6.0f);
 
 void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius = 20.0f, float offset = 6.0f, bool hovered = false);

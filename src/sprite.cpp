@@ -34,7 +34,8 @@ void loadSpritesheet(Sprite sprites[]) {
     // Array apenas com os caminhos, na mesma ordem dos enums (0, 1, ...)
     const char *paths[QUANTITY_OF_SPRITES] = {
         [SPR_KITCHEN] = "assets/sprites/kitchen.png",
-        [SPR_PLAYER]     = "assets/sprites/player.png"
+        [SPR_PLAYER]     = "assets/sprites/player.png",
+        [SPR_INGREDIENTS] = "assets/sprites/ingredients.png"
     };
 
     for (int i = 0; i < QUANTITY_OF_SPRITES; i++) {
