@@ -10,13 +10,82 @@
 #include "raylib.h"
 
 
+// Setado uma vez em gameStart (match.spriteMatch[SPR_MENU_BACKGROUND]). drawMenu/drawPause/
+// drawVictory/drawDefeat nao recebem Sprite/Match sempre, entao usam esse global pra desenhar
+// o fundo. Sem ele (chamada antes do load) so fica o RAYWHITE do ClearBackground.
+static Sprite* g_menuBackground = nullptr;
+
+void setMenuBackground(Sprite& bg) {
+    g_menuBackground = &bg;
+}
+
+static Rectangle growRect(Rectangle r, float pad) {
+    return { r.x - pad, r.y - pad, r.width + 2 * pad, r.height + 2 * pad };
+}
+
+static Rectangle rectUnion(Rectangle a, Rectangle b) {
+    float x1 = fminf(a.x, b.x), y1 = fminf(a.y, b.y);
+    float x2 = fmaxf(a.x + a.width, b.x + b.width), y2 = fmaxf(a.y + a.height, b.y + b.height);
+    return { x1, y1, x2 - x1, y2 - y1 };
+}
+
+static Rectangle textRect(const char* text, int fs, float x, float y) {
+    return { x, y, (float)MeasureText(text, fs), (float)fs };
+}
+
+// Uniao das shapes de todos os botoes do vetor (usado pra encaixar a caixa de fundo so
+// na area onde ha conteudo, sem cobrir a tela inteira). Vazio = retangulo degenerado.
+static Rectangle buttonsBBox(const ButtonVec& buttons) {
+    if (buttons.size == 0) return { 0, 0, 0, 0 };
+
+    Rectangle box = buttons.buttons[0].shape;
+    for (int i = 1; i < buttons.size; i++) box = rectUnion(box, buttons.buttons[i].shape);
+    return box;
+}
+
+// Mesma ideia, mas so pra um intervalo [start, start+count) do array (grupos dentro de uma tela)
+static Rectangle buttonsBBoxRange(const Button* buttons, int start, int count) {
+    Rectangle box = buttons[start].shape;
+    for (int i = 1; i < count; i++) box = rectUnion(box, buttons[start + i].shape);
+    return box;
+}
+
+// Painel decorativo (fundo + borda) atras de um grupo de botoes, estilo drawStove
+static void drawPanel(Rectangle box, float pad, Color fill, Color border, float borderThick) {
+    Rectangle r = growRect(box, pad);
+    DrawRectangleRec(r, fill);
+    DrawRectangleLinesEx(r, borderThick, border);
+}
+
+// Fundo (se setado) + caixa preta translucida atras do conteudo (`contentBox` ja deve
+// incluir toda a area de texto/botoes relevante). Chamar logo depois do ClearBackground,
+// antes de qualquer texto/botao do menu.
+static void drawMenuBackdrop(Rectangle contentBox) {
+    if (g_menuBackground != nullptr) {
+        DrawTexturePro(
+            g_menuBackground->texture,
+            (Rectangle){0, 0, (float)g_menuBackground->width, (float)g_menuBackground->height},
+            (Rectangle){0, 0, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT},
+            (Vector2){0, 0},
+            0.0f,
+            WHITE
+        );
+    }
+
+    DrawRectangleRec(growRect(contentBox, MENU_OVERLAY_PADDING), Fade(BLACK, MENU_OVERLAY_OPACITY));
+}
+
 void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd){
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
         const char* title = "DADO BURGER";
         int titleFs = 60;
-        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 150, titleFs, DARKBROWN);
+        int titleX = WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, titleY = 150;
+
+        drawMenuBackdrop(rectUnion(textRect(title, titleFs, titleX, titleY), buttonsBBox(menuButtons)));
+
+        DrawText(title, titleX, titleY, titleFs, BEIGE);
 
         for (int i = 0; i < menuButtons.size; i++) {
             const Button &b = menuButtons.buttons[i];
@@ -42,7 +111,11 @@ void drawPause(Match& match, int butUnderMouseInd){
 
         const char* title = "PAUSED";
         int titleFs = 60;
-        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 150, titleFs, DARKBROWN);
+        int titleX = WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, titleY = 150;
+
+        drawMenuBackdrop(rectUnion(textRect(title, titleFs, titleX, titleY), buttonsBBox(pauseButtons)));
+
+        DrawText(title, titleX, titleY, titleFs, BEIGE);
 
         for (int i = 0; i < pauseButtons.size; i++) {
             const Button &b = pauseButtons.buttons[i];
@@ -70,17 +143,33 @@ void drawVictory(Match& match, int butUnderMouseInd){
 
         const char* title = "VOCE VENCEU!";
         int titleFs = 60;
-        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 120, titleFs, GREEN);
+        int titleX = WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, titleY = 120;
 
         const char* moneyTxt = TextFormat("Dinheiro ganho: $ %d", match.player.money);
         int moneyFs = 28;
-        DrawText(moneyTxt, WINDOW_WIDTH / 2 - MeasureText(moneyTxt, moneyFs) / 2, 220, moneyFs, DARKGREEN);
+        int moneyX = WINDOW_WIDTH / 2 - MeasureText(moneyTxt, moneyFs) / 2, moneyY = 220;
 
         const char* prompt = "Digite seu nome:";
         int promptFs = 26;
-        DrawText(prompt, WINDOW_WIDTH / 2 - MeasureText(prompt, promptFs) / 2, 300, promptFs, DARKBROWN);
+        int promptX = WINDOW_WIDTH / 2 - MeasureText(prompt, promptFs) / 2, promptY = 300;
 
         Rectangle inputBox = { WINDOW_WIDTH / 2.0f - 220, 350, 440, 50 };
+
+        const char* hint = "Pressione ENTER para salvar";
+        int hintFs = 20;
+        int hintX = WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, hintY = (int)(inputBox.y + inputBox.height + 20);
+
+        Rectangle box = textRect(title, titleFs, titleX, titleY);
+        box = rectUnion(box, textRect(moneyTxt, moneyFs, moneyX, moneyY));
+        box = rectUnion(box, textRect(prompt, promptFs, promptX, promptY));
+        box = rectUnion(box, inputBox);
+        box = rectUnion(box, textRect(hint, hintFs, hintX, hintY));
+        drawMenuBackdrop(box);
+
+        DrawText(title, titleX, titleY, titleFs, GREEN);
+        DrawText(moneyTxt, moneyX, moneyY, moneyFs, DARKGREEN);
+        DrawText(prompt, promptX, promptY, promptFs, DARKBROWN);
+
         DrawRectangleRec(inputBox, RAYWHITE);
         DrawRectangleLinesEx(inputBox, 2, DARKBROWN);
 
@@ -93,9 +182,7 @@ void drawVictory(Match& match, int butUnderMouseInd){
             DrawText("|", cursorX, (int)(inputBox.y + inputBox.height / 2 - textFs / 2), textFs, BLACK);
         }
 
-        const char* hint = "Pressione ENTER para salvar";
-        int hintFs = 20;
-        DrawText(hint, WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, (int)(inputBox.y + inputBox.height + 20), hintFs, GRAY);
+        DrawText(hint, hintX, hintY, hintFs, GRAY);
 
     EndDrawing();
 }
@@ -109,11 +196,36 @@ void drawDefeat(Match& match, int butUnderMouseInd){
 
         const char* title = "VOCE PERDEU!";
         int titleFs = 60;
-        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, WINDOW_HEIGHT / 2 - titleFs, titleFs, RED);
+        int titleX = WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, titleY = WINDOW_HEIGHT / 2 - titleFs;
 
         const char* hint = "Pressione ENTER para voltar ao menu";
         int hintFs = 24;
-        DrawText(hint, WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, WINDOW_HEIGHT / 2 + 20, hintFs, GRAY);
+        int hintX = WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, hintY = WINDOW_HEIGHT / 2 + 20;
+
+        drawMenuBackdrop(rectUnion(textRect(title, titleFs, titleX, titleY), textRect(hint, hintFs, hintX, hintY)));
+
+        DrawText(title, titleX, titleY, titleFs, RED);
+        DrawText(hint, hintX, hintY, hintFs, GRAY);
+
+    EndDrawing();
+}
+
+void drawHowToPlay(){
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+        const char* title = "HOW TO PLAY";
+        int titleFs = 50;
+        int titleX = WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, titleY = 60;
+
+        const char* hint = "Pressione ENTER para voltar ao menu";
+        int hintFs = 22;
+        int hintX = WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, hintY = WINDOW_HEIGHT - 80;
+
+        drawMenuBackdrop(rectUnion(textRect(title, titleFs, titleX, titleY), textRect(hint, hintFs, hintX, hintY)));
+
+        DrawText(title, titleX, titleY, titleFs, BEIGE);
+        DrawText(hint, hintX, hintY, hintFs, GRAY);
 
     EndDrawing();
 }
@@ -124,7 +236,7 @@ void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const Bu
 
         const char* title = "HISTORY";
         int titleFs = 50;
-        DrawText(title, WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, 60, titleFs, DARKBROWN);
+        int titleX = WINDOW_WIDTH / 2 - MeasureText(title, titleFs) / 2, titleY = 60;
 
         int totalPages = (historico.size + HISTORY_ENTRIES_PER_PAGE - 1) / HISTORY_ENTRIES_PER_PAGE;
         if (totalPages < 1) totalPages = 1;
@@ -133,16 +245,35 @@ void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const Bu
         int end   = start + HISTORY_ENTRIES_PER_PAGE;
         if (end > historico.size) end = historico.size;
 
+        // snprintf em buffer proprio, nao TextFormat: o loop abaixo chama TextFormat("%d", score)
+        // por entrada, e o buffer circular interno do raylib (poucos slots) acaba reciclando e
+        // corrompendo pageTxt antes dele ser desenhado la na frente.
+        char pageTxtBuf[32];
+        snprintf(pageTxtBuf, sizeof(pageTxtBuf), "Page %d / %d", page + 1, totalPages);
+        const char* pageTxt = pageTxtBuf;
+        int pageX = WINDOW_WIDTH / 2 - MeasureText(pageTxt, 24) / 2, pageY = HISTORY_NAV_BUTTON_Y - 40;
+
+        Rectangle box = textRect(title, titleFs, titleX, titleY);
+        box = rectUnion(box, textRect(pageTxt, 24, pageX, pageY));
+        box = rectUnion(box, buttonsBBox(historyButtons));
+        if (end > start) {
+            Rectangle listArea = { (float)HISTORY_LIST_LEFT_X, (float)HISTORY_LIST_TOP_Y,
+                                    (float)(HISTORY_LIST_NAME_W + 100), (float)((end - start) * HISTORY_LIST_ROW_H) };
+            box = rectUnion(box, listArea);
+        }
+        drawMenuBackdrop(box);
+
+        DrawText(title, titleX, titleY, titleFs, BEIGE);
+
         int y = HISTORY_LIST_TOP_Y;
         for (int i = start; i < end; i++) {
             const PlayerInfo &info = historico.data[i];
-            DrawText(info.nome.c_str(), HISTORY_LIST_LEFT_X, y, 24, BLACK);
-            DrawText(TextFormat("%d", info.score), HISTORY_LIST_LEFT_X + HISTORY_LIST_NAME_W, y, 24, BLACK);
+            DrawText(info.nome.c_str(), HISTORY_LIST_LEFT_X, y, 24, RAYWHITE);
+            DrawText(TextFormat("%d", info.score), HISTORY_LIST_LEFT_X + HISTORY_LIST_NAME_W, y, 24, RAYWHITE);
             y += HISTORY_LIST_ROW_H;
         }
 
-        const char* pageTxt = TextFormat("Page %d / %d", page + 1, totalPages);
-        DrawText(pageTxt, WINDOW_WIDTH / 2 - MeasureText(pageTxt, 24) / 2, HISTORY_NAV_BUTTON_Y - 40, 24, DARKGRAY);
+        DrawText(pageTxt, pageX, pageY, 24, RAYWHITE);
 
         for (int i = 0; i < historyButtons.size; i++) {
             const Button &b = historyButtons.buttons[i];
@@ -179,6 +310,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
         BeginMode2D(match.camera);
             Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), match.camera);
 
+            spriteDraw(match.spriteMatch[SPR_KITCHEN_BACKGROUND], (Vector2){0, 0}, WINDOW_HEIGHT, WHITE);
+
             drawCostumers(match.costumer_line, match.costumer_counter);
 
             spriteDraw(match.spriteMatch[SPR_KITCHEN], (Vector2){0, 0}, WINDOW_HEIGHT, WHITE);
@@ -209,11 +342,28 @@ void drawKitchen(Match& match, int butUnderMouseInd){
     EndDrawing();
 }
 
+// Grupos de indices dos botoes de cada tela (definidos em buttons.cpp:declareButtons),
+// usados so pra desenhar um painel decorativo atras de cada grupo (estilo drawStove).
+#define PREPARE_SALAD_GROUP_START   0
+#define PREPARE_SALAD_GROUP_COUNT   5
+#define PREPARE_BOTTLE_GROUP_START  5
+#define PREPARE_BOTTLE_GROUP_COUNT  3
+#define PREPARE_PROTEIN_GROUP_START 8
+#define PREPARE_PROTEIN_GROUP_COUNT 5
+#define PREPARE_BREAD_BURGER_GROUP_START 13
+#define PREPARE_BREAD_BURGER_GROUP_COUNT 5
+
 void drawPrepare(Match &match, int butUnderMouseInd) {
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
     const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+
+    const float panelPad = 20.0f;
+    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_SALAD_GROUP_START, PREPARE_SALAD_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
+    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_BOTTLE_GROUP_START, PREPARE_BOTTLE_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
+    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_PROTEIN_GROUP_START, PREPARE_PROTEIN_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
+    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_BREAD_BURGER_GROUP_START, PREPARE_BREAD_BURGER_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
 
     drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
@@ -222,16 +372,10 @@ void drawPrepare(Match &match, int butUnderMouseInd) {
     EndDrawing();
 }
 
-
-static void drawStackColumn(float x, int count) {
-    float total  = count * STACK_H + (count - 1) * STACK_GAP;
-    float startY = WINDOW_WIDTH / 2.0f - total / 2.0f;
-
-    for (int i = 0; i < count; i++) {
-        Rectangle r = { x, startY + i * (STACK_H + STACK_GAP), STACK_W, STACK_H };
-        DrawRectangleRec(r, BLACK);
-    }
-}
+#define BOARD_LEFT_STACKS_START  0
+#define BOARD_LEFT_STACKS_COUNT  3
+#define BOARD_RIGHT_GROUP_START  3
+#define BOARD_RIGHT_GROUP_COUNT  3
 
 void drawBoard(Match match, int butUnderMouseInd) {
     BeginDrawing();
@@ -241,18 +385,20 @@ void drawBoard(Match match, int butUnderMouseInd) {
         DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, LIGHTGRAY);
         DrawRectangleLinesEx((Rectangle){ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT }, 12, DARKGRAY);
 
+        const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+
+        // painel amadeirado atras dos grupos de stacks (esquerda: 3 STACK; direita: 2 STACK + READY)
+        const float panelPad = 20.0f;
+        Color woodFill = { 181, 136, 99, 255 };
+        Color woodBorder = DARKBROWN;
+        drawPanel(buttonsBBoxRange(buttonsVec.buttons, BOARD_LEFT_STACKS_START, BOARD_LEFT_STACKS_COUNT), panelPad, woodFill, woodBorder, 4);
+        drawPanel(buttonsBBoxRange(buttonsVec.buttons, BOARD_RIGHT_GROUP_START, BOARD_RIGHT_GROUP_COUNT), panelPad, woodFill, woodBorder, 4);
+
         // tábua
         Rectangle board = { BOARD_X, BOARD_Y, BOARD_W, BOARD_H };
         DrawRectangleRec(board, (Color){ 139, 90, 43, 255 });
         DrawRectangleLinesEx(board, 4, DARKBROWN);
 
-        // 3 stacks à esquerda
-        drawStackColumn(BOARD_X - STACK_MARGIN - STACK_W, STACKS_LEFT);
-
-        // 2 stacks à direita
-        drawStackColumn(BOARD_X + BOARD_W + STACK_MARGIN, STACKS_RIGHT);
-
-        const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
         drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
         drawHUD(match.player, match.costumer_line.costumers_generated >= COSTUMERS_PER_MATCH, match.costumer_line.costumers_that_left);

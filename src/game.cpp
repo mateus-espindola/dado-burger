@@ -75,6 +75,7 @@ void gameStart(Game& game){
     loadSpritesheet(match.spriteMatch);
     setIngredientAtlas(match.spriteMatch[SPR_INGREDIENTS]);
     setCostumerAtlas(match.spriteMatch[SPR_COSTUMERS]);
+    setMenuBackground(match.spriteMatch[SPR_MENU_BACKGROUND]);
 
     match.player.object.sprite = match.spriteMatch[SPR_PLAYER];
     match.player.object.radius = PLAYER_HITBOX_RADIUS;
@@ -151,8 +152,8 @@ void gameProcess(Game& game){
         break;
 
         case HOW_TO_PLAY:
-            // tutorialProcess();
-            // drawHowToPlay();
+            drawHowToPlay();
+            if (IsKeyPressed(KEY_ENTER)) game.state = MENU;
         break;
 
         case HISTORY:

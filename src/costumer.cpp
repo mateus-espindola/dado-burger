@@ -200,7 +200,9 @@ bool callCostumer(Queue<Costumer>& queue, Costumer counter[]) {
     if (isEmptyQueue(queue)) return false;
 
     for (int i=0; i<COUNTER_SIZE; i++) {
-        if (counter[i].type == EMPTY) {
+        // Aceita tambem slot com cliente ainda saindo (leaving): ja foi atendido,
+        // nao precisa esperar a animacao de saida terminar pra chamar o proximo.
+        if (counter[i].type == EMPTY || counter[i].leaving) {
             Costumer calledCost;
             dequeue(queue, &calledCost);
 

@@ -36,7 +36,9 @@ void loadSpritesheet(Sprite sprites[]) {
         [SPR_KITCHEN] = "assets/sprites/kitchen.png",
         [SPR_PLAYER]     = "assets/sprites/player.png",
         [SPR_INGREDIENTS] = "assets/sprites/ingredients.png",
-        [SPR_COSTUMERS] = "assets/sprites/costumers.png"
+        [SPR_COSTUMERS] = "assets/sprites/costumers.png",
+        [SPR_KITCHEN_BACKGROUND] = "assets/sprites/kitchen_background.png",
+        [SPR_MENU_BACKGROUND] = "assets/sprites/menu_background.png"
     };
 
     for (int i = 0; i < QUANTITY_OF_SPRITES; i++) {

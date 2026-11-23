@@ -91,7 +91,7 @@ void charCountingSort(ContiguousList<PlayerInfo>& list, const int& charIndex) {
         list.data[i] = output.data[i];
     }
 
-    free(output.data);
+    delete[] output.data;
 }
 
 
@@ -100,7 +100,7 @@ template<typename T>
 void initializeContiguousList(ContiguousList<T>& list, const int& capacity) {
     list.size = 0;
     list.capacity = capacity;
-    list.data = static_cast<T*>(malloc(capacity * sizeof(T)));
+    list.data = new T[capacity];
 }
 
 template<typename T>

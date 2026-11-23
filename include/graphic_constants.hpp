@@ -49,6 +49,10 @@ constexpr float FRIDGE_WALL_Y = 0;
 constexpr float FRIDGE_WALL_W = 5 * KITCHEN_PNG_SCALE;
 constexpr float FRIDGE_WALL_H = 120 * KITCHEN_PNG_SCALE;
 
+// Caixa preta translucida desenhada atras do titulo/botoes dos menus (menu/pause/vitoria/derrota)
+constexpr float MENU_OVERLAY_OPACITY = 0.55f;
+constexpr float MENU_OVERLAY_PADDING = 24.0f;
+
 constexpr float BUTTON_OPACITY = 0.1f;
 
 constexpr float ORDER_BOX_OPACITY = 0.5f;

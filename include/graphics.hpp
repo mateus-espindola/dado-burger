@@ -7,6 +7,8 @@
 void drawMenu(const ButtonVec& menuButtons, int butUnderMouseInd);
 void drawHistory(const ContiguousList<PlayerInfo>& historico, int page, const ButtonVec& historyButtons, int butUnderMouseInd);
 
+void drawHowToPlay();
+
 void drawPause(Match& match, int butUnderMouseInd);
 void drawVictory(Match& match, int butUnderMouseInd);
 void drawDefeat(Match& match, int butUnderMouseInd);
@@ -61,6 +63,8 @@ void drawIngredientSprite(Sprite& atlas, Vector2 center, float size, const Ingre
 void setIngredientAtlas(Sprite& atlas);
 
 void setCostumerAtlas(Sprite& atlas);
+
+void setMenuBackground(Sprite& bg);
 
 void drawStack(const Stack& stack, Vector2 basePos, float radius = 20.0f, float offset = 6.0f);
 

@@ -10,7 +10,12 @@ void setKitchenCamera(Match& match){
 
     match.camera = { 0 };
 
-    match.camera.target = { match.player.object.pos.x, WINDOW_HEIGHT* 43/66};
+    // target.y e offset.y tem que coincidir: zoom e 1 e nada atualiza target.y depois (so
+    // target.x segue o player em cameraProcess), entao qualquer diferenca entre os dois e um
+    // deslocamento vertical constante da cena. Antes eram 43/66 vs 9/14 (~0.65 vs ~0.64),
+    // uma diferenca de uns 6px que deixava uma faixa do ClearBackground(RAYWHITE) visivel
+    // embaixo, por fora do kitchen_background desenhado so com WINDOW_HEIGHT de altura.
+    match.camera.target = { match.player.object.pos.x, WINDOW_HEIGHT - PLAYER_KITCHEN_POS.y / 2.0f };
     match.camera.offset = { WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT - PLAYER_KITCHEN_POS.y / 2.0f };
     match.camera.zoom = 1.0f;
 
