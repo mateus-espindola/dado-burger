@@ -43,6 +43,10 @@ constexpr int PLAYER_ATLAS_CELL_H = 54;
 constexpr int PLAYER_ANIM_FRAME_COUNT = 4;
 constexpr float PLAYER_ANIM_FRAME_TIME = 0.12f; // segundos por frame andando
 
+// Tamanho de desenho do how_to_play.png (centrado na tela). Grande por padrao, ajusta aqui.
+constexpr float HOW_TO_PLAY_IMG_W = WINDOW_WIDTH * 0.95f;
+constexpr float HOW_TO_PLAY_IMG_H = WINDOW_HEIGHT * 0.95f;
+
 // Parede divisoria entre kitchen e fridge (simula a quina da geladeira por cima de tudo)
 constexpr float FRIDGE_WALL_X = 587 * KITCHEN_PNG_SCALE;
 constexpr float FRIDGE_WALL_Y = 0;

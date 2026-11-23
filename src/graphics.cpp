@@ -210,6 +210,13 @@ void drawDefeat(Match& match, int butUnderMouseInd){
     EndDrawing();
 }
 
+// Setado uma vez em gameStart (match.spriteMatch[SPR_HOW_TO_PLAY])
+static Sprite* g_howToPlayImg = nullptr;
+
+void setHowToPlayImage(Sprite& img) {
+    g_howToPlayImg = &img;
+}
+
 void drawHowToPlay(){
     BeginDrawing();
     ClearBackground(RAYWHITE);
@@ -223,6 +230,19 @@ void drawHowToPlay(){
         int hintX = WINDOW_WIDTH / 2 - MeasureText(hint, hintFs) / 2, hintY = WINDOW_HEIGHT - 80;
 
         drawMenuBackdrop(rectUnion(textRect(title, titleFs, titleX, titleY), textRect(hint, hintFs, hintX, hintY)));
+
+        if (g_howToPlayImg != nullptr) {
+            Rectangle dest = { WINDOW_WIDTH / 2.0f - HOW_TO_PLAY_IMG_W / 2.0f, WINDOW_HEIGHT / 2.0f - HOW_TO_PLAY_IMG_H / 2.0f,
+                                HOW_TO_PLAY_IMG_W, HOW_TO_PLAY_IMG_H };
+            DrawTexturePro(
+                g_howToPlayImg->texture,
+                (Rectangle){0, 0, (float)g_howToPlayImg->width, (float)g_howToPlayImg->height},
+                dest,
+                (Vector2){0, 0},
+                0.0f,
+                WHITE
+            );
+        }
 
         DrawText(title, titleX, titleY, titleFs, BEIGE);
         DrawText(hint, hintX, hintY, hintFs, GRAY);
@@ -342,28 +362,72 @@ void drawKitchen(Match& match, int butUnderMouseInd){
     EndDrawing();
 }
 
-// Grupos de indices dos botoes de cada tela (definidos em buttons.cpp:declareButtons),
-// usados so pra desenhar um painel decorativo atras de cada grupo (estilo drawStove).
-#define PREPARE_SALAD_GROUP_START   0
-#define PREPARE_SALAD_GROUP_COUNT   5
-#define PREPARE_BOTTLE_GROUP_START  5
-#define PREPARE_BOTTLE_GROUP_COUNT  3
-#define PREPARE_PROTEIN_GROUP_START 8
-#define PREPARE_PROTEIN_GROUP_COUNT 5
-#define PREPARE_BREAD_BURGER_GROUP_START 13
-#define PREPARE_BREAD_BURGER_GROUP_COUNT 5
+// Setado uma vez em loadSpritesheet (match.spriteMatch[SPR_INGREDIENTS]). drawIngredient
+// usa o atlas se disponivel; sem ele (chamada antes do load, ou tipo fora do atlas) cai no circulo.
+static Sprite* g_ingredientAtlas = nullptr;
+
+void setIngredientAtlas(Sprite& atlas) {
+    g_ingredientAtlas = &atlas;
+}
+
+static int ingredientAtlasRow(IngredientType t); // definido mais abaixo, junto do resto do atlas
+
+// Indices dos botoes de prepare (definidos em buttons.cpp:declareButtons)
+#define PREPARE_SALAD_START   0
+#define PREPARE_SALAD_COUNT   5
+#define PREPARE_BOTTLE_START  5
+#define PREPARE_BOTTLE_COUNT  3
+#define PREPARE_PROTEIN_START 8
+#define PREPARE_PROTEIN_COUNT 5
+#define PREPARE_BREAD_START   13
+#define PREPARE_BREAD_COUNT   2
+#define PREPARE_BURGER_START  15
+#define PREPARE_BURGER_COUNT  3
+
+// Desenha a celula [row][col] do atlas de ingredientes direto por tipo (sem depender de um
+// Ingredient/estado de cozimento) - usado pros botoes de garrafa, que so tem um desenho fixo.
+static void drawIngredientAtlasCell(Sprite& atlas, Vector2 center, float size, IngredientType type, int col) {
+    int row = ingredientAtlasRow(type);
+    if (row < 0) return;
+
+    Rectangle src = {
+        (float)(col * INGREDIENT_ATLAS_CELL),
+        (float)(row * INGREDIENT_ATLAS_CELL),
+        (float)INGREDIENT_ATLAS_CELL,
+        (float)INGREDIENT_ATLAS_CELL
+    };
+    Rectangle dest = { center.x - size / 2, center.y - size / 2, size, size };
+
+    DrawTexturePro(atlas.texture, src, dest, (Vector2){0, 0}, 0.0f, WHITE);
+}
 
 void drawPrepare(Match &match, int butUnderMouseInd) {
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
     const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+    const Button* buttons = buttonsVec.buttons;
 
-    const float panelPad = 20.0f;
-    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_SALAD_GROUP_START, PREPARE_SALAD_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
-    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_BOTTLE_GROUP_START, PREPARE_BOTTLE_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
-    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_PROTEIN_GROUP_START, PREPARE_PROTEIN_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
-    drawPanel(buttonsBBoxRange(buttonsVec.buttons, PREPARE_BREAD_BURGER_GROUP_START, PREPARE_BREAD_BURGER_GROUP_COUNT), panelPad, GRAY, LIGHTGRAY, 4);
+    // salada e paes: um quadrado cinza individual por botao (nao um painel agrupado)
+    for (int i = 0; i < PREPARE_SALAD_COUNT; i++) drawPanel(buttons[PREPARE_SALAD_START + i].shape, 10.0f, GRAY, LIGHTGRAY, 3);
+    for (int i = 0; i < PREPARE_BREAD_COUNT; i++)  drawPanel(buttons[PREPARE_BREAD_START + i].shape, 10.0f, GRAY, LIGHTGRAY, 3);
+
+    // burger: um unico retangulo maroon cobrindo as 3 stacks do meio
+    drawPanel(buttonsBBoxRange(buttons, PREPARE_BURGER_START, PREPARE_BURGER_COUNT), 20.0f, MAROON, DARKBROWN, 4);
+
+    // proteina: um unico retangulo cinza escuro cobrindo os 5 heaps
+    drawPanel(buttonsBBoxRange(buttons, PREPARE_PROTEIN_START, PREPARE_PROTEIN_COUNT), 20.0f, DARKGRAY, GRAY, 4);
+
+    // garrafas: ketchup/mustard/pickles desenhados como o ingrediente em si (coluna 0 do atlas,
+    // linha de cada um), concentrico com o botao e na mesma altura dele
+    if (g_ingredientAtlas != nullptr) {
+        static const IngredientType bottleTypes[PREPARE_BOTTLE_COUNT] = { KETCHUP, MUSTARD, PICKLES };
+        for (int i = 0; i < PREPARE_BOTTLE_COUNT; i++) {
+            Rectangle shape = buttons[PREPARE_BOTTLE_START + i].shape;
+            Vector2 center = { shape.x + shape.width / 2, shape.y + shape.height / 2 };
+            drawIngredientAtlasCell(*g_ingredientAtlas, center, shape.height, bottleTypes[i], 0);
+        }
+    }
 
     drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
@@ -372,10 +436,9 @@ void drawPrepare(Match &match, int butUnderMouseInd) {
     EndDrawing();
 }
 
-#define BOARD_LEFT_STACKS_START  0
-#define BOARD_LEFT_STACKS_COUNT  3
-#define BOARD_RIGHT_GROUP_START  3
-#define BOARD_RIGHT_GROUP_COUNT  3
+#define BOARD_STACKS_START  0
+#define BOARD_STACKS_COUNT  5  // 3 STACK esquerda + 2 STACK direita
+#define BOARD_READIES_INDEX 5  // READIES_STACK
 
 void drawBoard(Match match, int butUnderMouseInd) {
     BeginDrawing();
@@ -387,14 +450,22 @@ void drawBoard(Match match, int butUnderMouseInd) {
 
         const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
-        // painel amadeirado atras dos grupos de stacks (esquerda: 3 STACK; direita: 2 STACK + READY)
+        // painel amadeirado cobrindo as 5 stacks de ingrediente (nao inclui readies nem a tabua)
         const float panelPad = 20.0f;
         Color woodFill = { 181, 136, 99, 255 };
         Color woodBorder = DARKBROWN;
-        drawPanel(buttonsBBoxRange(buttonsVec.buttons, BOARD_LEFT_STACKS_START, BOARD_LEFT_STACKS_COUNT), panelPad, woodFill, woodBorder, 4);
-        drawPanel(buttonsBBoxRange(buttonsVec.buttons, BOARD_RIGHT_GROUP_START, BOARD_RIGHT_GROUP_COUNT), panelPad, woodFill, woodBorder, 4);
+        drawPanel(buttonsBBoxRange(buttonsVec.buttons, BOARD_STACKS_START, BOARD_STACKS_COUNT), panelPad, woodFill, woodBorder, 4);
 
-        // tábua
+        // readies: quadrado maroon com circulo verde-escuro dentro, concentrico e maior que a stack
+        {
+            Rectangle readiesShape = buttonsVec.buttons[BOARD_READIES_INDEX].shape;
+            Vector2 center = { readiesShape.x + readiesShape.width / 2, readiesShape.y + readiesShape.height / 2 };
+            Rectangle readiesSquare = growRect(readiesShape, panelPad);
+            DrawRectangleRec(readiesSquare, MAROON);
+            DrawCircleV(center, readiesSquare.width / 2, DARKGREEN);
+        }
+
+        // tábua de corte em si (o retangulo verde generico do botao INSERT dela e pulado em drawButtons)
         Rectangle board = { BOARD_X, BOARD_Y, BOARD_W, BOARD_H };
         DrawRectangleRec(board, (Color){ 139, 90, 43, 255 });
         DrawRectangleLinesEx(board, 4, DARKBROWN);
@@ -430,11 +501,15 @@ static void drawSquareGrid(Rectangle area, int cols, int rows, float side) {
         }
 }
 
+#define OVEN_READIES_INDEX (OVEN_BUTTON_COUNT * 3) // 3 grupos de OVEN_BUTTON_COUNT antes do READY
+
 void drawStove(Match& match, int butUnderMouseInd) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
         BeginMode2D(match.camera);
+
+            const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
 
             // corpo do fogão (cobre o mundo todo)
             DrawRectangle(0, 0, STOVE_WORLD_WIDTH, STOVE_WORLD_HEIGHT, LIGHTGRAY);
@@ -457,7 +532,16 @@ void drawStove(Match& match, int butUnderMouseInd) {
             DrawRectangleLinesEx(readies, 6, DARKGRAY);
             drawSquareGrid(readies, 1, 2, 140);
 
-            const ButtonVec &buttonsVec = match.buttonsVec[match.screen];
+            // readies stack (READIES_HEAP): quadrado maroon com circulo verde-escuro dentro,
+            // concentrico e maior que o botao - mesma decoracao do readies da tabua de corte
+            {
+                Rectangle readiesShape = buttonsVec.buttons[OVEN_READIES_INDEX].shape;
+                Vector2 center = { readiesShape.x + readiesShape.width / 2, readiesShape.y + readiesShape.height / 2 };
+                Rectangle readiesSquare = growRect(readiesShape, 20.0f);
+                DrawRectangleRec(readiesSquare, MAROON);
+                DrawCircleV(center, readiesSquare.width / 2, DARKGREEN);
+            }
+
             drawButtons(buttonsVec, butUnderMouseInd, match.screen);
 
         EndMode2D();
@@ -647,14 +731,6 @@ void drawHUD(const Player &player, bool showFinishHint, int costumersThatLeft) {
     drawCostumersLeftX(costumersThatLeft);
 
     if (showFinishHint) drawFinishMatchHint();
-}
-
-// Setado uma vez em loadSpritesheet (match.spriteMatch[SPR_INGREDIENTS]). drawIngredient
-// usa o atlas se disponivel; sem ele (chamada antes do load, ou tipo fora do atlas) cai no circulo.
-static Sprite* g_ingredientAtlas = nullptr;
-
-void setIngredientAtlas(Sprite& atlas) {
-    g_ingredientAtlas = &atlas;
 }
 
 // Desenha um ingrediente (sprite do atlas se disponivel, senao circulo + contorno;
@@ -932,7 +1008,11 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
 
         const Button &b = screenButtons.buttons[i];
 
-        DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, Fade(GREEN, BUTTON_OPACITY));
+        // A tabua de corte (BOARD) ja tem decoracao propria desenhada antes (drawBoard);
+        // o retangulo verde generico so poluiria por cima dela.
+        if (strcmp(b.text, "CUTTING BOARD") != 0) {
+            DrawRectangle((int)b.shape.x, (int)b.shape.y, (int)b.shape.width, (int)b.shape.height, Fade(GREEN, BUTTON_OPACITY));
+        }
         // DrawText(b.text, (int)b.shape.x + 10, (int)b.shape.y + 10, 30, BLACK);
 
         // Parte comum: círculo do ingrediente
