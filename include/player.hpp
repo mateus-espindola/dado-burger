@@ -48,6 +48,10 @@ struct Player {
     int selectedSlot;
     Direction direction;
     int money;
+
+    bool moving;
+    int animFrame;
+    float animTimer;
 };
 
 // struct Slot {

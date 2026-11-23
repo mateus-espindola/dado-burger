@@ -24,7 +24,9 @@ World worldOf(MatchScreen s) {
 
 //Returns the limit of the scene. It is used to call the camera function with the proper scene size to find target and things like that
 Limits playerLimitsOf(const Match &match) {
-    float halfW = spriteDrawnWidth(match.player.object.sprite, PLAYER_HEIGHT) / 2;
+    // Usa o aspecto fixo da celula do atlas (24x54), nao o texture.width inteiro
+    // (que agora e PLAYER_ANIM_FRAME_COUNT frames lado a lado).
+    float halfW = (PLAYER_HEIGHT * ((float)PLAYER_ATLAS_CELL_W / PLAYER_ATLAS_CELL_H)) / 2;
 
     switch (match.screen) {
         case OVEN: { //Those are necessary because the compiler has troubles with the variables initialized in the case

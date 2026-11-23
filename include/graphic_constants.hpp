@@ -14,6 +14,8 @@ constexpr float GAME_SCALE = ((float) WINDOW_HEIGHT) / 96.0f;
 // Ex.: sino em (237, 74), 11x7 no Aseprite -> na tela fica em
 // (237*KITCHEN_PNG_SCALE, 74*KITCHEN_PNG_SCALE), tamanho (11*KITCHEN_PNG_SCALE, 7*KITCHEN_PNG_SCALE).
 // Atualiza KITCHEN_PNG_HEIGHT se o canvas for redimensionado de novo no Aseprite.
+constexpr float KITCHEN_PNG_HEIGHT = 120.0f;
+constexpr float KITCHEN_PNG_SCALE  = WINDOW_HEIGHT / KITCHEN_PNG_HEIGHT;
 
 constexpr int INGREDIENT_RADIUS = 3*16.0f;
 
@@ -27,7 +29,19 @@ constexpr int INGREDIENT_ATLAS_COLS = 7;
 constexpr int COSTUMER_ATLAS_CELL_W = 24;
 constexpr int COSTUMER_ATLAS_CELL_H = 34;
 
+// Tamanho de desenho em tela do sprite do cliente (a celula do atlas e so 24x34, pequena
+// demais pra tela). Ajusta aqui o quanto o cliente aparece na tela.
+constexpr float COSTUMER_DRAW_W = COSTUMER_ATLAS_CELL_W * KITCHEN_PNG_SCALE;
+constexpr float COSTUMER_DRAW_H = COSTUMER_ATLAS_CELL_H * KITCHEN_PNG_SCALE;
+
 constexpr float PLAYER_HEIGHT = 0.45 * WINDOW_HEIGHT;
+
+// Atlas de animacao do player: player.png, 4 frames 24x54 lado a lado (walk cycle).
+// Frame 0 e usado como pose parada (player.moving == false).
+constexpr int PLAYER_ATLAS_CELL_W = 24;
+constexpr int PLAYER_ATLAS_CELL_H = 54;
+constexpr int PLAYER_ANIM_FRAME_COUNT = 4;
+constexpr float PLAYER_ANIM_FRAME_TIME = 0.12f; // segundos por frame andando
 
 constexpr float BUTTON_OPACITY = 0.1f;
 

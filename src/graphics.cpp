@@ -588,8 +588,10 @@ void drawStackButtons(const ButtonVec& screenButtons) {
     }
 }
 
+// Aspecto fixo da celula do atlas do player (24x54), nao do texture.width/height inteiro
+// (que agora e 4 frames lado a lado).
 Vector2 getSpritePos(Object& object) {
-    float drawnWidth = spriteDrawnWidth(object.sprite, PLAYER_HEIGHT);
+    float drawnWidth = PLAYER_HEIGHT * ((float)PLAYER_ATLAS_CELL_W / PLAYER_ATLAS_CELL_H);
     return (Vector2){object.pos.x - drawnWidth / 2, object.pos.y - PLAYER_HEIGHT / 2};
 }
 
@@ -597,16 +599,32 @@ void hitboxDraw(const Object& object) {
     DrawCircleV(object.pos, object.radius, RED);
 }
 
+// Recorta o frame da animacao de andar (player.png, atlas 4 frames de 24x54 lado a lado).
+// DIR_LEFT espelha o frame usando largura negativa na src (mesmo truque de warDetirps).
+static void drawPlayerFrame(Sprite& sprite, Vector2 pos, float targetHeight, int frame, Direction dir) {
+    float drawnWidth = targetHeight * ((float)PLAYER_ATLAS_CELL_W / PLAYER_ATLAS_CELL_H);
+
+    float srcX = (float)(frame * PLAYER_ATLAS_CELL_W);
+    float srcW = (float)PLAYER_ATLAS_CELL_W;
+    if (dir == DIR_LEFT) {
+        srcX += PLAYER_ATLAS_CELL_W; // espelha: comeca na borda direita da celula
+        srcW = -srcW;
+    }
+
+    DrawTexturePro(
+        sprite.texture,
+        (Rectangle){srcX, 0, srcW, (float)PLAYER_ATLAS_CELL_H},
+        (Rectangle){pos.x, pos.y, drawnWidth, targetHeight},
+        (Vector2){0, 0},
+        0.0f,
+        WHITE
+    );
+}
+
 //COLOCAR CONST DEPOIS
 void playerDraw(Player& player) {
     Vector2 spritePos = getSpritePos(player.object);
-
-    if (player.direction == DIR_RIGHT) {
-        spriteDraw(player.object.sprite, spritePos, PLAYER_HEIGHT, WHITE);
-    }
-    if (player.direction == DIR_LEFT) {
-        warDetirps(player.object.sprite, spritePos, PLAYER_HEIGHT, WHITE);
-    }
+    drawPlayerFrame(player.object.sprite, spritePos, PLAYER_HEIGHT, player.animFrame, player.direction);
 }
 
 int drawNearestBut(const Player& player, const ButtonVec& screenButtons) {
@@ -913,10 +931,10 @@ static void drawCostumerSprite(Sprite& atlas, Vector2 center, CostumerType type)
         (float)COSTUMER_ATLAS_CELL_H
     };
     Rectangle dest = {
-        center.x - COSTUMER_ATLAS_CELL_W / 2.0f,
-        center.y - COSTUMER_ATLAS_CELL_H / 2.0f,
-        (float)COSTUMER_ATLAS_CELL_W,
-        (float)COSTUMER_ATLAS_CELL_H
+        center.x - COSTUMER_DRAW_W / 2.0f,
+        center.y - COSTUMER_DRAW_H / 2.0f,
+        COSTUMER_DRAW_W,
+        COSTUMER_DRAW_H
     };
 
     DrawTexturePro(atlas.texture, src, dest, (Vector2){0, 0}, 0.0f, WHITE);
