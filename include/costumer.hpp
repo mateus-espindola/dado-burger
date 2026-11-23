@@ -10,9 +10,13 @@ enum CostumerType{
 
     EMPTY = -1,
     CHILL_GUY = 0,
+    MOA,
+    ALYSA,
+    TONY,
+    SPEED,
+    SKELETON,
     NORMAL,
     VEGAN,
-    TONY,
     COSTUMER_TYPES_QUANTITY
 
 };

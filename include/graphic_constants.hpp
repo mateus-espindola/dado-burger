@@ -14,8 +14,6 @@ constexpr float GAME_SCALE = ((float) WINDOW_HEIGHT) / 96.0f;
 // Ex.: sino em (237, 74), 11x7 no Aseprite -> na tela fica em
 // (237*KITCHEN_PNG_SCALE, 74*KITCHEN_PNG_SCALE), tamanho (11*KITCHEN_PNG_SCALE, 7*KITCHEN_PNG_SCALE).
 // Atualiza KITCHEN_PNG_HEIGHT se o canvas for redimensionado de novo no Aseprite.
-constexpr float KITCHEN_PNG_HEIGHT = 120.0f;
-constexpr float KITCHEN_PNG_SCALE  = WINDOW_HEIGHT / KITCHEN_PNG_HEIGHT;
 
 constexpr int INGREDIENT_RADIUS = 3*16.0f;
 
@@ -24,9 +22,17 @@ constexpr int INGREDIENT_RADIUS = 3*16.0f;
 constexpr int INGREDIENT_ATLAS_CELL = 24;
 constexpr int INGREDIENT_ATLAS_COLS = 7;
 
+// Atlas de clientes: costumers.png, 192x34, 8 sprites 24x34 lado a lado (1 por CostumerType,
+// na ordem do enum: CHILL_GUY, MOA, ALYSA, TONY, SPEED, SKELETON, NORMAL, VEGAN).
+constexpr int COSTUMER_ATLAS_CELL_W = 24;
+constexpr int COSTUMER_ATLAS_CELL_H = 34;
+
 constexpr float PLAYER_HEIGHT = 0.45 * WINDOW_HEIGHT;
 
 constexpr float BUTTON_OPACITY = 0.1f;
+
+constexpr float ORDER_BOX_OPACITY = 0.5f;
+constexpr float ORDER_BOX_EXTRA_W = 120.0f;
 
 // Barra de decaimento desenhada do lado do heap quando o mouse esta por cima
 constexpr float ROT_BAR_W   = 10.0f;

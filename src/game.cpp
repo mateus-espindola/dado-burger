@@ -73,6 +73,8 @@ void gameStart(Game& game){
     Match &match = game.current_match;
     // loadSpritesheet(game.spritesMenu);
     loadSpritesheet(match.spriteMatch);
+    setIngredientAtlas(match.spriteMatch[SPR_INGREDIENTS]);
+    setCostumerAtlas(match.spriteMatch[SPR_COSTUMERS]);
 
     match.player.object.sprite = match.spriteMatch[SPR_PLAYER];
     match.player.object.radius = PLAYER_HITBOX_RADIUS;

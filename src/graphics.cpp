@@ -173,7 +173,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
 
         BeginMode2D(match.camera);
             Vector2 mouseWorld = GetScreenToWorld2D(GetMousePosition(), match.camera);
-            drawCostumers(match.costumer_line, match.costumer_counter, mouseWorld);
+
+            drawCostumers(match.costumer_line, match.costumer_counter);
 
             spriteDraw(match.spriteMatch[SPR_KITCHEN], (Vector2){0, 0}, WINDOW_HEIGHT, WHITE);
 
@@ -191,6 +192,8 @@ void drawKitchen(Match& match, int butUnderMouseInd){
             playerDraw(match.player);
 
             if(DRAW_HITBOX == 1) hitboxDraw(match.player.object);
+
+            drawCostumerOrders(match.costumer_counter, mouseWorld);
 
         EndMode2D();
 
@@ -420,7 +423,7 @@ void drawInventory(const Player &player) {
             if (slot.type == BURGER) {
                 // desenha as camadas reais do hamburguer, de baixo para cima
                 Vector2 base = { center.x, r.y + r.height - INV_SLOT_SIZE * 0.3f };
-                drawStack(slot, base, INV_SLOT_SIZE * 0.22f, INV_SLOT_SIZE * 0.12f);
+                drawStack(slot, base, INV_SLOT_SIZE * 0.22f, INV_SLOT_SIZE * 0.08f);
             } else {
                 drawIngredient(center, INV_SLOT_SIZE * 0.3f, slot.top->data);
             }
@@ -493,38 +496,31 @@ void drawHUD(const Player &player, bool showFinishHint, int costumersThatLeft) {
     if (showFinishHint) drawFinishMatchHint();
 }
 
-// Texto curto do ponto de preparo pra mostrar acima do ingrediente, ou nullptr se nao ha nada a mostrar
-static const char* shortCookLabel(const Ingredient& ing) {
-    CookPoint point = practicalCookingStateOf(ing);
+// Setado uma vez em loadSpritesheet (match.spriteMatch[SPR_INGREDIENTS]). drawIngredient
+// usa o atlas se disponivel; sem ele (chamada antes do load, ou tipo fora do atlas) cai no circulo.
+static Sprite* g_ingredientAtlas = nullptr;
 
-    if (ing.type == MEAT) {
-        switch (point) {
-            case RARE:        return "Rare";
-            case MEDIUM_RARE: return "Medium";
-            case WELL_DONE:   return "Well";
-            case OVER_COOKED: return "Hell naw";
-            default:          return nullptr; // RAW: ainda nao tem ponto pra mostrar
-        }
-    }
-
-    if (point == READY) return "Ready";
-    return nullptr;
+void setIngredientAtlas(Sprite& atlas) {
+    g_ingredientAtlas = &atlas;
 }
 
-// Desenha um ingrediente (circulo + contorno + texto pequeno do ponto de preparo acima, se houver)
+// Desenha um ingrediente (sprite do atlas se disponivel, senao circulo + contorno;
+// sempre com texto pequeno do ponto de preparo acima, se houver)
 void drawIngredient(Vector2 center, float radius, const Ingredient& ing) {
-    Color color = ingredientColor(ing.type);
-    if (ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED || ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) {
-        color = BLACK;
-    }
-    DrawCircleV(center, radius, color);
-    DrawCircleLinesV(center, radius, BLACK);
+    bool drewSprite = false;
 
-    const char* label = shortCookLabel(ing);
-    if (label != nullptr) {
-        const int fs = 10;
-        int tw = MeasureText(label, fs);
-        DrawText(label, (int)(center.x - tw / 2.0f), (int)(center.y - radius - fs - 2), fs, WHITE);
+    if (g_ingredientAtlas != nullptr && ingredientAtlasRow(ing.type) >= 0) {
+        drawIngredientSprite(*g_ingredientAtlas, center, radius * 2.0f, ing);
+        drewSprite = true;
+    }
+
+    if (!drewSprite) {
+        Color color = ingredientColor(ing.type);
+        if (ing.cook_state.cookInfo[0].cookPoint == OVER_COOKED || ing.cook_state.cookInfo[1].cookPoint == OVER_COOKED) {
+            color = BLACK;
+        }
+        DrawCircleV(center, radius, color);
+        DrawCircleLinesV(center, radius, BLACK);
     }
 }
 
@@ -857,11 +853,16 @@ static void drawOrderBurger(const Costumer& cost) {
     int count = 0;
     for (LinkedList_node<Ingredient>* p = cost.order.start; p != nullptr; p = p->prox) count++;
 
+    if (count > 0) {
+        Rectangle box = { x - ORDER_RECT_GAP, yBase - (count - 1) * step - ORDER_RECT_GAP,
+                           ORDER_RECT_W + ORDER_RECT_GAP * 2 + ORDER_BOX_EXTRA_W, count * step + ORDER_RECT_GAP };
+        DrawRectangleRec(box, Fade(BLACK, ORDER_BOX_OPACITY));
+    }
+
     int index = count - 1;
     for (LinkedList_node<Ingredient>* p = cost.order.start; p != nullptr; p = p->prox) {
-        Rectangle r = { x, yBase - index * step, ORDER_RECT_W, ORDER_RECT_H };
-        DrawRectangleRec(r, ingredientColor(p->data.type));
-        DrawRectangleLinesEx(r, 1, BLACK);
+        Vector2 center = { x + ORDER_RECT_H / 2.0f, yBase - index * step + ORDER_RECT_H / 2.0f };
+        drawIngredient(center, ORDER_RECT_H / 2.0f, p->data);
 
         const char* name = ingredientName(p->data.type);
         const char* cookLabel = nullptr;
@@ -877,71 +878,86 @@ static void drawOrderBurger(const Costumer& cost) {
 
         const char* text = cookLabel ? TextFormat("%s (%s)", name, cookLabel) : name;
         const int fs = 12;
-        DrawText(text, (int)(r.x + r.width + 6), (int)(r.y + r.height / 2 - fs / 2), fs, WHITE);
+        DrawText(text, (int)(x + ORDER_RECT_H + 6), (int)(center.y - fs / 2), fs, WHITE);
 
         index--;
     }
 }
 
-void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorld) {
+static Color costumerColor(CostumerType type) {
+    switch (type) {
+        case CHILL_GUY: return BLUE;
+        case MOA:       return LIGHTGRAY;
+        case ALYSA:     return DARKGREEN;
+        case TONY:      return MAROON;
+        case SPEED:     return RED;
+        default:        return PURPLE;
+    }
+}
+
+// Setado uma vez em loadSpritesheet (match.spriteMatch[SPR_COSTUMERS]). drawCostumerBody
+// usa o atlas se disponivel; sem ele (chamada antes do load) cai no circulo.
+static Sprite* g_costumerAtlas = nullptr;
+
+void setCostumerAtlas(Sprite& atlas) {
+    g_costumerAtlas = &atlas;
+}
+
+// Desenha a celula do atlas correspondente ao tipo do cliente, centrada em `center`.
+// Cada CostumerType valido (CHILL_GUY..VEGAN) e uma coluna, na ordem do enum.
+static void drawCostumerSprite(Sprite& atlas, Vector2 center, CostumerType type) {
+    Rectangle src = {
+        (float)(type * COSTUMER_ATLAS_CELL_W),
+        0,
+        (float)COSTUMER_ATLAS_CELL_W,
+        (float)COSTUMER_ATLAS_CELL_H
+    };
+    Rectangle dest = {
+        center.x - COSTUMER_ATLAS_CELL_W / 2.0f,
+        center.y - COSTUMER_ATLAS_CELL_H / 2.0f,
+        (float)COSTUMER_ATLAS_CELL_W,
+        (float)COSTUMER_ATLAS_CELL_H
+    };
+
+    DrawTexturePro(atlas.texture, src, dest, (Vector2){0, 0}, 0.0f, WHITE);
+}
+
+static void drawCostumerBody(const Costumer& cost) {
+    if (g_costumerAtlas != nullptr) {
+        drawCostumerSprite(*g_costumerAtlas, cost.obj.pos, cost.type);
+    } else {
+        DrawCircleV(cost.obj.pos, cost.obj.radius, costumerColor(cost.type));
+    }
+    drawPatienceBar(cost.obj, cost.patience_time);
+}
+
+// So os corpos (circulo/sprite + barra de paciencia). Chamar ANTES do background, pra ficar atras.
+void drawCostumers(Queue<Costumer>& queue, Costumer counter[]) {
     for (Queue_node<Costumer>* aux = queue.first; aux != nullptr; aux = aux->prox) {
-            Costumer cost = aux->data;
+        Costumer& cost = aux->data;
 
-            Color color;
-            switch (cost.type) {
-                case CHILL_GUY:
-                    color = BLUE;
-                    break;
-                case NORMAL:
-                    color = LIGHTGRAY;
-                    break;
-                case VEGAN:
-                    color = DARKGREEN;
-                    break;
-                case TONY:
-                    color = MAROON;
-                    break;
-                default:
-                    color = PURPLE;
-                    break;
-            }
-
-            std::cout << cost.type << " drawn at: " << cost.obj.pos.x << " | ideal pos: " << cost.ideal_pos_x << "\n";
-            DrawCircleV(cost.obj.pos, cost.obj.radius, color);
-            drawPatienceBar(cost.obj, cost.patience_time);
+        std::cout << cost.type << " drawn at: " << cost.obj.pos.x << " | ideal pos: " << cost.ideal_pos_x << "\n";
+        drawCostumerBody(cost);
     }
 
     for (int i=0; i<COUNTER_SIZE; i++) {
-            Costumer cost = counter[i];
+        Costumer& cost = counter[i];
+        if (cost.type == EMPTY) continue;
 
-            if (cost.type != EMPTY) {
+        std::cout << cost.type << " drawn at: " << cost.obj.pos.x << "\n";
+        drawCostumerBody(cost);
+    }
+}
 
-                Color color;
-                switch (cost.type) {
-                    case CHILL_GUY:
-                        color = BLUE;
-                        break;
-                    case NORMAL:
-                        color = LIGHTGRAY;
-                        break;
-                    case VEGAN:
-                        color = DARKGREEN;
-                        break;
-                    case TONY:
-                        color = MAROON;
-                        break;
-                    default:
-                        color = PURPLE;
-                        break;
-                }
+// So o balao do pedido do cliente sob o mouse. Chamar DEPOIS do background (e do player),
+// pra ficar na frente de tudo.
+void drawCostumerOrders(Costumer counter[], Vector2 mouseWorld) {
+    for (int i=0; i<COUNTER_SIZE; i++) {
+        Costumer& cost = counter[i];
+        if (cost.type == EMPTY) continue;
 
-                std::cout << cost.type << " drawn at: " << cost.obj.pos.x << "\n";
-                DrawCircleV(cost.obj.pos, cost.obj.radius, color);
-                drawPatienceBar(cost.obj, cost.patience_time);
-
-                if (CheckCollisionPointCircle(mouseWorld, cost.obj.pos, cost.obj.radius)) {
-                    drawOrderBurger(cost);
-                }
-            }
+        if (CheckCollisionPointCircle(mouseWorld, cost.obj.pos, cost.obj.radius)) {
+            drawOrderBurger(cost);
+        }
     }
 }

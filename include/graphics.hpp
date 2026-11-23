@@ -56,6 +56,10 @@ void drawIngredient(Vector2 center, float radius, const Ingredient& ing);
 
 void drawIngredientSprite(Sprite& atlas, Vector2 center, float size, const Ingredient& ing);
 
+void setIngredientAtlas(Sprite& atlas);
+
+void setCostumerAtlas(Sprite& atlas);
+
 void drawStack(const Stack& stack, Vector2 basePos, float radius = 20.0f, float offset = 6.0f);
 
 void drawHeap(const Heap<Ingredient>& heap, Vector2 basePos, float radius = 20.0f, float offset = 6.0f, bool hovered = false);
@@ -64,4 +68,6 @@ void drawStackButtons(const ButtonVec& screenButtons);
 
 void drawCtrlHintFor(Rectangle button, int screen);
 
-void drawCostumers(Queue<Costumer>& queue, Costumer counter[], Vector2 mouseWorld);
+void drawCostumers(Queue<Costumer>& queue, Costumer counter[]);
+
+void drawCostumerOrders(Costumer counter[], Vector2 mouseWorld);

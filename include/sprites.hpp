@@ -10,6 +10,7 @@ enum SpriteType {
     SPR_KITCHEN,
     SPR_PLAYER,
     SPR_INGREDIENTS,
+    SPR_COSTUMERS,
     QUANTITY_OF_SPRITES
 };
 

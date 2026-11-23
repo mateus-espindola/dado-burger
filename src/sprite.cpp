@@ -35,7 +35,8 @@ void loadSpritesheet(Sprite sprites[]) {
     const char *paths[QUANTITY_OF_SPRITES] = {
         [SPR_KITCHEN] = "assets/sprites/kitchen.png",
         [SPR_PLAYER]     = "assets/sprites/player.png",
-        [SPR_INGREDIENTS] = "assets/sprites/ingredients.png"
+        [SPR_INGREDIENTS] = "assets/sprites/ingredients.png",
+        [SPR_COSTUMERS] = "assets/sprites/costumers.png"
     };
 
     for (int i = 0; i < QUANTITY_OF_SPRITES; i++) {
