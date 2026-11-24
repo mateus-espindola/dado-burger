@@ -3,12 +3,9 @@
     UBUNTU COMPILING: g++ src/*.cpp -o jogoburger -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 */
 
-// #include "../include/constants.hpp"
 #include "../include/game.hpp"
-// #include "../include/data_structures.hpp"
 #include "../include/graphics.hpp"
 #include "../include/graphic_constants.hpp"
-// #include "raylib.h"
 #include "../include/logs.hpp"
 
 int main(int argc, char* argv[]) {
