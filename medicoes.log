@@ -4,23 +4,23 @@
 Nodes inserted: 837253
 Tree height: 20
 Rotations (insertion): 837233
-Total load time: 1.682656 s
+Total load time: 1.237410 s
 
 --- History (Context) ---
-Loaded entries: 100010
+Loaded entries: 100012
 
 --- AVL (Searches during match) ---
-Total searches: 54
-Total comparisons: 1024
-Average comparisons per search: 18.96
-Total accumulated search time: 0.000261 s
+Total searches: 0
+Total comparisons: 0
+Average comparisons per search: 0.00
+Total accumulated search time: 0.000000 s
 
 --- Hash Table (Cache) ---
-Table size (m): 100003
-Occupied entries (n): 54
-Load factor (lambda): 0.0005
+Table size (m): 0
+Occupied entries (n): 0
+Load factor (lambda): 0.0000
 Total hits: 0
-Total misses: 54
+Total misses: 0
 Hit rate: 0.00%
 Total collisions: 0
 

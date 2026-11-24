@@ -10,10 +10,10 @@ constexpr int MONEY_PER_PERFECT_BURGER = 100;
 
 
 // Costumers
-constexpr float AVERAGE_COSTUMER_PATIENCE = FPS* 180.0f;
+constexpr float AVERAGE_COSTUMER_PATIENCE = FPS* 200.0f;
 constexpr float COSTUMER_PATIENCE_DECAY = 1.0f; // por frame
 
-constexpr float COSTUMER_TIMER_MAX = FPS * 30.0f; // Tempo até o proximo cliente aparecer
+constexpr float COSTUMER_TIMER_MAX = FPS * 15.0f; // Tempo até o proximo cliente aparecer
 constexpr float COSTUMER_TIMER_SPEED = 1.0f;
 
 constexpr int COSTUMERS_PER_MATCH = 10;

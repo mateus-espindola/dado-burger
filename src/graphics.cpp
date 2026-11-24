@@ -244,8 +244,8 @@ void drawHowToPlay(){
             );
         }
 
-        DrawText(title, titleX, titleY, titleFs, BEIGE);
-        DrawText(hint, hintX, hintY, hintFs, GRAY);
+        // DrawText(title, titleX, titleY, titleFs, BEIGE);
+        // DrawText(hint, hintX, hintY, hintFs, GRAY);
 
     EndDrawing();
 }
@@ -682,7 +682,7 @@ void drawMoney(const Player &player) {
     Rectangle r = { WINDOW_WIDTH - MONEY_RECT_W - MONEY_MARGIN, MONEY_MARGIN, MONEY_RECT_W, MONEY_RECT_H };
 
     DrawRectangleRounded(r, 0.3f, 8, Fade(DARKGREEN, 0.5f));
-    DrawRectangleRoundedLines(r, 0.3f, 8, 2, GREEN);
+    DrawRectangleRoundedLinesEx(r, 0.3f, 8, 2, GREEN);
 
     const char* text = TextFormat("$ %d", player.money);
     const int fs = 24;
@@ -1034,7 +1034,7 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
                 drawStackDetails(b);
 
                 // Converte b.target.type para texto legível utilizando o nome do ingrediente
-                const char* stackLabel = (b.target.type == BURGER) ? "Burger" : 
+                const char* stackLabel = (b.target.type == BURGER) ? "Burger" :
                                          ((b.target.type == NONE) ? b.text : ingredientName((IngredientType)b.target.type));
 
                 int fs = 18;
@@ -1058,7 +1058,7 @@ void drawButtons(const ButtonVec& screenButtons, int butUnderMouseInd, MatchScre
                 int fs = 20;
                 int textWidth = MeasureText(b.text, fs);
                 float textX = b.shape.x + (b.shape.width / 2.0f) - (textWidth / 2.0f);
-                float textY = b.shape.y - fs - 6.0f; 
+                float textY = b.shape.y - fs - 6.0f;
                 DrawText(b.text, (int)textX, (int)textY, fs, WHITE);
             } break;
 

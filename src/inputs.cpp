@@ -76,20 +76,16 @@ void transferBetweenStacks(Stack& orig, Stack& dest){
     stack_push(dest, ing);
 }
 
-// Move todos os itens preservando a ordem. Um pop+push simples inverteria a pilha
-// (propriedade classica de pilha), entao desce recursivamente ate o fundo e so
-// empilha no destino ao desenrolar, do mais fundo para o topo.
 void transferAllBetweenStacks(Stack& orig, Stack& dest){
     if (orig.size == 0) return;
 
     Ingredient ing;
     stack_pop(orig, ing);
 
-    transferAllBetweenStacks(orig, dest);
+    transferAllBetweenStacks(orig, dest); // Desce recursivamente ao fundo da pilha
 
     stack_push(dest, ing);
 }
-
 
 void processInputButAction(Ingredient& ing, const MatchScreen& screen){
     switch(screen){
@@ -103,236 +99,6 @@ void processInputButAction(Ingredient& ing, const MatchScreen& screen){
     }
 }
 
-
-
-// void processButClick(Match& match, Button& button) {
-//     Player& player = match.player;
-
-//     Stack& inventory = player.inventory[player.selectedSlot];
-//     Stack& butStack = button.target;
-
-//     switch (button.type) {
-//         case CLICK: {
-//             bool isMustard = std::strcmp(button.text, "MUSTARD") == 0;
-//             bool bottle = std::strcmp(button.text, "KETCHUP") == 0 || isMustard || std::strcmp(button.text, "PICKLES") == 0;
-//             if (bottle) {
-//                 // Acha, entre os botoes "BURGER" que realmente tem um burger montado
-//                 // (target.type == BURGER), o que esta mais a esquerda na tela - em vez de
-//                 // depender de indice fixo ou jogar no slot vazio so por ser o mais a esquerda.
-//                 ButtonVec& prepareVec = match.buttonsVec[PREPARE];
-//                 int leftmost = -1;
-//                 for (int i = 0; i < prepareVec.size; i++) {
-//                     Button& b = prepareVec.buttons[i];
-//                     if (std::strcmp(b.text, "BURGER") != 0) continue;
-//                     if (b.target.type != BURGER) continue;
-//                     if (leftmost == -1 || b.shape.x < prepareVec.buttons[leftmost].shape.x) leftmost = i;
-//                 }
-
-//                 if (leftmost != -1) {
-//                     Ingredient ing;
-//                     // 'M' mapeia pra MEAT em charToIngType; so o MUSTARD usa o 'm' minusculo pra nao colidir
-//                     initIngredient(ing, isMustard ? 'm' : button.text[0]);
-
-//                     stack_push(prepareVec.buttons[leftmost].target, ing);
-//                 }
-
-//                 break;
-//             }
-//             if (std::strcmp(button.text, COSTUMER_BELL_TEXT) == 0) {
-//                 callCostumer(match.costumer_line, match.costumer_counter);
-
-//                 break;
-//             } // Handles the costumer bell
-//             else {
-//                 match.screen = screenFromName(button.text);
-//             } // Handles the screen changes
-//         break;
-//         }
-
-//         case PICK:
-//             if(inventory.size < inventory.capacity){
-//                 Ingredient ing;
-//                 initIngredient(ing, button.text[0]);
-//                 stack_push(inventory, ing);
-//             }
-
-//         break;
-
-//         case DROP:
-//             while(inventory.size > 0){
-//                 stack_pop(inventory);
-//             }
-//             inventory.capacity = 1;
-//         break;
-
-//         case INSERT:
-//             if(butStack.size == 0){
-//                 if(inventory.size > 0 && canInsert(match.screen, inventory.type)){
-//                     transferBetweenStacks(inventory, butStack);
-//                     butStack.top->data.cook_state.cooking = true;
-//                 }
-//             }
-//             else{ //if(butStack.size > 0){}
-//                 Ingredient& ing = butStack.top->data;
-//                 if(IsKeyDown(KEY_LEFT_CONTROL) && canCtrlAction(match.screen, ing.type)){
-//                     processInputButAction(ing, match.screen);
-//                 }
-//                 if(inventory.size == 0 && !IsKeyDown(KEY_LEFT_CONTROL)){
-//                     ing.cook_state.cooking = false;
-//                     transferBetweenStacks(butStack, inventory);
-//                 }
-//             }
-//         break;
-
-//         case READIES_HEAP: {
-//             Heap<Ingredient>& heap = button.heap;
-
-//             if (inventory.type == NONE) break; // so recebe, nunca devolve
-
-//             // Olha o item no topo da mao ANTES de tirar: depois do pop inventory.type
-//             // ja vira NONE (capacidade 1) e a checagem nunca passaria.
-//             Ingredient& top = inventory.top->data;
-
-//             bool ingReady = practicalCookingStateOf(top) == RARE || practicalCookingStateOf(top) == MEDIUM_RARE ||
-//                             practicalCookingStateOf(top) == WELL_DONE || practicalCookingStateOf(top) == READY;
-
-//             if (ingReady && heap.size < heap.capacity) {
-//                 Ingredient aux;
-//                 stack_pop(inventory, aux);
-//                 insertHeap(heap, aux);
-//             }
-
-//             break;
-//         }
-
-//         case HEAP: {
-//             Heap<Ingredient>& heap = button.heap;
-
-//             if (inventory.type == NONE) {
-//                 // Mao vazia: pega o ingrediente mais perto de estragar (topo do heap)
-//                 Ingredient ing;
-//                 if (peekMinHeap(heap, ing) && inventory.size < inventory.capacity) {
-//                     stack_push(inventory, getMinValueHeap(heap));
-//                 }
-//                 break;
-//             }
-
-//             // Mao ocupada: so aceita ingrediente cozinhavel, e o heap so aceita um tipo por vez
-//             bool typeOk = heap.type == NONE || heap.type == inventory.type;
-
-//             if (isCookable(inventory.type) && typeOk && heap.size < heap.capacity) {
-//                 Ingredient aux;
-//                 stack_pop(inventory, aux);
-//                 insertHeap(heap, aux);
-//             }
-//         break;
-//         }
-
-//         case READIES_STACK:
-//             if (inventory.type != NONE && inventory.type != BURGER) {
-//                 Ingredient aux;
-//                 stack_pop(inventory, aux);
-
-//                 bool ingReady = aux.cook_state.cookInfo[0].cookPoint == READY && aux.cook_state.cookInfo[1].cookPoint == READY;
-
-//                 if (ingReady && isCuttable(aux.type)) {
-//                     stack_push(butStack, aux);
-//                     break;
-//                 }
-
-//                 stack_push(inventory, aux);
-//                 break;
-//             }
-
-//         case STACK: {
-//             if (inventory.type == NONE) {
-//                 if (butStack.type == BURGER) {
-//                     if (IsKeyDown(KEY_LEFT_CONTROL)) {
-//                         // Ctrl: tira so o ingrediente do topo, nao o hamburguer inteiro
-//                         Ingredient aux;
-//                         stack_pop(butStack, aux);
-//                         stack_push(inventory, aux);
-
-//                         break;
-//                     }
-
-//                     inventory.capacity = butStack.size;
-//                     transferAllBetweenStacks(butStack, inventory);
-//                     inventory.type = BURGER;
-
-//                     break;
-//                 }
-
-//                 if (butStack.type == NONE) break;
-
-//                 else {
-//                     Ingredient aux;
-//                     stack_pop(butStack, aux);
-//                     stack_push(inventory, aux);
-
-//                     break;
-//                 }
-//             }
-//             if (inventory.type == BURGER) {
-//                 if (butStack.type == BURGER) {
-//                     bool inventoryBigger = inventory.capacity >= butStack.capacity;
-//                     int newCapacity = butStack.capacity;
-
-//                     if (inventoryBigger) {
-//                         transferAllBetweenStacks(butStack, inventory);
-//                         inventory.capacity = newCapacity;
-//                     }
-//                     if (!inventoryBigger) {
-//                         inventory.capacity = newCapacity;
-//                         transferAllBetweenStacks(butStack, inventory);
-//                     }
-//                     break;
-//                 }
-
-//                 if (butStack.type == NONE) {
-//                     transferAllBetweenStacks(inventory, butStack);
-//                     butStack.type = BURGER;
-//                     inventory.capacity = 1;
-//                     break;
-//                 }
-
-//                 else break;
-//             }
-//             else {
-//                 if (butStack.type == BURGER) {
-//                     Ingredient aux;
-//                     stack_pop(inventory, aux);
-//                     stack_push(butStack, aux);
-
-//                     break;
-//                 }
-
-//                 if (butStack.type == NONE) {
-//                     Ingredient aux;
-//                     stack_pop(inventory, aux);
-//                     stack_push(butStack, aux);
-
-//                     if (aux.type == LOWER_BREAD) butStack.type = BURGER;
-
-//                     break;
-//                 }
-
-//                 else {
-//                     if (butStack.type == inventory.type) {
-//                         Ingredient aux;
-//                         stack_pop(inventory, aux);
-//                         stack_push(butStack, aux);
-
-//                         break;
-//                     }
-
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-// }
-
 void processButClick(Match& match, Button& button) {
     Player& player = match.player;
 
@@ -344,20 +110,19 @@ void processButClick(Match& match, Button& button) {
             bool isMustard = std::strcmp(button.text, "MUSTARD") == 0;
             bool bottle = std::strcmp(button.text, "KETCHUP") == 0 || isMustard || std::strcmp(button.text, "PICKLES") == 0;
             if (bottle) {
-                // Acha, entre os botoes "BURGER" que tem um burger montado
-                // (target.size > 0), o que esta mais a esquerda na tela.
+
                 ButtonVec& prepareVec = match.buttonsVec[PREPARE];
                 int leftmost = -1;
                 for (int i = 0; i < prepareVec.size; i++) {
                     Button& b = prepareVec.buttons[i];
                     if (std::strcmp(b.text, "BURGER") != 0) continue;
-                    if (b.target.size == 0) continue;   // MUDOU: o tipo agora e fixo, entao testa o conteudo
+                    if (b.target.size == 0) continue;
                     if (leftmost == -1 || b.shape.x < prepareVec.buttons[leftmost].shape.x) leftmost = i;
                 }
 
                 if (leftmost != -1) {
                     Ingredient ing;
-                    // 'M' mapeia pra MEAT em charToIngType; so o MUSTARD usa o 'm' minusculo pra nao colidir
+
                     initIngredient(ing, isMustard ? 'm' : button.text[0]);
 
                     stack_push(prepareVec.buttons[leftmost].target, ing);
@@ -416,8 +181,6 @@ void processButClick(Match& match, Button& button) {
 
             if (inventory.type == NONE) break; // so recebe, nunca devolve
 
-            // MUDOU: inventory.type so e atualizado no fim da funcao, entao nao
-            // depende mais de olhar o topo antes do pop.
             Ingredient& top = inventory.top->data;
 
             bool ingReady = practicalCookingStateOf(top) == RARE || practicalCookingStateOf(top) == MEDIUM_RARE ||
@@ -462,7 +225,6 @@ void processButClick(Match& match, Button& button) {
 
                 bool ingReady = aux.cook_state.cookInfo[0].cookPoint == READY && aux.cook_state.cookInfo[1].cookPoint == READY;
 
-                // MUDOU: pilha so aceita o mesmo tipo (NONE = sem restricao)
                 bool typeOk = butStack.type == NONE || butStack.type == aux.type;
 
                 if (ingReady && isCuttable(aux.type) && typeOk) {
@@ -477,13 +239,13 @@ void processButClick(Match& match, Button& button) {
             [[fallthrough]];
 
         case STACK: {
-            // ---------- MAO VAZIA ----------
+            // MAO VAZIA
             if (inventory.type == NONE) {
-                if (butStack.size == 0) break;   // MUDOU: o tipo nao vira mais NONE ao esvaziar
+                if (butStack.size == 0) break;
 
                 if (butStack.type == BURGER) {
                     if (IsKeyDown(KEY_LEFT_CONTROL)) {
-                        // Ctrl: tira so o ingrediente do topo, nao o hamburguer inteiro
+
                         Ingredient aux;
                         stack_pop(butStack, aux);
                         stack_push(inventory, aux);
@@ -493,12 +255,11 @@ void processButClick(Match& match, Button& button) {
 
                     inventory.capacity = butStack.size;
                     transferAllBetweenStacks(butStack, inventory);
-                    inventory.type = BURGER;   // so o jogador decide que a mao e BURGER
+                    inventory.type = BURGER;
 
                     break;
                 }
 
-                // pilha solta: pega um ingrediente
                 Ingredient aux;
                 stack_pop(butStack, aux);
                 stack_push(inventory, aux);
@@ -506,12 +267,11 @@ void processButClick(Match& match, Button& button) {
                 break;
             }
 
-            // ---------- SEGURANDO HAMBURGUER ----------
+            // SEGURANDO HAMBURGUER
             if (inventory.type == BURGER) {
                 if (butStack.type != BURGER) break;   // nao apoia hamburguer em pilha solta
 
                 if (butStack.size == 0) {
-                    // MUDOU: bancada de montagem vazia (nasce como BURGER): apoia o hamburguer
                     transferAllBetweenStacks(inventory, butStack);
                     break;
                 }
@@ -531,10 +291,8 @@ void processButClick(Match& match, Button& button) {
                 break;
             }
 
-            // ---------- SEGURANDO INGREDIENTE SOLTO ----------
+            // SEGURANDO INGREDIENTE
             if (butStack.type == BURGER) {
-                // MUDOU: pilha de montagem vazia so aceita o pao de baixo
-                // (antes, so o LOWER_BREAD transformava a pilha em BURGER)
                 if (butStack.size == 0 && inventory.type != LOWER_BREAD) break;
 
                 Ingredient aux;
@@ -544,7 +302,6 @@ void processButClick(Match& match, Button& button) {
                 break;
             }
 
-            // pilha solta: NONE = aceita qualquer tipo; senao so o mesmo tipo
             if (butStack.type == NONE || butStack.type == inventory.type) {
                 Ingredient aux;
                 stack_pop(inventory, aux);
@@ -554,7 +311,5 @@ void processButClick(Match& match, Button& button) {
             break;
         }
     }
-
-    // MUDOU: unico ponto que atualiza o tipo da mao
     updatePlayerInvType(inventory);
 }
