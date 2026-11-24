@@ -29,11 +29,8 @@ void matchEnd(Match& match) {
         for (int i = 0; i < screen.size; i++) {
             Button& b = screen.buttons[i];
 
-            stack_destroy(b.target); // esvazia os nodes e zera type/size, sem tocar na capacidade
+            stack_destroy(b.target);
 
-            // Nao usa exterminateHeap: ela libera o array e zera capacity, o que inviabilizaria
-            // o proximo insertHeap depois de um matchStart (size==capacity==0 rejeitaria tudo).
-            // So precisa esvaziar o que importa pro reuso.
             b.heap.size = 0;
             b.heap.type = NONE;
         }
@@ -55,7 +52,6 @@ void playerProcess(Player& player) {
     if (IsKeyDown(KEY_LEFT))  player.object.pos.x -= 4;
 }
 
-// Empilha "count" ingredientes "c" na pilha, no ponto de preparo ja definido por initIngredient
 static void fillStack(Stack& s, char c, int count) {
     for (int i = 0; i < count; i++) {
         Ingredient ing;
@@ -64,7 +60,6 @@ static void fillStack(Stack& s, char c, int count) {
     }
 }
 
-// Igual, mas forca o ponto de preparo pra READY (cutIngredient so marca READY, sem alterar o tipo)
 static void fillStackReady(Stack& s, char c, int count) {
     for (int i = 0; i < count; i++) {
         Ingredient ing;
@@ -74,7 +69,6 @@ static void fillStackReady(Stack& s, char c, int count) {
     }
 }
 
-// Preenche as pilhas/heaps de todas as telas antes da partida comecar.
 void setIngredients(ButtonVec screens[], int screenCount) {
     (void)screenCount;
 
