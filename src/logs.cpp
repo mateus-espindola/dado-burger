@@ -1,4 +1,4 @@
-#include "logs.hpp"
+#include "../include/logs.hpp"
 
 Metrics g_metrics;
 

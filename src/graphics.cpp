@@ -682,7 +682,7 @@ void drawMoney(const Player &player) {
     Rectangle r = { WINDOW_WIDTH - MONEY_RECT_W - MONEY_MARGIN, MONEY_MARGIN, MONEY_RECT_W, MONEY_RECT_H };
 
     DrawRectangleRounded(r, 0.3f, 8, Fade(DARKGREEN, 0.5f));
-    DrawRectangleRoundedLinesEx(r, 0.3f, 8, 2, GREEN);
+    DrawRectangleRoundedLines(r, 0.3f, 8, 2, GREEN);
 
     const char* text = TextFormat("$ %d", player.money);
     const int fs = 24;
@@ -749,7 +749,7 @@ void drawIngredient(Vector2 center, float radius, const Ingredient& ing) {
             color = BLACK;
         }
         DrawCircleV(center, radius, color);
-        DrawCircleLinesV(center, radius, BLACK);
+        DrawCircleLines(center.x, center.y, radius, BLACK);
     }
 }
 

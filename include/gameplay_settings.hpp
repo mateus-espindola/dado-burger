@@ -13,13 +13,13 @@ constexpr int MONEY_PER_PERFECT_BURGER = 100;
 constexpr float AVERAGE_COSTUMER_PATIENCE = FPS* 180.0f;
 constexpr float COSTUMER_PATIENCE_DECAY = 1.0f; // por frame
 
-constexpr float COSTUMER_TIMER_MAX = FPS * 3.0f; // Tempo até o proximo cliente aparecer
+constexpr float COSTUMER_TIMER_MAX = FPS * 30.0f; // Tempo até o proximo cliente aparecer
 constexpr float COSTUMER_TIMER_SPEED = 1.0f;
 
-constexpr int COSTUMERS_PER_MATCH = 30;
+constexpr int COSTUMERS_PER_MATCH = 10;
 constexpr int COSTUMER_LEAVE_TOLERANCE = COSTUMERS_PER_MATCH * 0.7; // Porcentagem de costumers que devem ser atendidos obrigatoriamente
 
-constexpr int TONYS_MIN_CHEESE = 3;
+constexpr int TONYS_MIN_CHEESE = 4;
 constexpr int TONYS_MAX_CHEESE = 6;
 
 

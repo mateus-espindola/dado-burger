@@ -1,0 +1,28 @@
+=== PERFORMANCE REPORT ===
+
+--- AVL (Loading) ---
+Nodes inserted: 837253
+Tree height: 20
+Rotations (insertion): 837233
+Total load time: 1.682656 s
+
+--- History (Context) ---
+Loaded entries: 100010
+
+--- AVL (Searches during match) ---
+Total searches: 54
+Total comparisons: 1024
+Average comparisons per search: 18.96
+Total accumulated search time: 0.000261 s
+
+--- Hash Table (Cache) ---
+Table size (m): 100003
+Occupied entries (n): 54
+Load factor (lambda): 0.0005
+Total hits: 0
+Total misses: 54
+Hit rate: 0.00%
+Total collisions: 0
+
+--- History Sorting ---
+Not executed yet

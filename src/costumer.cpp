@@ -2,7 +2,7 @@
 
 #include "../include/costumer.hpp"
 #include "raylib.h"
-#include "logs.hpp"
+#include "../include/logs.hpp"
 
 void getCostumerOrder(LinkedList<Ingredient>& list, const int order_cod, const AVL& avl, HashTable& ht) {
     Order order;

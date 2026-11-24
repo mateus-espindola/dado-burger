@@ -1,4 +1,4 @@
-#include "timer.hpp"
+#include "../include/timer.hpp"
 
 void timer_iniciar(Timer *t) {
     t->inicio = std::chrono::steady_clock::now();

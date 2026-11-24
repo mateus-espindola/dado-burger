@@ -10,7 +10,7 @@
 
 #include "raylib.h"
 
-#include "logs.hpp"
+#include "../include/logs.hpp"
 
 bool readFiles(Game& game, FILE* fp, FILE* fh) {
     if (fp == nullptr) {

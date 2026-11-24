@@ -1,6 +1,5 @@
 #include "../include/avl.hpp"
 #include <string>
-#include "logs.hpp"
 
 // AUX FUNCTIONS
 int getAVLNodeLevel(AVL_node* node) {

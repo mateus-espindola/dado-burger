@@ -1,5 +1,6 @@
 /*
     WINDOWS COMPILING: g++ -o dado_burger src/*.cpp -Wall -std=c++17 -I C:/raylib/raylib/src -L C:/raylib/raylib/src -lraylib -lopengl32 -lgdi32 -lwinmm
+    UBUNTU COMPILING: g++ src/*.cpp -o jogoburger -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 */
 
 // #include "../include/constants.hpp"
@@ -8,7 +9,7 @@
 #include "../include/graphics.hpp"
 #include "../include/graphic_constants.hpp"
 // #include "raylib.h"
-#include "logs.hpp"
+#include "../include/logs.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {

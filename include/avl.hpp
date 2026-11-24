@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include "logs.hpp"
 
 struct Order {
     int cod;

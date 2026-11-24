@@ -1,6 +1,6 @@
 #include "../include/hashtable.hpp"
 
-#include "logs.hpp"
+#include "../include/logs.hpp"
 
 // AUX FUNCTIONS
 
